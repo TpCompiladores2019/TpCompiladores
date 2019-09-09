@@ -10,6 +10,9 @@ public class main {
 
 	static int posicion;
 	
+	public int getLardaTrolo() {
+		return -1;
+	}
 	
 	public static void main(String[] args) throws IOException {
 		
