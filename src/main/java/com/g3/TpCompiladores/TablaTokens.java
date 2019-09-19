@@ -4,10 +4,10 @@ import java.util.Hashtable;
 
 public class TablaTokens {
 
-	private Hashtable<String,Integer> tokens = new Hashtable<String,Integer>();
+	public Hashtable<String,Integer> tokens = new Hashtable<String,Integer>();
 	
 	public final static int ID=260;
-	public final static int CTE=261;
+	public final static int CTEE=261;
 	public final static int CADENA=262;
 	public final static int ASIGNACION=263;
 	public final static int MAYORIGUAL=264;
@@ -24,23 +24,25 @@ public class TablaTokens {
 	public final static int DO=275;
 	public final static int UNTIL=276;
 	public final static int FLOAT=277;
+	public final static int CTEF =278;
 	
 	public void CompletarTabla() {
 		//Palabras Reservadas
-		tokens.put("if", (int)IF);
-		tokens.put("else", (int)ELSE);
-		tokens.put("end_if", (int)END_IF);
-		tokens.put("print", (int)PRINT);
-		tokens.put("int", (int)INT);
-		tokens.put("begin", (int)BEGIN);
-		tokens.put("end", (int)END);
-		tokens.put("do", (int)DO);
-		tokens.put("until", (int)UNTIL);
-		tokens.put("float", (int)FLOAT);
+		tokens.put("if", IF);
+		tokens.put("else", ELSE);
+		tokens.put("end_if", END_IF);
+		tokens.put("print",PRINT);
+		tokens.put("int", INT);
+		tokens.put("begin", BEGIN);
+		tokens.put("end", END);
+		tokens.put("do", DO);
+		tokens.put("until", UNTIL);
+		tokens.put("float", FLOAT);
 		//Identificador
-		tokens.put("IDENTIFICADOR",(int)ID);
+		tokens.put("IDENTIFICADOR",ID);
 		//Constantes
-		tokens.put("CONSTANTE",(int)CTE);
+		tokens.put("CONSTANTE E",CTEE);
+		tokens.put("CONSTANTE F",CTEF);
 		//Cadena
 		tokens.put("CADENA",(int)CADENA);
 		//Asignacion
@@ -73,5 +75,11 @@ public class TablaTokens {
 	public int getToken(String clave) {
 		return tokens.get(clave);
 	}
+
+	public boolean contieneClave(String clave) {
+		
+		return tokens.containsKey(clave);
+	}
+	
 	
 }

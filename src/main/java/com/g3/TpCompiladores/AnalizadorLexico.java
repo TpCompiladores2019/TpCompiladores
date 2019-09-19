@@ -7,50 +7,75 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 public class AnalizadorLexico {
+										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; \n  % 
+	private int [][] transicionEstados = {{ 1, 2, 0, 3, 1, 1,-1,-1,12,-1, 8, 9,11,10, 0, 0,-1,-1,-1,-1,-1,-1, 0,15}, //0
+										  { 1, 1, 1,-1, 1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //1
+										  {-1, 2,-1, 3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //2
+										  { 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //3
+										  {-1, 4,-1,-1, 5, 5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //4
+										  { 0, 7, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //5
+										  { 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //6
+										  {-1, 7,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //7
+										  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //8
+										  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //9
+										  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //10
+										  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //11
+										  {-1,-1,-1,-1,-1,-1,-1,13,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //12
+										  {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //13
+										  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //14
+										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0,-1}  //15
+								};
+										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; st  % 
 
-	private int [][] transicionEstados = {{ 1, 2, 0, 3, 1, 1,-1,-1,12,-1, 8, 9,11,10,-1,-1,-1,-1,-1,-1,-1,-1,-1,15}, //0
-			  { 1, 1, 1,-1, 1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //1
-			  {-1, 2,-1, 3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //2
-			  { 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //3
-			  {-1, 4,-1,-1, 5, 5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //4
-			  { 0, 7, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //5
-			  { 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //6
-			  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //7
-			  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //8
-			  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //9
-			  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //10
-			  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //11
-			  {-1,-1,-1,-1,-1,-1,-1,13,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //12
-			  {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //13
-			  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //14
-			  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0,-1}  //15
-	};
-//			L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; st  % 
-	private int [][] accionesSemanticas ={{ 1, 1,-1, 1, 1, 1, 8, 8, 1, 8, 1, 1, 1, 1,-1,-1, 8, 8, 8, 8, 8, 8,-1, 1}, //0
-			  { 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //1
-			  { 4, 2, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, //2
-			  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //3
-			  { 5, 2, 5, 5, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, //4
-			  {-1, 2,-1,-1,-1,-1, 2, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //5
-			  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //6
-			  { 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, //7
-			  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 6,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //8
-			  { 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //9
-			  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 6,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //10
-			  { 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 6, 3, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //11
-			  { 3, 3, 3, 3, 3, 3, 3,-1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //12
-			  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //13
-			  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //14
-			  { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,-1, 7} //15
-	};
+/*private int [][] accionesSemanticas ={{ 1, 1,-1, 1, 1, 1, 8, 8, 1, 8, 1, 1, 1, 1,-1,-1, 8, 8, 8, 8, 8, 8,-1, 1}, //0
+									  { 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //1
+									  { 4, 2, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, //2
+									  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //3
+									  { 5, 2, 5, 5, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, //4
+									  {-1, 2,-1,-1,-1,-1, 2, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //5
+									  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //6
+									  { 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, //7
+									  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 6,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //8
+									  { 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //9
+									  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 6,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //10
+									  { 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 6, 3, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //11
+									  { 3, 3, 3, 3, 3, 3, 3,-1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //12
+									  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //13
+									  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //14
+									  { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,-1, 7} //15
+};*/
 
 
-	private InterfazAccionSemantica [][] matriz = { 
+	InterfazAccionSemantica AS1 = new ASAgregar();
+	InterfazAccionSemantica AS2 = new ASChequearCadena();
+	InterfazAccionSemantica AS3 = new ASChequearEntero();
+	InterfazAccionSemantica AS4 = new ASChequearFloat();
+	InterfazAccionSemantica AS8 = new ASAgregaYPasa();
+	InterfazAccionSemantica AS9 = new ASError();
+	private InterfazAccionSemantica [][] accionesSemanticas={
+//		 L   D    _   .   E   e   -    +  /   *   :   >   <   =  ' '   tb   [   ]   (    )  ,   ;   st  % 
+		{AS1,AS1,AS9,AS1,AS1,AS1,AS8,AS8,AS1,AS8,AS1,AS1,AS1,AS1,null,null,AS8,AS8,AS8,AS8,AS8,AS8,null,AS1}, //0
+	    {AS1,AS1,AS1,AS2,AS1,AS1,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,null,AS1}, //1
+		{AS3,AS1,AS3,AS1,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,null,AS1}, //2
+		{AS9,AS1,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS8,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,null,AS1}, //3
+		{AS4,AS1,AS4,AS4,AS1,AS1,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,null,AS1}, //4
+		{AS9,AS1,AS9,AS9,AS9,AS9,AS1,AS1,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,null,AS1}, //5
+		{AS9,AS1,AS9,AS9,AS9,AS9,AS1,AS1,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,null,AS1}, //6
+		{AS4,AS1,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,AS4,null,AS1}, //7
+		{AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS8,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,null,AS1}, //8
+		{AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS8,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,null,AS1}, //9
+		{AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS8,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,null,AS1}, //10
+		{AS2,AS2,AS1,AS2,AS1,AS1,AS2,AS2,AS2,AS2,AS2,AS8,AS2,AS8,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,null,AS1}, //11
+		{AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS1,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,null,AS1}, //12
+		{AS1,AS1,AS1,AS2,AS1,AS1,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,null,AS1}, //13
+		{AS1,AS1,AS1,AS2,AS1,AS1,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,null,AS1}, //14
+		{AS1,AS1,AS1,AS2,AS1,AS1,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,null,AS1},//15
 			
-	};
+		};
 	
-	private int indiceLectura =0;
+	public static int indiceLectura =0;
 	private int nroLinea = 1;
+	
 	
 	private Hashtable<Character,Integer> columnas=new Hashtable<Character,Integer>();
 	public void rellenar() {
@@ -74,7 +99,7 @@ public class AnalizadorLexico {
 		columnas.put(':',10);	columnas.put('>',11);	columnas.put('<',12);	columnas.put('=',13);	
 		columnas.put(' ',14);	columnas.put('	',15);	columnas.put('[',16);	columnas.put(']',17);	
 		columnas.put('(',18);	columnas.put(')',19);	columnas.put(',',20);	columnas.put(';',21);	
-		columnas.put('%',23);
+		columnas.put('%',23);   columnas.put('$',24);
 	}
 
 	private TablaSimbolos tablaSimbolos = new TablaSimbolos();
@@ -101,7 +126,6 @@ public class AnalizadorLexico {
 		tablaTokens.CompletarTabla();
 		rellenar();
 		leerArchivo();
-		System.out.println(codigoLeido);
 	}
 	
 	
@@ -109,15 +133,15 @@ public class AnalizadorLexico {
 		
 		int nroToken = -1;
 		int estadoActual = 0;
-		while (nroToken == -1) { //quiere decir que no encuentro token	
+		StringBuilder cadena = new StringBuilder();
+		while (estadoActual != -1) { //llega a estado final	
 			Character caracterleido = codigoLeido.charAt(indiceLectura);
-			indiceLectura++;		
+			System.out.println(caracterleido);
+			indiceLectura++;
 			int columna = (int)columnas.get(caracterleido);
-			System.out.println("Accion a ejecutar "+accionesSemanticas[estadoActual][columna]);
-			//nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens);
-			System.out.println("Estado actual " + estadoActual);
+			if (accionesSemanticas[estadoActual][columna] != null)
+				nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens);
 			estadoActual = transicionEstados[estadoActual][columna];
-			System.out.println("Estado nuevo " + estadoActual);
 		}
 		return nroToken;	
 	}
