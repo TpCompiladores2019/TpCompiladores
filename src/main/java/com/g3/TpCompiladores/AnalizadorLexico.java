@@ -128,9 +128,4 @@ public class AnalizadorLexico {
 		return nroToken;	
 	}
 
-	public void imprimirTablaSimbolos() {
-
-		tablaSimbolos.imprimir();
-		
-	}
 }

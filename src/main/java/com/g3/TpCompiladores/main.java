@@ -19,6 +19,6 @@ public class main {
 			System.out.println("Nro de token: " + analizarLexico.getToken());
 
 		}
-		analizarLexico.imprimirTablaSimbolos();
+		tablaSimbolos.imprimir();
 }
 }
