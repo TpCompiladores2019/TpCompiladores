@@ -102,7 +102,7 @@ public class AnalizadorLexico {
 		columnas.put('%',23);   columnas.put('$',24);
 	}
 
-	private TablaSimbolos tablaSimbolos = new TablaSimbolos();
+	private TablaSimbolos tablaSimbolos;
 
 	private TablaTokens tablaTokens = new TablaTokens();
 	
@@ -122,7 +122,8 @@ public class AnalizadorLexico {
 		codigoLeido.append("$");
 	}
 	
-	public AnalizadorLexico() throws IOException {
+	public AnalizadorLexico(TablaSimbolos tablaSimbolos2) throws IOException {
+		tablaSimbolos = tablaSimbolos2;
 		tablaTokens.CompletarTabla();
 		rellenar();
 		leerArchivo();

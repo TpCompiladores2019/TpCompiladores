@@ -12,8 +12,8 @@ public class main {
 	
 	public static void main(String[] args) throws IOException {
 
-	
-		AnalizadorLexico analizarLexico = new AnalizadorLexico();
+		TablaSimbolos tablaSimbolos =  new TablaSimbolos();
+		AnalizadorLexico analizarLexico = new AnalizadorLexico(tablaSimbolos);
 		for (int i =0 ; i < 5 ; i++) {
 			System.out.println("Nro de token: " + analizarLexico.getToken());
 
