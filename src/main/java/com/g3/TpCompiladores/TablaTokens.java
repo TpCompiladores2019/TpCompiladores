@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public class TablaTokens {
 
-	public Hashtable<String,Integer> tokens = new Hashtable<String,Integer>();
+	private Hashtable<String,Integer> tokens = new Hashtable<String,Integer>();
 	
 	public final static int ID=260;
 	public final static int CTEE=261;

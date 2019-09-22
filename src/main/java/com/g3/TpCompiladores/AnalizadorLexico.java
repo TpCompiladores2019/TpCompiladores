@@ -25,26 +25,6 @@ public class AnalizadorLexico {
 										  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //14
 										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0,-1}  //15
 								};
-										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; st  % 
-
-/*private int [][] accionesSemanticas ={{ 1, 1,-1, 1, 1, 1, 8, 8, 1, 8, 1, 1, 1, 1,-1,-1, 8, 8, 8, 8, 8, 8,-1, 1}, //0
-									  { 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //1
-									  { 4, 2, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, //2
-									  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //3
-									  { 5, 2, 5, 5, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, //4
-									  {-1, 2,-1,-1,-1,-1, 2, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //5
-									  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //6
-									  { 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, //7
-									  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 6,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //8
-									  { 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //9
-									  {-1, 2,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 6,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //10
-									  { 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 6, 3, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //11
-									  { 3, 3, 3, 3, 3, 3, 3,-1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, //12
-									  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //13
-									  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //14
-									  { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,-1, 7} //15
-};*/
-
 
 	InterfazAccionSemantica AS1 = new ASAgregar(); 
 	InterfazAccionSemantica AS2 = new ASChequearCadena();
@@ -74,11 +54,12 @@ public class AnalizadorLexico {
 		};
 	
 	public static int indiceLectura =0;
-	private int nroLinea = 1;
 	
-	
+	public static int nroLinea = 1;
+		
 	private Hashtable<Character,Integer> columnas=new Hashtable<Character,Integer>();
-	public void rellenar() {
+	
+	private void inicializarColumnas() {
 		columnas.put('a',0);	columnas.put('b',0);	columnas.put('c',0);	columnas.put('d',0);	
 		columnas.put('e',5);	columnas.put('f',0);	columnas.put('g',0);	columnas.put('h',0);	
 		columnas.put('i',0);	columnas.put('j',0);	columnas.put('k',0);	columnas.put('l',0);	
@@ -104,13 +85,13 @@ public class AnalizadorLexico {
 
 	private TablaSimbolos tablaSimbolos;
 
-	private TablaTokens tablaTokens = new TablaTokens();
+	private TablaTokens tablaTokens;
 	
 	private BufferedReader bf;
 	
 	private StringBuilder codigoLeido = new StringBuilder();
 	
-	public void leerArchivo() throws IOException {
+	private void leerArchivo() throws IOException {
 		FileReader fr = new FileReader("C:\\Users\\Larda\\Desktop\\datos.txt");
 		bf = new BufferedReader(fr);
 		String nuevaLinea = bf.readLine();
@@ -122,13 +103,13 @@ public class AnalizadorLexico {
 		codigoLeido.append("$");
 	}
 	
-	public AnalizadorLexico(TablaSimbolos tablaSimbolos2) throws IOException {
+	public AnalizadorLexico(TablaSimbolos tablaSimbolos2, TablaTokens tablaTokens2) throws IOException {
 		tablaSimbolos = tablaSimbolos2;
+		tablaTokens = tablaTokens2;
 		tablaTokens.CompletarTabla();
-		rellenar();
+		inicializarColumnas();
 		leerArchivo();
 	}
-	
 	
 	public int getToken() throws IOException {
 		
