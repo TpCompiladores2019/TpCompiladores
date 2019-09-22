@@ -46,7 +46,7 @@ public class AnalizadorLexico {
 };*/
 
 
-	InterfazAccionSemantica AS1 = new ASAgregar();
+	InterfazAccionSemantica AS1 = new ASAgregar(); 
 	InterfazAccionSemantica AS2 = new ASChequearCadena();
 	InterfazAccionSemantica AS3 = new ASChequearEntero();
 	InterfazAccionSemantica AS4 = new ASChequearFloat();
@@ -111,7 +111,7 @@ public class AnalizadorLexico {
 	private StringBuilder codigoLeido = new StringBuilder();
 	
 	public void leerArchivo() throws IOException {
-		FileReader fr = new FileReader("C:\\Users\\Juan\\Desktop\\datos.txt");
+		FileReader fr = new FileReader("C:\\Users\\Larda\\Desktop\\datos.txt");
 		bf = new BufferedReader(fr);
 		String nuevaLinea = bf.readLine();
 		while (nuevaLinea != null) {
@@ -140,9 +140,15 @@ public class AnalizadorLexico {
 			indiceLectura++;
 			int columna = (int)columnas.get(caracterleido);
 			if (accionesSemanticas[estadoActual][columna] != null)
-				nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens);
+				nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens,tablaSimbolos);
 			estadoActual = transicionEstados[estadoActual][columna];
 		}
 		return nroToken;	
+	}
+
+	public void imprimirTablaSimbolos() {
+
+		tablaSimbolos.imprimir();
+		
 	}
 }
