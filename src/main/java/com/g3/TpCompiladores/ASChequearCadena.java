@@ -14,7 +14,7 @@ public class ASChequearCadena implements InterfazAccionSemantica{
 		if (tablaTokens.contieneClave(salida)) // Es palabra reservada
 			return tablaTokens.getToken(salida);
 
-		tablaSimbolos.agregar(salida,"String"); // Si es palabra reservbada no se agrega a la tabla de simbolos
+		tablaSimbolos.agregar(salida,"String"); // Si es palabra reservbada no se agrega a la tabla de simbolos //TODO Mirar proque no es STRING
 		return tablaTokens.getToken("IDENTIFICADOR");
 		}
 	
