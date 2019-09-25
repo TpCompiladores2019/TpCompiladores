@@ -24,5 +24,9 @@ public class Compilador {
 
 		}
 		tablaSimbolos.imprimir();
+		for ( Lexico.Error e: AnalizadorLexico.listaErrores) {
+			System.out.println(e.toString());
+		}
+			
 }
 }

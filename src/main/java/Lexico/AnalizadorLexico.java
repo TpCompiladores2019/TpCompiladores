@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import AccionesSemanticas.ASAgregaYPasa;
 import AccionesSemanticas.ASAgregar;
@@ -44,11 +46,11 @@ public class AnalizadorLexico {
 	IAccionSemantica AS2 = new ASChequearCadena();
 	IAccionSemantica AS3 = new ASChequearEntero();
 	IAccionSemantica AS4 = new ASChequearFloat();
-	IAccionSemantica AS8 = new ASAgregaYPasa();
-	IAccionSemantica AS9 = new ASError();
 	IAccionSemantica AS5 = null;
 	IAccionSemantica AS6 = new ASCadenaUnaLinea();
 	IAccionSemantica AS7 = new ASAumentarNumLinea();
+	IAccionSemantica AS8 = new ASAgregaYPasa();
+	IAccionSemantica AS9 = new ASError();
 	IAccionSemantica AS10 = new ASConsumirComentario();
 	
 	private IAccionSemantica [][] accionesSemanticas={
@@ -77,6 +79,8 @@ public class AnalizadorLexico {
 	public static int indiceLectura =0;
 	
 	public static int nroLinea = 1;
+
+	public static List <Error>listaErrores = new ArrayList<Error>();
 		
 	private Hashtable<Character,Integer> columnas=new Hashtable<Character,Integer>();
 	
@@ -115,7 +119,7 @@ public class AnalizadorLexico {
 	private StringBuilder codigoLeido = new StringBuilder();
 	
 	private void leerArchivo() throws IOException {
-		FileReader fr = new FileReader("C:\\Users\\Juan\\Desktop\\datos.txt");
+		FileReader fr = new FileReader("C:\\Users\\Larda\\Desktop\\datos.txt");
 		bf = new BufferedReader(fr);
 		String nuevaLinea = bf.readLine();
 		while (nuevaLinea != null) {
