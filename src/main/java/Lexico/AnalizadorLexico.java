@@ -13,6 +13,7 @@ import AccionesSemanticas.ASCadenaUnaLinea;
 import AccionesSemanticas.ASChequearCadena;
 import AccionesSemanticas.ASChequearEntero;
 import AccionesSemanticas.ASChequearFloat;
+import AccionesSemanticas.ASConsumirComentario;
 import AccionesSemanticas.ASError;
 import AccionesSemanticas.IAccionSemantica;
 
@@ -48,9 +49,11 @@ public class AnalizadorLexico {
 	IAccionSemantica AS5 = null;
 	IAccionSemantica AS6 = new ASCadenaUnaLinea();
 	IAccionSemantica AS7 = new ASAumentarNumLinea();
+	IAccionSemantica AS10 = new ASConsumirComentario();
 	
 	private IAccionSemantica [][] accionesSemanticas={
-//		 L   D    _   .   E   e   -    +  /   *   :   >   <   =  ' '  tb   [   ]   (    )  ,   ;   \   n   % 
+//		   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 21  22  23  24 
+//		   L   D   _   .   E   e   -   +   /   *   :   >   <   = ' ' tb   [   ]   (   )  ,   ;   \   n   % 
 		{AS1,AS1,AS9,AS1,AS1,AS1,AS8,AS8,AS1,AS8,AS1,AS1,AS1,AS1,AS5,AS5,AS8,AS8,AS8,AS8,AS8,AS8,AS1,AS1,AS5}, //0
 	    {AS1,AS1,AS1,AS2,AS1,AS1,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS1,AS2}, //1
 		{AS3,AS1,AS3,AS1,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS3,AS2,AS2,AS3}, //2
@@ -63,7 +66,7 @@ public class AnalizadorLexico {
 		{AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS8,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2}, //9
 		{AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS8,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9,AS9}, //10
 		{AS2,AS2,AS1,AS2,AS1,AS1,AS2,AS2,AS2,AS2,AS2,AS8,AS2,AS8,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2}, //11
-		{AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS1,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2}, //12
+		{AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS10,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2,AS2}, //12
 		{AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5}, //13
 		{AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5,AS5}, //14
 		{AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS1,AS6},//15 /va accion semantico
@@ -98,7 +101,9 @@ public class AnalizadorLexico {
 		columnas.put(':',10);	columnas.put('>',11);	columnas.put('<',12);	columnas.put('=',13);	
 		columnas.put(' ',14);	columnas.put('	',15);	columnas.put('[',16);	columnas.put(']',17);	
 		columnas.put('(',18);	columnas.put(')',19);	columnas.put(',',20);	columnas.put(';',21);	
-		columnas.put('/',22);	columnas.put('%',24);   columnas.put('$',25);	
+		columnas.put('\n',22);	columnas.put('%',24);   columnas.put('$',25);	
+				
+				
 	}
 
 	private TablaSimbolos tablaSimbolos;
@@ -139,7 +144,9 @@ public class AnalizadorLexico {
 			System.out.println(caracterleido);
 			indiceLectura++;
 			int columna = (int)columnas.get(caracterleido);
-			if (accionesSemanticas[estadoActual][columna] != null)
+			//System.out.println("estado Actual: " + estadoActual);
+			//System.out.println("columna: " + columna);
+			if (accionesSemanticas[estadoActual][columna] != null) 
 				nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens,tablaSimbolos);
 			estadoActual = transicionEstados[estadoActual][columna]; 
 		}
