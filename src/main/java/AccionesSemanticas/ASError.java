@@ -9,9 +9,9 @@ public class ASError implements IAccionSemantica {
 
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
-		
 		Error nuevoError = new Error("La cadena no puede iniciar con ",AnalizadorLexico.nroLinea,"'"+caracter+"'","ERROR");
 		AnalizadorLexico.listaErrores.add(nuevoError);
+		System.out.println("entro");
 		 
 		return -100;
 	}
