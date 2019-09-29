@@ -5,14 +5,12 @@ import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 import Lexico.Error;
 
-public class ASError implements IAccionSemantica {
+public class ASErrorInicioCadena implements IAccionSemantica {
 
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		Error nuevoError = new Error("La cadena no puede iniciar con ",AnalizadorLexico.nroLinea,"'"+caracter+"'","ERROR");
-		AnalizadorLexico.listaErrores.add(nuevoError);
-		System.out.println("entro");
-		 
+		AnalizadorLexico.listaErrores.add(nuevoError);		 
 		return -100;
 	}
 
