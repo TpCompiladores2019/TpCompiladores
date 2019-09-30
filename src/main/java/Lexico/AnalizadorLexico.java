@@ -148,6 +148,9 @@ public class AnalizadorLexico {
 			System.out.println(caracterleido);
 			indiceLectura++;
 			int columna = (int)columnas.get(caracterleido);
+			//System.out.println("estadoActual: " + estadoActual );
+			//System.out.println("columna: " + columna);
+			
 			if (accionesSemanticas[estadoActual][columna] != null) 
 				nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens,tablaSimbolos);
 			estadoActual = transicionEstados[estadoActual][columna]; 
