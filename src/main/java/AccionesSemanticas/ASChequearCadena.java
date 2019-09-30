@@ -1,6 +1,7 @@
 package AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
+import Lexico.Error;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
@@ -9,11 +10,13 @@ public class ASChequearCadena implements IAccionSemantica{
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		AnalizadorLexico.indiceLectura--; // Esta bien esto??
 		String salida;
-		if (cadena.length() > 25)
+		if (cadena.length() > 25) {
 			salida = cadena.substring(0, 24);
+			Error w = new Error("La variable "+ cadena + " fue truncada",AnalizadorLexico.nroLinea,"","WARNING");
+			AnalizadorLexico.listaErrores.add(w);//AGREGAR A WARNIGN
+		}
 		else
 			salida = cadena.toString();	
-		// FALTA HACER EL WARNING
 		//cadena = salida; para que vuelva modifcado, hay que ver como se hace
 				
 		if (tablaTokens.contieneClave(salida)) // Es palabra reservada

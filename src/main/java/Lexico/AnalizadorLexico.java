@@ -15,6 +15,7 @@ import AccionesSemanticas.ASChequearCadena;
 import AccionesSemanticas.ASChequearEntero;
 import AccionesSemanticas.ASChequearFloat;
 import AccionesSemanticas.ASConsumirComentario;
+import AccionesSemanticas.ASErrorCadenaMultilinea;
 import AccionesSemanticas.ASErrorCaracterFaltante;
 import AccionesSemanticas.ASErrorInicioCadena;
 import AccionesSemanticas.IAccionSemantica;
@@ -23,7 +24,7 @@ public class AnalizadorLexico {
 										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; \n  %  $
 	private int [][] transicionEstados = {{ 1, 2, 0, 3, 1, 1,-1,-1,12,-1, 8, 9,11,10, 0, 0,-1,-1,-1,-1,-1,-1, 0,15,-1}, //0
 										  { 1, 1, 1,-1, 1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //1
-										  {-1, 2,-1, 3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //2
+										  {-1, 2,-1, 4,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //2
 										  { 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1}, //3
 										  {-1, 4,-1,-1, 5, 5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //4
 										  { 0, 7, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1}, //5
@@ -36,7 +37,7 @@ public class AnalizadorLexico {
 										  {-1,-1,-1,-1,-1,-1,-1,13,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //12
 										  {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,-1}, //13 //TODO consultar que onda el $ si no cierra el comentario
 										  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,-1}, //14
-										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,0,-1,-1}, //15
+										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0,-1,-1}, //15
 								};
 
 	IAccionSemantica AS1 = new ASAgregar(); 
@@ -50,26 +51,27 @@ public class AnalizadorLexico {
 	IAccionSemantica AS9 = new ASErrorInicioCadena();
 	IAccionSemantica AS10 = new ASConsumirComentario();
 	IAccionSemantica AS11 = new ASErrorCaracterFaltante();
+	IAccionSemantica AS12 = new ASErrorCadenaMultilinea();
 	
 	private IAccionSemantica [][] accionesSemanticas={
-//		   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23 
-//		   L   D    _    .    E    e    -    +    /    *    :    >    <    =   ' '  tb    [    ]    (    )    ,    ;    \n   % 
-		{AS1 ,AS1 ,AS9 ,AS1 ,AS1 ,AS1 ,AS8 ,AS8 ,AS1 ,AS8 ,AS1 ,AS1 ,AS1 ,AS1 ,AS5 ,AS5 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS7 ,AS5}, //0
-	    {AS1 ,AS1 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //1
-		{AS3 ,AS1 ,AS3 ,AS1 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3}, //2
-		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //3
-		{AS4 ,AS1 ,AS4 ,AS4 ,AS1 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4}, //4
-		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //5
-		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //6
-		{AS4 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4}, //7
-		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //8
-		{AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS8 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //9
-		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //10
-		{AS2 ,AS2 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS8 ,AS2 ,AS8 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //11
-		{AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS10,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //12
-		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5}, //13
-		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5}, //14
-		{AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS9 ,AS6},//15 
+//		   0   1    2    3    4    5    6    7    8    9   10   11    12   13  14   15   16   17   18   19   20   21    22  23   24
+//		   L   D    _    .    E    e    -    +    /    *    :    >    <    =   ' '  tb    [    ]    (    )    ,    ;    \n   %    $
+		{AS1 ,AS1 ,AS9 ,AS1 ,AS1 ,AS1 ,AS8 ,AS8 ,AS1 ,AS8 ,AS1 ,AS1 ,AS1 ,AS1 ,AS5 ,AS5 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS7 ,AS5, AS5}, //0
+	    {AS1 ,AS1 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2, AS5}, //1
+		{AS3 ,AS1 ,AS3 ,AS1 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3, AS5}, //2
+		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS5}, //3
+		{AS4 ,AS1 ,AS4 ,AS4 ,AS1 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4, AS5}, //4
+		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS5}, //5
+		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS5}, //6
+		{AS4 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4, AS5}, //7
+		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS5}, //8
+		{AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS8 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2, AS5}, //9
+		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS5}, //10
+		{AS2 ,AS2 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS8 ,AS2 ,AS8 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2, AS5}, //11
+		{AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS10,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2, AS5}, //12
+		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5, AS5}, //13
+		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5, AS5}, //14
+		{AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS12 ,AS6, AS5},//15 
 		};
 	
 
@@ -78,6 +80,7 @@ public class AnalizadorLexico {
 	public static int nroLinea = 1;
 
 	public static List <Error>listaErrores = new ArrayList<Error>();
+	public static List <Error>listaWarning = new ArrayList<Error>();
 		
 	private Hashtable<Character,Integer> columnas=new Hashtable<Character,Integer>();
 	
@@ -102,7 +105,7 @@ public class AnalizadorLexico {
 		columnas.put(':',10);	columnas.put('>',11);	columnas.put('<',12);	columnas.put('=',13);	
 		columnas.put(' ',14);	columnas.put('	',15);	columnas.put('[',16);	columnas.put(']',17);	
 		columnas.put('(',18);	columnas.put(')',19);	columnas.put(',',20);	columnas.put(';',21);	
-		columnas.put('\n',22);	columnas.put('%',23);   columnas.put('$',25);	
+		columnas.put('\n',22);	columnas.put('%',23);   columnas.put('$',24);	
 				
 				
 	}
@@ -116,7 +119,7 @@ public class AnalizadorLexico {
 	private StringBuilder codigoLeido = new StringBuilder();
 	
 	private void leerArchivo() throws IOException {
-		FileReader fr = new FileReader("C:\\Users\\Larda\\Desktop\\datos.txt");
+		FileReader fr = new FileReader("C:\\Users\\Juan\\Desktop\\datos.txt");
 		bf = new BufferedReader(fr);
 		String nuevaLinea = bf.readLine();
 		while (nuevaLinea != null) {
