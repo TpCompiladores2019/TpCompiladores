@@ -19,7 +19,7 @@ public class Compilador {
 		TablaSimbolos tablaSimbolos =  new TablaSimbolos();
 		TablaTokens tablaTokens  = new TablaTokens();
 		AnalizadorLexico analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens);
-		for (int i =0 ; i < 5 ; i++) {
+		for (int i =0 ; i < 2 ; i++) {
 			System.out.println("Nro de token: " + analizarLexico.getToken());
 
 		}
