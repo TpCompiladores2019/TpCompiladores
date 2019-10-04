@@ -6,25 +6,26 @@ public class TablaTokens {
 
 	private Hashtable<String,Integer> tokens = new Hashtable<String,Integer>();
 	
-	public final static int ID=260;
-	public final static int CTEE=261;
-	public final static int CADENA=262;
-	public final static int ASIGNACION=263;
-	public final static int MAYORIGUAL=264;
-	public final static int MENORIGUAL=265;
-	public final static int IGUAL=266;
-	public final static int DISTINTO=267;
-	public final static int IF=268;
-	public final static int ELSE=269;
-	public final static int END_IF=270;
-	public final static int PRINT=271;
-	public final static int INT=272;
-	public final static int BEGIN=273;
-	public final static int END=274;
-	public final static int DO=275;
-	public final static int UNTIL=276;
-	public final static int FLOAT=277;
-	public final static int CTEF =278;
+	public final static int YYERRCODE=256;
+	public final static int ID=257;
+	public final static int CTE_E=258;
+	public final static int CTE_F =259;
+	public final static int CADENA=260;
+	public final static int ASIGNACION=261;
+	public final static int MAYORIGUAL=262;
+	public final static int MENORIGUAL=263;
+	public final static int DISTINTO=264;
+	public final static int IGUAL=265;
+	public final static int IF=266;
+	public final static int ELSE=267;
+	public final static int END_IF=268;
+	public final static int PRINT=269;
+	public final static int INT=270;
+	public final static int BEGIN=271;
+	public final static int END=272;
+	public final static int DO=273;
+	public final static int UNTIL=274;
+	public final static int FLOAT=275;
 	
 	public void CompletarTabla() {
 		//Palabras Reservadas
@@ -41,8 +42,8 @@ public class TablaTokens {
 		//Identificador
 		tokens.put("IDENTIFICADOR",ID);
 		//Constantes
-		tokens.put("CONSTANTE E",CTEE);
-		tokens.put("CONSTANTE F",CTEF);
+		tokens.put("CONSTANTE E",CTE_E);
+		tokens.put("CONSTANTE F",CTE_F);
 		//Cadena
 		tokens.put("CADENA",(int)CADENA);
 		//Asignacion
