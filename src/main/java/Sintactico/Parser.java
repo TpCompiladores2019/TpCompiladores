@@ -1,5 +1,10 @@
 package Sintactico;
 
+import java.io.IOException;
+
+import Lexico.AnalizadorLexico;
+import Lexico.TablaSimbolos;
+
 //### This file created by BYACC 1.8(/Java extension  1.15)
 //### Java capabilities added 7 Jan 97, Bob Jamison
 //### Updated : 27 Nov 97  -- Bob Jamison, Joe Nieten
@@ -28,6 +33,9 @@ package Sintactico;
 public class Parser
 {
 
+private AnalizadorLexico analizadorLexico;
+private TablaSimbolos tablaSimbolos;
+	
 boolean yydebug;        //do I want debug output?
 int yynerrs;            //number of errors so far
 int yyerrflag;          //was there an error?
@@ -404,10 +412,13 @@ int yystate;   //current parsing state from state table
 String yys;    //current token string
 
 
+public int yyparser() throws IOException{
+	return yyparse();
+}
 //###############################################################
 // method: yyparse : parse input and execute indicated items
 //###############################################################
-int yyparse()
+int yyparse() throws IOException
 {
 boolean doaction;
   init_stacks();
@@ -571,6 +582,14 @@ boolean doaction;
     }//main loop
   return 0;//yyaccept!!
 }
+private void yyerror(String string) {
+	// TODO Auto-generated method stub
+	
+}
+private int yylex() throws IOException {
+	int id = analizadorLexico.yylex();
+	return id;
+}
 //## end of method parse() ######################################
 
 
@@ -580,8 +599,9 @@ boolean doaction;
  * A default run method, used for operating this parser
  * object in the background.  It is intended for extending Thread
  * or implementing Runnable.  Turn off with -Jnorun .
+ * @throws IOException 
  */
-public void run()
+public void run() throws IOException
 {
   yyparse();
 }
@@ -609,6 +629,10 @@ public Parser(boolean debugMe)
   yydebug=debugMe;
 }
 //###############################################################
+public Parser(AnalizadorLexico analizarLexico, TablaSimbolos tablaSimbolos) {
+	this.analizadorLexico = analizarLexico;
+	this.tablaSimbolos=tablaSimbolos;
+}
 
 
 

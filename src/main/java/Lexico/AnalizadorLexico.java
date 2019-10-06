@@ -7,55 +7,57 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import AccionesSemanticas.ASAgregaYPasa;
+import AccionesSemanticas.ASFinalOAC;
 import AccionesSemanticas.ASAgregar;
 import AccionesSemanticas.ASAumentarNumLinea;
-import AccionesSemanticas.ASCadenaUnaLinea;
-import AccionesSemanticas.ASChequearCadena;
-import AccionesSemanticas.ASChequearEntero;
-import AccionesSemanticas.ASChequearFloat;
+import AccionesSemanticas.ASFinalCadena;
+import AccionesSemanticas.ASFinalID;
+import AccionesSemanticas.ASFinalEntero;
+import AccionesSemanticas.ASFinalFloat;
 import AccionesSemanticas.ASConsumirComentario;
 import AccionesSemanticas.ASErrorCadenaMultilinea;
 import AccionesSemanticas.ASErrorCaracterFaltante;
-import AccionesSemanticas.ASErrorInicioCadena;
+import AccionesSemanticas.ASFinal;
+import AccionesSemanticas.ASError;
 import AccionesSemanticas.IAccionSemantica;
 
 public class AnalizadorLexico {
 	private final int F = 400;
-	
+	private final int E = -1;
 	
 	
 										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; \n  % 
-	private int [][] transicionEstados = {{ 1, 2, 0, 3, 1, 1,-1,-1,12,-1, 8, 9,11,10, 0, 0,-1,-1,-1,-1,-1,-1, 0,15}, //0
-										  { 1, 1, 1,-1, 1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //1
-										  {-1, 2,-1, 4,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //2
-										  { 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //3
-										  {-1, 4,-1,-1, 5, 5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //4
-										  { 0, 7, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //5
-										  { 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //6
-										  {-1, 7,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //7
-										  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //8
-										  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //9
-										  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //10
-										  {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //11
-										  {-1,-1,-1,-1,-1,-1,-1,13,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, //12
+	private int [][] transicionEstados = {{ 1, 2, E, 3, 1, 1, F, F,12, F, 8, 9,11,10, 0, 0, F, F, F, F, F, F, 0,15}, //0
+										  { 1, 1, 1, F, 1, 1, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //1
+										  { F, 2, F, 4, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //2
+										  { E, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //3
+										  { F, 4, F, F, 5, 5, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //4
+										  { E, 7, E, E, E, E, 6, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //5
+										  { E, 7, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //6
+										  { F, 7, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //7
+										  { E, E, E, E, E, E, E, E, E, E, E, E, E, F, E, E, E, E, E, E, E, E, E, E}, //8
+										  { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //9
+										  { E, E, E, E, E, E, E, E, E, E, E, E, E, F, E, E, E, E, E, E, E, E, E, 0}, //10
+										  { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //11
+										  { F, F, F, F, F, F, F,13, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //12
 										  {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //13 
 										  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //14
-										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0,-1}, //15
+										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0, F}, //15
 								};
 
 	IAccionSemantica AS1 = new ASAgregar(); 
-	IAccionSemantica AS2 = new ASChequearCadena();
-	IAccionSemantica AS3 = new ASChequearEntero();
-	IAccionSemantica AS4 = new ASChequearFloat();
+	IAccionSemantica AS2 = new ASFinalID();
+	IAccionSemantica AS3 = new ASFinalEntero();
+	IAccionSemantica AS4 = new ASFinalFloat();
 	IAccionSemantica AS5 = null;
-	IAccionSemantica AS6 = new ASCadenaUnaLinea();
+	IAccionSemantica AS6 = new ASFinalCadena();
 	IAccionSemantica AS7 = new ASAumentarNumLinea();
-	IAccionSemantica AS8 = new ASAgregaYPasa();
-	IAccionSemantica AS9 = new ASErrorInicioCadena();
+	IAccionSemantica AS8 = new ASFinalOAC(); //mirar nombre
+	IAccionSemantica AS9 = new ASError();
 	IAccionSemantica AS10 = new ASConsumirComentario();
 	IAccionSemantica AS11 = new ASErrorCaracterFaltante();
 	IAccionSemantica AS12 = new ASErrorCadenaMultilinea();
+	IAccionSemantica AS13 = new ASFinal();
 	
 	private IAccionSemantica [][] accionesSemanticas={
 //		   0   1    2    3    4    5    6    7    8    9   10   11    12   13  14   15   16   17   18   19   20   21    22  23  
@@ -66,19 +68,19 @@ public class AnalizadorLexico {
 		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //3
 		{AS4 ,AS1 ,AS4 ,AS4 ,AS1 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4}, //4
 		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //5
-		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //6
+		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //6
 		{AS4 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4}, //7
 		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //8
-		{AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS8 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //9
+		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS8,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13}, //9
 		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //10
-		{AS2 ,AS2 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS8 ,AS2 ,AS8 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //11
-		{AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS10,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //12
-		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5}, //13
-		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5}, //14
+		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS8,AS13,AS8,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13}, //11
+		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS10,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13},  //12
+		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5}, //13
+		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5}, //14
 		{AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS12 ,AS6},//15 
 		};
 	
-
+	
 	public static int indiceLectura =0;	
 	public static int nroLinea = 1;
 
@@ -111,7 +113,12 @@ public class AnalizadorLexico {
 		columnas.put('(',18);	columnas.put(')',19);	columnas.put(',',20);	columnas.put(';',21);	
 		columnas.put('\n',22);	columnas.put('%',23);   			
 	}
-
+	
+	private int getColumna(char caracterLeido) {
+		if (columnas.containsKey(caracterLeido))
+			return (int) columnas.get(caracterLeido);
+		return 2;
+	}
 	private TablaSimbolos tablaSimbolos;
 
 	private TablaTokens tablaTokens;
@@ -141,13 +148,12 @@ public class AnalizadorLexico {
 		int numAscii = -1;
 
 		StringBuilder cadena = new StringBuilder();
-		while (estadoActual != -1 && indiceLectura<ascii.size()){ //llega a estado final
+		while (estadoActual != F && estadoActual != E && indiceLectura<ascii.size()){ //llega a estado final
 			numAscii = ascii.get(indiceLectura);
 			if(numAscii != 13) {
 				char caracterleido = (char) numAscii;
-				System.out.println(caracterleido);
 				indiceLectura++;
-				int columna = (int)columnas.get(caracterleido);
+				int columna = getColumna(caracterleido);
 				if (accionesSemanticas[estadoActual][columna] != null) 
 					nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens,tablaSimbolos);
 				estadoActual = transicionEstados[estadoActual][columna];

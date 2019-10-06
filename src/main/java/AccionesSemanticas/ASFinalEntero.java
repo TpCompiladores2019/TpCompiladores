@@ -4,7 +4,7 @@ import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 import Lexico.Error;
-public class ASChequearEntero implements IAccionSemantica {
+public class ASFinalEntero implements IAccionSemantica {
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		AnalizadorLexico.indiceLectura--;

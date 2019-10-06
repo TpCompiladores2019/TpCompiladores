@@ -9,19 +9,21 @@ import java.util.HashMap;
 import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
+import Sintactico.Parser;
 
 public class Compilador {
 
 	static int posicion;
 	
 	public static void main(String[] args) throws IOException {
-
+		
 		TablaSimbolos tablaSimbolos =  new TablaSimbolos();
 		TablaTokens tablaTokens  = new TablaTokens();
 		String path = "C:\\Users\\Juan\\Desktop\\datos.txt";
+		
 		AnalizadorLexico analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,path);
 		for (int i =0 ; i < 7 ; i++) {
-			System.out.println("Nro de token: " + analizarLexico.getToken());
+			System.out.println("Nro de token: " + analizarLexico.yylex());
 
 		}
 		tablaSimbolos.imprimir();

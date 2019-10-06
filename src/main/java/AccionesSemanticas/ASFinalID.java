@@ -5,10 +5,10 @@ import Lexico.Error;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASChequearCadena implements IAccionSemantica{
+public class ASFinalID implements IAccionSemantica{
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
-		AnalizadorLexico.indiceLectura--; // Esta bien esto??
+		AnalizadorLexico.indiceLectura--; // 
 		String salida;
 		if (cadena.length() > 25) {
 			salida = cadena.substring(0, 24);

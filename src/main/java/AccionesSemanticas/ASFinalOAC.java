@@ -3,12 +3,11 @@ package AccionesSemanticas;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASCadenaUnaLinea implements IAccionSemantica{
+public class ASFinalOAC implements IAccionSemantica {
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
-	
-		tablaSimbolos.agregar(cadena.toString(),"cadena");
-		return tablaTokens.getToken("CADENA");
+		cadena.append(caracter);
+		return tablaTokens.getToken(cadena.toString());
 	}
 
 }

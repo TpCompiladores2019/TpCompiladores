@@ -5,11 +5,11 @@ import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 import Lexico.Error;
 
-public class ASErrorInicioCadena implements IAccionSemantica {
+public class ASError implements IAccionSemantica {
 
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
-		Error nuevoError = new Error("La cadena no puede iniciar con ",AnalizadorLexico.nroLinea,"'"+caracter+"'","ERROR");
+		Error nuevoError = new Error("Token ",AnalizadorLexico.nroLinea,"'"+caracter+"' invalido","ERROR");
 		AnalizadorLexico.listaErrores.add(nuevoError);		 
 		return -1;
 	}
