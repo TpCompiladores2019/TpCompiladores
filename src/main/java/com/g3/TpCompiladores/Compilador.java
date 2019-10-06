@@ -19,7 +19,7 @@ public class Compilador {
 		
 		TablaSimbolos tablaSimbolos =  new TablaSimbolos();
 		TablaTokens tablaTokens  = new TablaTokens();
-		String path = "C:\\Users\\Juan\\Desktop\\datos.txt";
+		String path = "C:\\Users\\Larda\\Desktop\\datos.txt";
 		
 		AnalizadorLexico analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,path);
 		for (int i =0 ; i < 7 ; i++) {
@@ -30,6 +30,5 @@ public class Compilador {
 		for ( Lexico.Error e: AnalizadorLexico.listaErrores) {
 			System.out.println(e.toString());
 		}
-			
 }
 }

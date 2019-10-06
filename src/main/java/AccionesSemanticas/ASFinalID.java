@@ -13,7 +13,7 @@ public class ASFinalID implements IAccionSemantica{
 		if (cadena.length() > 25) {
 			salida = cadena.substring(0, 24);
 			Error w = new Error("La variable "+ cadena + " fue truncada",AnalizadorLexico.nroLinea,"","WARNING");
-			AnalizadorLexico.listaErrores.add(w);//AGREGAR A WARNIGN
+			AnalizadorLexico.listaWarning.add(w);//AGREGAR A WARNIGN
 		}
 		else
 			salida = cadena.toString();	
