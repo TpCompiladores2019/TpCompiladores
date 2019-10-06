@@ -26,23 +26,23 @@ public class AnalizadorLexico {
 	private final int E = -1;
 	
 	
-										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; \n  % 
-	private int [][] transicionEstados = {{ 1, 2, E, 3, 1, 1, F, F,12, F, 8, 9,11,10, 0, 0, F, F, F, F, F, F, 0,15}, //0
-										  { 1, 1, 1, F, 1, 1, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //1
-										  { F, 2, F, 4, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //2
-										  { E, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //3
-										  { F, 4, F, F, 5, 5, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //4
-										  { E, 7, E, E, E, E, 6, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //5
-										  { E, 7, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //6
-										  { F, 7, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //7
-										  { E, E, E, E, E, E, E, E, E, E, E, E, E, F, E, E, E, E, E, E, E, E, E, E}, //8
-										  { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //9
-										  { E, E, E, E, E, E, E, E, E, E, E, E, E, F, E, E, E, E, E, E, E, E, E, 0}, //10
-										  { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //11
-										  { F, F, F, F, F, F, F,13, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F}, //12
-										  {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //13 
-										  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13}, //14
-										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0, F}, //15
+										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; \n  %  otros
+	private int [][] transicionEstados = {{ 1, 2, E, 3, 1, 1, F, F,12, F, 8, 9,11,10, 0, 0, F, F, F, F, F, F, 0,15, E}, //0
+										  { 1, 1, 1, F, 1, 1, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //1
+										  { F, 2, F, 4, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //2
+										  { E, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //3
+										  { F, 4, F, F, 5, 5, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //4
+										  { E, 7, E, E, E, E, 6, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //5
+										  { E, 7, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //6
+										  { F, 7, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //7
+										  { E, E, E, E, E, E, E, E, E, E, E, E, E, F, E, E, E, E, E, E, E, E, E, E, E}, //8
+										  { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //9
+										  { E, E, E, E, E, E, E, E, E, E, E, E, E, F, E, E, E, E, E, E, E, E, E, 0, E}, //10
+										  { F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //11
+										  { F, F, F, F, F, F, F,13, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //12
+										  {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13, 13}, //13 
+										  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13, 13}, //14
+										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0, F, E}, //15
 								};
 
 	IAccionSemantica AS1 = new ASAgregar(); 
@@ -60,24 +60,24 @@ public class AnalizadorLexico {
 	IAccionSemantica AS13 = new ASFinal();
 	
 	private IAccionSemantica [][] accionesSemanticas={
-//		   0   1    2    3    4    5    6    7    8    9   10   11    12   13  14   15   16   17   18   19   20   21    22  23  
-//		   L   D    _    .    E    e    -    +    /    *    :    >    <    =   ' '  tb    [    ]    (    )    ,    ;    \n   %  
-		{AS1 ,AS1 ,AS9 ,AS1 ,AS1 ,AS1 ,AS8 ,AS8 ,AS1 ,AS8 ,AS1 ,AS1 ,AS1 ,AS1 ,AS5 ,AS5 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS7 ,AS5}, //0
-	    {AS1 ,AS1 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2}, //1
-		{AS3 ,AS1 ,AS3 ,AS1 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3}, //2
-		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //3
-		{AS4 ,AS1 ,AS4 ,AS4 ,AS1 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4}, //4
-		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //5
-		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //6
-		{AS4 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4}, //7
-		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //8
-		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS8,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13}, //9
-		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11}, //10
-		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS8,AS13,AS8,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13}, //11
-		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS10,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13},  //12
-		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5}, //13
-		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5}, //14
-		{AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS12 ,AS6},//15 
+//		   0   1    2    3    4    5    6    7    8    9   10   11    12   13  14   15   16   17   18   19   20   21    22  23	24  
+//		   L   D    _    .    E    e    -    +    /    *    :    >    <    =   ' '  tb    [    ]    (    )    ,    ;    \n   %  otros
+		{AS1 ,AS1 ,AS9 ,AS1 ,AS1 ,AS1 ,AS8 ,AS8 ,AS1 ,AS8 ,AS1 ,AS1 ,AS1 ,AS1 ,AS5 ,AS5 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS7 ,AS5, AS9}, //0
+	    {AS1 ,AS1 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2, AS9}, //1
+		{AS3 ,AS1 ,AS3 ,AS1 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3, AS9}, //2
+		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //3
+		{AS4 ,AS1 ,AS4 ,AS4 ,AS1 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4, AS9}, //4
+		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //5
+		{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //6
+		{AS4 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4, AS9}, //7
+		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11, AS9}, //8
+		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS8,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13, AS9}, //9
+		{AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS8 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11, AS9}, //10
+		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS8,AS13,AS8,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13, AS9}, //11
+		{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS10,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13, AS9},  //12
+		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5, AS5}, //13
+		{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5, AS5}, //14
+		{AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS12 ,AS6, AS9},//15 
 		};
 	
 	
@@ -117,7 +117,7 @@ public class AnalizadorLexico {
 	private int getColumna(char caracterLeido) {
 		if (columnas.containsKey(caracterLeido))
 			return (int) columnas.get(caracterLeido);
-		return 2;
+		return 24;
 	}
 	private TablaSimbolos tablaSimbolos;
 
@@ -152,8 +152,11 @@ public class AnalizadorLexico {
 			numAscii = ascii.get(indiceLectura);
 			if(numAscii != 13) {
 				char caracterleido = (char) numAscii;
+				System.out.println(caracterleido);
 				indiceLectura++;
 				int columna = getColumna(caracterleido);
+				System.out.println("estado" + estadoActual);
+				System.out.println("Columna: " + columna);
 				if (accionesSemanticas[estadoActual][columna] != null) 
 					nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens,tablaSimbolos);
 				estadoActual = transicionEstados[estadoActual][columna];
