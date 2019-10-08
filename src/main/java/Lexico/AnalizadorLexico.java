@@ -20,6 +20,7 @@ import AccionesSemanticas.ASErrorCaracterFaltante;
 import AccionesSemanticas.ASFinal;
 import AccionesSemanticas.ASError;
 import AccionesSemanticas.IAccionSemantica;
+import Sintactico.ParserVal;
 
 public class AnalizadorLexico {
 	private final int F = 400;
@@ -83,6 +84,7 @@ public class AnalizadorLexico {
 	
 	public static int indiceLectura =0;	
 	public static int nroLinea = 1;
+	boolean porcentaje=false;
 
 
 	public static List <Error>listaErrores = new ArrayList<Error>();
@@ -126,7 +128,7 @@ public class AnalizadorLexico {
 	private FileReader fr;
 	private ArrayList<Integer> ascii = new ArrayList<Integer>();
 	
-	
+
 	
 	public AnalizadorLexico(TablaSimbolos tablaSimbolos, TablaTokens tablaTokens,String path) throws IOException {
 		this.tablaSimbolos = tablaSimbolos;
@@ -141,22 +143,30 @@ public class AnalizadorLexico {
 		ascii.add(32);
 	}
 	
-	public int yylex() throws IOException {
+	public void checkPorcentaje(char c) {
+		if (c=='%') {
+			porcentaje=!porcentaje;
+		}
+	}
+	
+	public int yylex() {
 		
 		int nroToken = -1;
 		int estadoActual = 0;
 		int numAscii = -1;
+		
 
 		StringBuilder cadena = new StringBuilder();
 		while (estadoActual != F && estadoActual != E && indiceLectura<ascii.size()){ //llega a estado final
 			numAscii = ascii.get(indiceLectura);
 			if(numAscii != 13) {
 				char caracterleido = (char) numAscii;
+				checkPorcentaje(caracterleido);
 				System.out.println(caracterleido);
 				indiceLectura++;
 				int columna = getColumna(caracterleido);
-				System.out.println("estado" + estadoActual);
-				System.out.println("Columna: " + columna);
+				//System.out.println("estado" + estadoActual);
+				//System.out.println("Columna: " + columna);
 				if (accionesSemanticas[estadoActual][columna] != null) 
 					nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens,tablaSimbolos);
 				estadoActual = transicionEstados[estadoActual][columna];
@@ -164,6 +174,13 @@ public class AnalizadorLexico {
 			else
 				indiceLectura++;
 		}
+		if(indiceLectura==ascii.size()) {
+			if (porcentaje) 
+				System.out.println("ERRROORRRR");
+			return 0;
+			}
+//		if (tablaSimbolos.existeClave(cadena.toString()))
+//			parserVal.sval = cadena.toString();
 		return nroToken;	
 	}
 

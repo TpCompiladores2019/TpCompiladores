@@ -12,7 +12,7 @@
 	/* Comparadores */
 	MAYORIGUAL 
 	MENORIGUAL 
-	DISTINTO
+	DESTINTO
 	IGUAL
 	 
 	
@@ -20,7 +20,7 @@
 	IF
 	ELSE
 	END_IF
-	PRINT
+	PRINNT
 	INT
 	BEGIN
 	END
@@ -38,8 +38,8 @@
 			 ;
 
 	conjunto_sentencias : sentencias_declarativas
-						| sentencias_declarativas sentencias_ejecutables
-						| sentencias_ejecutables
+						| sentencias_declarativas begin sentencias_ejecutables end
+						| begin sentencias_ejecutables end
 						;
 	
 	sentencias_declarativas : sentencias_declarativas sentencia_declarativa
@@ -50,16 +50,16 @@
 							| sentencia_ejecutable
 							;
 							
-	sentencia_declarativa : tipo lista_variables
+	sentencia_declarativa : tipo lista_variables ';'
 						  | tipo ID '[' CTE_E ']' ';'
 						  ;
 							
-	tipo : INT 
-	 	 | FLOAT
+	tipo : int 
+	 	 | float
 		 ;
 		 
 	lista_variables : lista_variables ',' ID 
-					| ID ';'
+					| ID
 					;
 					
 	sentencia_ejecutable : selecion_ejecutable
@@ -68,8 +68,8 @@
 						  | asign
 						  ;
 	
-	selecion_ejecutable : IF '(' condicion ')' bloque_sentencias ELSE bloque_sentencias END_IF ';'
-						| IF '(' condicion ')' bloque_sentencias END_IF ';'
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else bloque_sentencias end_if ';'
+						| if '(' condicion ')' bloque_sentencias end_if ';'
 						;
 						
 	condicion : expresion_aritmetica operador expresion_aritmetica
@@ -100,20 +100,21 @@
 			 | MENORIGUAL
 			 | '>'
 			 | MAYORIGUAL
-			 | DISTINTO
+			 | DESTINTO
 			 | IGUAL
 			 ;
 			
 	bloque_sentencias : sentencia_declarativa
 					  | sentencia_ejecutable
-					  | BEGIN conjunto_sentencias END
+					  | begin sentencias sentencia_ejecutable end
+					  | begin sentencias sentencia_declarativa end
 					  ;
 
 	
-	control_ejecutable : DO bloque_sentencias UNTIL '(' condicion ')' ';'
+	control_ejecutable : do bloque_sentencias until '(' condicion ')' ';'
 						;
 	
-	salida_ejecutable : PRINT '(' CADENA ')' ';'
+	salida_ejecutable : print '(' CADENA ')' ';'
 					  ;
 	asign : variable ASIGNACION expresion_aritmetica ';'
 		  ;
@@ -121,6 +122,11 @@
 	invocacion_metodo : ID '.' ID '(' ')' 
 					  ;
 
+	sentencias : sentencias sentencia_declarativa
+			   | sentencias sentencia_ejecutable
+			   | sentencia_declarativa
+			   | sentencia_ejecutable
+			   ;
 
 
 

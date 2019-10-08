@@ -11,6 +11,7 @@ import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 import Sintactico.Parser;
 
+
 public class Compilador {
 
 	static int posicion;
@@ -19,13 +20,17 @@ public class Compilador {
 		
 		TablaSimbolos tablaSimbolos =  new TablaSimbolos();
 		TablaTokens tablaTokens  = new TablaTokens();
-		String path = "C:\\Users\\Larda\\Desktop\\datos.txt";
-		
+		//ParserVal parserVal = new ParserVal();
+		String path = "C:\\Users\\Juan\\Desktop\\datos.txt";
 		AnalizadorLexico analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,path);
-		for (int i =0 ; i < 7 ; i++) {
-			System.out.println("Nro de token: " + analizarLexico.yylex());
+		Parser parser = new Parser(analizarLexico,tablaSimbolos);
+		
+		int nroToken=-1;
+		/*while (nroToken != 0) {
+			nroToken=analizarLexico.yylex();
+		}*/
 
-		}
+		System.out.println(parser.yyparser());
 		tablaSimbolos.imprimir();
 		for ( Lexico.Error e: AnalizadorLexico.listaErrores) {
 			System.out.println(e.toString());
