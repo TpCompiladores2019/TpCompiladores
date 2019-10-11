@@ -1,0 +1,2487 @@
+   0  $accept : programa $end
+
+   1  programa : conjunto_sentencias
+
+   2  conjunto_sentencias : sentencias_declarativas
+   3                      | sentencias_declarativas begin sentencias_ejecutables end
+   4                      | begin sentencias_ejecutables end
+
+   5  sentencias_declarativas : sentencias_declarativas sentencia_declarativa
+   6                          | sentencia_declarativa
+
+   7  sentencias_ejecutables : sentencias_ejecutables sentencia_ejecutable
+   8                         | sentencia_ejecutable
+
+   9  sentencia_declarativa : tipo lista_variables ';'
+  10                        | tipo ID '[' CTE_E ']' ';'
+  11                        | ID '[' CTE_E ']' ';'
+  12                        | lista_variables ';'
+  13                        | tipo ID '[' CTE_E ']'
+  14                        | tipo lista_variables
+  15                        | tipo ID '[' CTE_E ';'
+  16                        | tipo ID CTE_E ']' ';'
+  17                        | tipo ';'
+  18                        | tipo '[' CTE_E ']' ';'
+  19                        | tipo ID '[' ']' ';'
+
+  20  tipo : int
+  21       | float
+
+  22  lista_variables : lista_variables ',' ID
+  23                  | ID
+
+  24  sentencia_ejecutable : selecion_ejecutable
+  25                       | control_ejecutable
+  26                       | salida_ejecutable
+  27                       | asign
+
+  28  selecion_ejecutable : if '(' condicion ')' bloque_sentencias else bloque_sentencias end_if ';'
+  29                      | if '(' condicion ')' bloque_sentencias end_if ';'
+  30                      | if '(' condicion ')' bloque_sentencias else bloque_sentencias ';'
+  31                      | if '(' condicion ')' bloque_sentencias bloque_sentencias end_if ';'
+  32                      | if '(' condicion bloque_sentencias else bloque_sentencias end_if ';'
+  33                      | if '(' ')' bloque_sentencias else bloque_sentencias end_if ';'
+  34                      | if condicion ')' bloque_sentencias else bloque_sentencias end_if ';'
+  35                      | '(' condicion ')' bloque_sentencias else bloque_sentencias end_if ';'
+  36                      | '(' condicion ')' bloque_sentencias end_if ';'
+  37                      | if condicion ')' bloque_sentencias end_if ';'
+  38                      | if '(' ')' bloque_sentencias end_if ';'
+  39                      | if '(' condicion bloque_sentencias end_if ';'
+  40                      | if '(' condicion ')' end_if ';'
+  41                      | if '(' condicion ')' bloque_sentencias ';'
+
+  42  condicion : expresion_aritmetica operador expresion_aritmetica
+  43            | operador expresion_aritmetica
+  44            | expresion_aritmetica expresion_aritmetica
+  45            | expresion_aritmetica operador
+
+  46  expresion_aritmetica : expresion_aritmetica '+' termino
+  47                       | expresion_aritmetica '-' termino
+  48                       | termino
+
+  49  termino : termino '*' factor
+  50          | termino '/' factor
+  51          | factor
+
+  52  factor : variable
+  53         | CTE_E
+  54         | CTE_F
+  55         | invocacion_metodo
+
+  56  variable : ID '[' ID ']'
+  57           | ID '[' CTE_E ']'
+  58           | ID
+
+  59  operador : '<'
+  60           | MENORIGUAL
+  61           | '>'
+  62           | MAYORIGUAL
+  63           | DESTINTO
+  64           | IGUAL
+
+  65  bloque_sentencias : sentencia_declarativa
+  66                    | sentencia_ejecutable
+  67                    | begin sentencias sentencia_ejecutable end
+  68                    | begin sentencias sentencia_declarativa end
+
+  69  control_ejecutable : do bloque_sentencias until '(' condicion ')' ';'
+  70                     | bloque_sentencias until '(' condicion ')' ';'
+  71                     | do until '(' condicion ')' ';'
+  72                     | do bloque_sentencias '(' condicion ')' ';'
+  73                     | do bloque_sentencias until condicion ')' ';'
+  74                     | do bloque_sentencias until '(' ')' ';'
+  75                     | do bloque_sentencias until '(' condicion ';'
+
+  76  salida_ejecutable : print '(' CADENA ')' ';'
+  77                    | '(' CADENA ')' ';'
+  78                    | print CADENA ')' ';'
+  79                    | print '(' ')' ';'
+  80                    | print '(' CADENA ';'
+
+  81  asign : variable ASIGNACION expresion_aritmetica ';'
+  82        | ASIGNACION expresion_aritmetica ';'
+  83        | variable expresion_aritmetica ';'
+  84        | variable ASIGNACION ';'
+
+  85  invocacion_metodo : ID '.' ID '(' ')'
+
+  86  sentencias : sentencias sentencia_declarativa
+  87             | sentencias sentencia_ejecutable
+  88             | sentencia_declarativa
+  89             | sentencia_ejecutable
+
+state 0
+	$accept : . programa $end  (0)
+
+	ID  shift 1
+	int  shift 2
+	begin  shift 3
+	float  shift 4
+	.  error
+
+	programa  goto 5
+	conjunto_sentencias  goto 6
+	sentencias_declarativas  goto 7
+	sentencia_declarativa  goto 8
+	tipo  goto 9
+	lista_variables  goto 10
+
+
+state 1
+	sentencia_declarativa : ID . '[' CTE_E ']' ';'  (11)
+	lista_variables : ID .  (23)
+
+	'['  shift 11
+	';'  reduce 23
+	','  reduce 23
+
+
+state 2
+	tipo : int .  (20)
+
+	.  reduce 20
+
+
+state 3
+	conjunto_sentencias : begin . sentencias_ejecutables end  (4)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencias_ejecutables  goto 19
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 21
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 26
+	variable  goto 27
+
+
+state 4
+	tipo : float .  (21)
+
+	.  reduce 21
+
+
+state 5
+	$accept : programa . $end  (0)
+
+	$end  accept
+
+
+state 6
+	programa : conjunto_sentencias .  (1)
+
+	.  reduce 1
+
+
+state 7
+	conjunto_sentencias : sentencias_declarativas .  (2)
+	conjunto_sentencias : sentencias_declarativas . begin sentencias_ejecutables end  (3)
+	sentencias_declarativas : sentencias_declarativas . sentencia_declarativa  (5)
+
+	ID  shift 1
+	int  shift 2
+	begin  shift 28
+	float  shift 4
+	$end  reduce 2
+
+	sentencia_declarativa  goto 29
+	tipo  goto 9
+	lista_variables  goto 10
+
+
+state 8
+	sentencias_declarativas : sentencia_declarativa .  (6)
+
+	.  reduce 6
+
+
+state 9
+	sentencia_declarativa : tipo . lista_variables ';'  (9)
+	sentencia_declarativa : tipo . ID '[' CTE_E ']' ';'  (10)
+	sentencia_declarativa : tipo . ID '[' CTE_E ']'  (13)
+	sentencia_declarativa : tipo . lista_variables  (14)
+	sentencia_declarativa : tipo . ID '[' CTE_E ';'  (15)
+	sentencia_declarativa : tipo . ID CTE_E ']' ';'  (16)
+	sentencia_declarativa : tipo . ';'  (17)
+	sentencia_declarativa : tipo . '[' CTE_E ']' ';'  (18)
+	sentencia_declarativa : tipo . ID '[' ']' ';'  (19)
+
+	ID  shift 30
+	';'  shift 31
+	'['  shift 32
+	.  error
+
+	lista_variables  goto 33
+
+
+state 10
+	sentencia_declarativa : lista_variables . ';'  (12)
+	lista_variables : lista_variables . ',' ID  (22)
+
+	';'  shift 34
+	','  shift 35
+	.  error
+
+
+state 11
+	sentencia_declarativa : ID '[' . CTE_E ']' ';'  (11)
+
+	CTE_E  shift 36
+	.  error
+
+
+state 12
+	sentencia_declarativa : ID . '[' CTE_E ']' ';'  (11)
+	lista_variables : ID .  (23)
+	variable : ID . '[' ID ']'  (56)
+	variable : ID . '[' CTE_E ']'  (57)
+	variable : ID .  (58)
+
+	'['  shift 37
+	ID  reduce 58
+	CTE_E  reduce 58
+	CTE_F  reduce 58
+	ASIGNACION  reduce 58
+	';'  reduce 23
+	','  reduce 23
+
+
+state 13
+	asign : ASIGNACION . expresion_aritmetica ';'  (82)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	.  error
+
+	expresion_aritmetica  goto 41
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 14
+	selecion_ejecutable : if . '(' condicion ')' bloque_sentencias else bloque_sentencias end_if ';'  (28)
+	selecion_ejecutable : if . '(' condicion ')' bloque_sentencias end_if ';'  (29)
+	selecion_ejecutable : if . '(' condicion ')' bloque_sentencias else bloque_sentencias ';'  (30)
+	selecion_ejecutable : if . '(' condicion ')' bloque_sentencias bloque_sentencias end_if ';'  (31)
+	selecion_ejecutable : if . '(' condicion bloque_sentencias else bloque_sentencias end_if ';'  (32)
+	selecion_ejecutable : if . '(' ')' bloque_sentencias else bloque_sentencias end_if ';'  (33)
+	selecion_ejecutable : if . condicion ')' bloque_sentencias else bloque_sentencias end_if ';'  (34)
+	selecion_ejecutable : if . condicion ')' bloque_sentencias end_if ';'  (37)
+	selecion_ejecutable : if . '(' ')' bloque_sentencias end_if ';'  (38)
+	selecion_ejecutable : if . '(' condicion bloque_sentencias end_if ';'  (39)
+	selecion_ejecutable : if . '(' condicion ')' end_if ';'  (40)
+	selecion_ejecutable : if . '(' condicion ')' bloque_sentencias ';'  (41)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	'('  shift 50
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 53
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 15
+	salida_ejecutable : print . '(' CADENA ')' ';'  (76)
+	salida_ejecutable : print . CADENA ')' ';'  (78)
+	salida_ejecutable : print . '(' ')' ';'  (79)
+	salida_ejecutable : print . '(' CADENA ';'  (80)
+
+	CADENA  shift 56
+	'('  shift 57
+	.  error
+
+
+state 16
+	bloque_sentencias : begin . sentencias sentencia_ejecutable end  (67)
+	bloque_sentencias : begin . sentencias sentencia_declarativa end  (68)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 58
+	sentencia_ejecutable  goto 59
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 26
+	variable  goto 27
+	sentencias  goto 60
+
+
+state 17
+	control_ejecutable : do . bloque_sentencias until '(' condicion ')' ';'  (69)
+	control_ejecutable : do . until '(' condicion ')' ';'  (71)
+	control_ejecutable : do . bloque_sentencias '(' condicion ')' ';'  (72)
+	control_ejecutable : do . bloque_sentencias until condicion ')' ';'  (73)
+	control_ejecutable : do . bloque_sentencias until '(' ')' ';'  (74)
+	control_ejecutable : do . bloque_sentencias until '(' condicion ';'  (75)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	until  shift 61
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 63
+	variable  goto 27
+
+
+state 18
+	selecion_ejecutable : '(' . condicion ')' bloque_sentencias else bloque_sentencias end_if ';'  (35)
+	selecion_ejecutable : '(' . condicion ')' bloque_sentencias end_if ';'  (36)
+	salida_ejecutable : '(' . CADENA ')' ';'  (77)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	CADENA  shift 64
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 65
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 19
+	conjunto_sentencias : begin sentencias_ejecutables . end  (4)
+	sentencias_ejecutables : sentencias_ejecutables . sentencia_ejecutable  (7)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	end  shift 66
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 67
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 26
+	variable  goto 27
+
+
+state 20
+	bloque_sentencias : sentencia_declarativa .  (65)
+
+	.  reduce 65
+
+
+state 21
+	sentencias_ejecutables : sentencia_ejecutable .  (8)
+	bloque_sentencias : sentencia_ejecutable .  (66)
+
+	ID  reduce 8
+	ASIGNACION  reduce 8
+	if  reduce 8
+	print  reduce 8
+	int  reduce 8
+	begin  reduce 8
+	end  reduce 8
+	do  reduce 8
+	until  reduce 66
+	float  reduce 8
+	'('  reduce 8
+
+
+state 22
+	sentencia_ejecutable : selecion_ejecutable .  (24)
+
+	.  reduce 24
+
+
+state 23
+	sentencia_ejecutable : control_ejecutable .  (25)
+
+	.  reduce 25
+
+
+state 24
+	sentencia_ejecutable : salida_ejecutable .  (26)
+
+	.  reduce 26
+
+
+state 25
+	sentencia_ejecutable : asign .  (27)
+
+	.  reduce 27
+
+
+state 26
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	until  shift 68
+	.  error
+
+
+state 27
+	asign : variable . ASIGNACION expresion_aritmetica ';'  (81)
+	asign : variable . expresion_aritmetica ';'  (83)
+	asign : variable . ASIGNACION ';'  (84)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	ASIGNACION  shift 69
+	.  error
+
+	expresion_aritmetica  goto 70
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 28
+	conjunto_sentencias : sentencias_declarativas begin . sentencias_ejecutables end  (3)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencias_ejecutables  goto 71
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 21
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 26
+	variable  goto 27
+
+
+state 29
+	sentencias_declarativas : sentencias_declarativas sentencia_declarativa .  (5)
+
+	.  reduce 5
+
+
+state 30
+	sentencia_declarativa : tipo ID . '[' CTE_E ']' ';'  (10)
+	sentencia_declarativa : tipo ID . '[' CTE_E ']'  (13)
+	sentencia_declarativa : tipo ID . '[' CTE_E ';'  (15)
+	sentencia_declarativa : tipo ID . CTE_E ']' ';'  (16)
+	sentencia_declarativa : tipo ID . '[' ']' ';'  (19)
+	lista_variables : ID .  (23)
+
+	CTE_E  shift 72
+	'['  shift 73
+	$end  reduce 23
+	ID  reduce 23
+	ASIGNACION  reduce 23
+	if  reduce 23
+	else  reduce 23
+	end_if  reduce 23
+	print  reduce 23
+	int  reduce 23
+	begin  reduce 23
+	end  reduce 23
+	do  reduce 23
+	until  reduce 23
+	float  reduce 23
+	';'  reduce 23
+	','  reduce 23
+	'('  reduce 23
+
+
+state 31
+	sentencia_declarativa : tipo ';' .  (17)
+
+	.  reduce 17
+
+
+state 32
+	sentencia_declarativa : tipo '[' . CTE_E ']' ';'  (18)
+
+	CTE_E  shift 74
+	.  error
+
+
+33: shift/reduce conflict (shift 75, reduce 14) on ';'
+state 33
+	sentencia_declarativa : tipo lista_variables . ';'  (9)
+	sentencia_declarativa : tipo lista_variables .  (14)
+	lista_variables : lista_variables . ',' ID  (22)
+
+	';'  shift 75
+	','  shift 35
+	$end  reduce 14
+	ID  reduce 14
+	ASIGNACION  reduce 14
+	if  reduce 14
+	else  reduce 14
+	end_if  reduce 14
+	print  reduce 14
+	int  reduce 14
+	begin  reduce 14
+	end  reduce 14
+	do  reduce 14
+	until  reduce 14
+	float  reduce 14
+	'('  reduce 14
+
+
+state 34
+	sentencia_declarativa : lista_variables ';' .  (12)
+
+	.  reduce 12
+
+
+state 35
+	lista_variables : lista_variables ',' . ID  (22)
+
+	ID  shift 76
+	.  error
+
+
+state 36
+	sentencia_declarativa : ID '[' CTE_E . ']' ';'  (11)
+
+	']'  shift 77
+	.  error
+
+
+state 37
+	sentencia_declarativa : ID '[' . CTE_E ']' ';'  (11)
+	variable : ID '[' . ID ']'  (56)
+	variable : ID '[' . CTE_E ']'  (57)
+
+	ID  shift 78
+	CTE_E  shift 79
+	.  error
+
+
+state 38
+	variable : ID . '[' ID ']'  (56)
+	variable : ID . '[' CTE_E ']'  (57)
+	variable : ID .  (58)
+	invocacion_metodo : ID . '.' ID '(' ')'  (85)
+
+	'['  shift 80
+	'.'  shift 81
+	ID  reduce 58
+	CTE_E  reduce 58
+	CTE_F  reduce 58
+	ASIGNACION  reduce 58
+	MAYORIGUAL  reduce 58
+	MENORIGUAL  reduce 58
+	DESTINTO  reduce 58
+	IGUAL  reduce 58
+	if  reduce 58
+	print  reduce 58
+	int  reduce 58
+	begin  reduce 58
+	do  reduce 58
+	float  reduce 58
+	'+'  reduce 58
+	'-'  reduce 58
+	'*'  reduce 58
+	'/'  reduce 58
+	';'  reduce 58
+	'('  reduce 58
+	')'  reduce 58
+	'<'  reduce 58
+	'>'  reduce 58
+
+
+state 39
+	factor : CTE_E .  (53)
+
+	.  reduce 53
+
+
+state 40
+	factor : CTE_F .  (54)
+
+	.  reduce 54
+
+
+state 41
+	expresion_aritmetica : expresion_aritmetica . '+' termino  (46)
+	expresion_aritmetica : expresion_aritmetica . '-' termino  (47)
+	asign : ASIGNACION expresion_aritmetica . ';'  (82)
+
+	'+'  shift 82
+	'-'  shift 83
+	';'  shift 84
+	.  error
+
+
+state 42
+	expresion_aritmetica : termino .  (48)
+	termino : termino . '*' factor  (49)
+	termino : termino . '/' factor  (50)
+
+	'*'  shift 85
+	'/'  shift 86
+	ID  reduce 48
+	CTE_E  reduce 48
+	CTE_F  reduce 48
+	ASIGNACION  reduce 48
+	MAYORIGUAL  reduce 48
+	MENORIGUAL  reduce 48
+	DESTINTO  reduce 48
+	IGUAL  reduce 48
+	if  reduce 48
+	print  reduce 48
+	int  reduce 48
+	begin  reduce 48
+	do  reduce 48
+	float  reduce 48
+	'+'  reduce 48
+	'-'  reduce 48
+	';'  reduce 48
+	'('  reduce 48
+	')'  reduce 48
+	'<'  reduce 48
+	'>'  reduce 48
+
+
+state 43
+	termino : factor .  (51)
+
+	.  reduce 51
+
+
+state 44
+	factor : variable .  (52)
+
+	.  reduce 52
+
+
+state 45
+	factor : invocacion_metodo .  (55)
+
+	.  reduce 55
+
+
+state 46
+	operador : MAYORIGUAL .  (62)
+
+	.  reduce 62
+
+
+state 47
+	operador : MENORIGUAL .  (60)
+
+	.  reduce 60
+
+
+state 48
+	operador : DESTINTO .  (63)
+
+	.  reduce 63
+
+
+state 49
+	operador : IGUAL .  (64)
+
+	.  reduce 64
+
+
+state 50
+	selecion_ejecutable : if '(' . condicion ')' bloque_sentencias else bloque_sentencias end_if ';'  (28)
+	selecion_ejecutable : if '(' . condicion ')' bloque_sentencias end_if ';'  (29)
+	selecion_ejecutable : if '(' . condicion ')' bloque_sentencias else bloque_sentencias ';'  (30)
+	selecion_ejecutable : if '(' . condicion ')' bloque_sentencias bloque_sentencias end_if ';'  (31)
+	selecion_ejecutable : if '(' . condicion bloque_sentencias else bloque_sentencias end_if ';'  (32)
+	selecion_ejecutable : if '(' . ')' bloque_sentencias else bloque_sentencias end_if ';'  (33)
+	selecion_ejecutable : if '(' . ')' bloque_sentencias end_if ';'  (38)
+	selecion_ejecutable : if '(' . condicion bloque_sentencias end_if ';'  (39)
+	selecion_ejecutable : if '(' . condicion ')' end_if ';'  (40)
+	selecion_ejecutable : if '(' . condicion ')' bloque_sentencias ';'  (41)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	')'  shift 87
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 88
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 51
+	operador : '<' .  (59)
+
+	.  reduce 59
+
+
+state 52
+	operador : '>' .  (61)
+
+	.  reduce 61
+
+
+state 53
+	selecion_ejecutable : if condicion . ')' bloque_sentencias else bloque_sentencias end_if ';'  (34)
+	selecion_ejecutable : if condicion . ')' bloque_sentencias end_if ';'  (37)
+
+	')'  shift 89
+	.  error
+
+
+state 54
+	condicion : expresion_aritmetica . operador expresion_aritmetica  (42)
+	condicion : expresion_aritmetica . expresion_aritmetica  (44)
+	condicion : expresion_aritmetica . operador  (45)
+	expresion_aritmetica : expresion_aritmetica . '+' termino  (46)
+	expresion_aritmetica : expresion_aritmetica . '-' termino  (47)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	'+'  shift 82
+	'-'  shift 83
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	expresion_aritmetica  goto 90
+	operador  goto 91
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 55
+	condicion : operador . expresion_aritmetica  (43)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	.  error
+
+	expresion_aritmetica  goto 92
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 56
+	salida_ejecutable : print CADENA . ')' ';'  (78)
+
+	')'  shift 93
+	.  error
+
+
+state 57
+	salida_ejecutable : print '(' . CADENA ')' ';'  (76)
+	salida_ejecutable : print '(' . ')' ';'  (79)
+	salida_ejecutable : print '(' . CADENA ';'  (80)
+
+	CADENA  shift 94
+	')'  shift 95
+	.  error
+
+
+state 58
+	bloque_sentencias : sentencia_declarativa .  (65)
+	sentencias : sentencia_declarativa .  (88)
+
+	ID  reduce 88
+	ASIGNACION  reduce 88
+	if  reduce 88
+	print  reduce 88
+	int  reduce 88
+	begin  reduce 88
+	do  reduce 88
+	until  reduce 65
+	float  reduce 88
+	'('  reduce 88
+
+
+state 59
+	bloque_sentencias : sentencia_ejecutable .  (66)
+	sentencias : sentencia_ejecutable .  (89)
+
+	ID  reduce 89
+	ASIGNACION  reduce 89
+	if  reduce 89
+	print  reduce 89
+	int  reduce 89
+	begin  reduce 89
+	do  reduce 89
+	until  reduce 66
+	float  reduce 89
+	'('  reduce 89
+
+
+state 60
+	bloque_sentencias : begin sentencias . sentencia_ejecutable end  (67)
+	bloque_sentencias : begin sentencias . sentencia_declarativa end  (68)
+	sentencias : sentencias . sentencia_declarativa  (86)
+	sentencias : sentencias . sentencia_ejecutable  (87)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 96
+	sentencia_ejecutable  goto 97
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 26
+	variable  goto 27
+
+
+state 61
+	control_ejecutable : do until . '(' condicion ')' ';'  (71)
+
+	'('  shift 98
+	.  error
+
+
+state 62
+	bloque_sentencias : sentencia_ejecutable .  (66)
+
+	.  reduce 66
+
+
+state 63
+	control_ejecutable : do bloque_sentencias . until '(' condicion ')' ';'  (69)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+	control_ejecutable : do bloque_sentencias . '(' condicion ')' ';'  (72)
+	control_ejecutable : do bloque_sentencias . until condicion ')' ';'  (73)
+	control_ejecutable : do bloque_sentencias . until '(' ')' ';'  (74)
+	control_ejecutable : do bloque_sentencias . until '(' condicion ';'  (75)
+
+	until  shift 99
+	'('  shift 100
+	.  error
+
+
+state 64
+	salida_ejecutable : '(' CADENA . ')' ';'  (77)
+
+	')'  shift 101
+	.  error
+
+
+state 65
+	selecion_ejecutable : '(' condicion . ')' bloque_sentencias else bloque_sentencias end_if ';'  (35)
+	selecion_ejecutable : '(' condicion . ')' bloque_sentencias end_if ';'  (36)
+
+	')'  shift 102
+	.  error
+
+
+state 66
+	conjunto_sentencias : begin sentencias_ejecutables end .  (4)
+
+	.  reduce 4
+
+
+state 67
+	sentencias_ejecutables : sentencias_ejecutables sentencia_ejecutable .  (7)
+	bloque_sentencias : sentencia_ejecutable .  (66)
+
+	ID  reduce 7
+	ASIGNACION  reduce 7
+	if  reduce 7
+	print  reduce 7
+	int  reduce 7
+	begin  reduce 7
+	end  reduce 7
+	do  reduce 7
+	until  reduce 66
+	float  reduce 7
+	'('  reduce 7
+
+
+state 68
+	control_ejecutable : bloque_sentencias until . '(' condicion ')' ';'  (70)
+
+	'('  shift 103
+	.  error
+
+
+state 69
+	asign : variable ASIGNACION . expresion_aritmetica ';'  (81)
+	asign : variable ASIGNACION . ';'  (84)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	';'  shift 104
+	.  error
+
+	expresion_aritmetica  goto 105
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 70
+	expresion_aritmetica : expresion_aritmetica . '+' termino  (46)
+	expresion_aritmetica : expresion_aritmetica . '-' termino  (47)
+	asign : variable expresion_aritmetica . ';'  (83)
+
+	'+'  shift 82
+	'-'  shift 83
+	';'  shift 106
+	.  error
+
+
+state 71
+	conjunto_sentencias : sentencias_declarativas begin sentencias_ejecutables . end  (3)
+	sentencias_ejecutables : sentencias_ejecutables . sentencia_ejecutable  (7)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	end  shift 107
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 67
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 26
+	variable  goto 27
+
+
+state 72
+	sentencia_declarativa : tipo ID CTE_E . ']' ';'  (16)
+
+	']'  shift 108
+	.  error
+
+
+state 73
+	sentencia_declarativa : tipo ID '[' . CTE_E ']' ';'  (10)
+	sentencia_declarativa : tipo ID '[' . CTE_E ']'  (13)
+	sentencia_declarativa : tipo ID '[' . CTE_E ';'  (15)
+	sentencia_declarativa : tipo ID '[' . ']' ';'  (19)
+
+	CTE_E  shift 109
+	']'  shift 110
+	.  error
+
+
+state 74
+	sentencia_declarativa : tipo '[' CTE_E . ']' ';'  (18)
+
+	']'  shift 111
+	.  error
+
+
+state 75
+	sentencia_declarativa : tipo lista_variables ';' .  (9)
+
+	.  reduce 9
+
+
+state 76
+	lista_variables : lista_variables ',' ID .  (22)
+
+	.  reduce 22
+
+
+state 77
+	sentencia_declarativa : ID '[' CTE_E ']' . ';'  (11)
+
+	';'  shift 112
+	.  error
+
+
+state 78
+	variable : ID '[' ID . ']'  (56)
+
+	']'  shift 113
+	.  error
+
+
+state 79
+	sentencia_declarativa : ID '[' CTE_E . ']' ';'  (11)
+	variable : ID '[' CTE_E . ']'  (57)
+
+	']'  shift 114
+	.  error
+
+
+state 80
+	variable : ID '[' . ID ']'  (56)
+	variable : ID '[' . CTE_E ']'  (57)
+
+	ID  shift 78
+	CTE_E  shift 115
+	.  error
+
+
+state 81
+	invocacion_metodo : ID '.' . ID '(' ')'  (85)
+
+	ID  shift 116
+	.  error
+
+
+state 82
+	expresion_aritmetica : expresion_aritmetica '+' . termino  (46)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	.  error
+
+	termino  goto 117
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 83
+	expresion_aritmetica : expresion_aritmetica '-' . termino  (47)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	.  error
+
+	termino  goto 118
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 84
+	asign : ASIGNACION expresion_aritmetica ';' .  (82)
+
+	.  reduce 82
+
+
+state 85
+	termino : termino '*' . factor  (49)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	.  error
+
+	factor  goto 119
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 86
+	termino : termino '/' . factor  (50)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	.  error
+
+	factor  goto 120
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 87
+	selecion_ejecutable : if '(' ')' . bloque_sentencias else bloque_sentencias end_if ';'  (33)
+	selecion_ejecutable : if '(' ')' . bloque_sentencias end_if ';'  (38)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 121
+	variable  goto 27
+
+
+state 88
+	selecion_ejecutable : if '(' condicion . ')' bloque_sentencias else bloque_sentencias end_if ';'  (28)
+	selecion_ejecutable : if '(' condicion . ')' bloque_sentencias end_if ';'  (29)
+	selecion_ejecutable : if '(' condicion . ')' bloque_sentencias else bloque_sentencias ';'  (30)
+	selecion_ejecutable : if '(' condicion . ')' bloque_sentencias bloque_sentencias end_if ';'  (31)
+	selecion_ejecutable : if '(' condicion . bloque_sentencias else bloque_sentencias end_if ';'  (32)
+	selecion_ejecutable : if '(' condicion . bloque_sentencias end_if ';'  (39)
+	selecion_ejecutable : if '(' condicion . ')' end_if ';'  (40)
+	selecion_ejecutable : if '(' condicion . ')' bloque_sentencias ';'  (41)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	')'  shift 122
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 123
+	variable  goto 27
+
+
+state 89
+	selecion_ejecutable : if condicion ')' . bloque_sentencias else bloque_sentencias end_if ';'  (34)
+	selecion_ejecutable : if condicion ')' . bloque_sentencias end_if ';'  (37)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 124
+	variable  goto 27
+
+
+state 90
+	condicion : expresion_aritmetica expresion_aritmetica .  (44)
+	expresion_aritmetica : expresion_aritmetica . '+' termino  (46)
+	expresion_aritmetica : expresion_aritmetica . '-' termino  (47)
+
+	'+'  shift 82
+	'-'  shift 83
+	ID  reduce 44
+	ASIGNACION  reduce 44
+	if  reduce 44
+	print  reduce 44
+	int  reduce 44
+	begin  reduce 44
+	do  reduce 44
+	float  reduce 44
+	';'  reduce 44
+	'('  reduce 44
+	')'  reduce 44
+
+
+91: shift/reduce conflict (shift 38, reduce 45) on ID
+state 91
+	condicion : expresion_aritmetica operador . expresion_aritmetica  (42)
+	condicion : expresion_aritmetica operador .  (45)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	ASIGNACION  reduce 45
+	if  reduce 45
+	print  reduce 45
+	int  reduce 45
+	begin  reduce 45
+	do  reduce 45
+	float  reduce 45
+	';'  reduce 45
+	'('  reduce 45
+	')'  reduce 45
+
+	expresion_aritmetica  goto 125
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 92
+	condicion : operador expresion_aritmetica .  (43)
+	expresion_aritmetica : expresion_aritmetica . '+' termino  (46)
+	expresion_aritmetica : expresion_aritmetica . '-' termino  (47)
+
+	'+'  shift 82
+	'-'  shift 83
+	ID  reduce 43
+	ASIGNACION  reduce 43
+	if  reduce 43
+	print  reduce 43
+	int  reduce 43
+	begin  reduce 43
+	do  reduce 43
+	float  reduce 43
+	';'  reduce 43
+	'('  reduce 43
+	')'  reduce 43
+
+
+state 93
+	salida_ejecutable : print CADENA ')' . ';'  (78)
+
+	';'  shift 126
+	.  error
+
+
+state 94
+	salida_ejecutable : print '(' CADENA . ')' ';'  (76)
+	salida_ejecutable : print '(' CADENA . ';'  (80)
+
+	';'  shift 127
+	')'  shift 128
+	.  error
+
+
+state 95
+	salida_ejecutable : print '(' ')' . ';'  (79)
+
+	';'  shift 129
+	.  error
+
+
+state 96
+	bloque_sentencias : sentencia_declarativa .  (65)
+	bloque_sentencias : begin sentencias sentencia_declarativa . end  (68)
+	sentencias : sentencias sentencia_declarativa .  (86)
+
+	end  shift 130
+	ID  reduce 86
+	ASIGNACION  reduce 86
+	if  reduce 86
+	print  reduce 86
+	int  reduce 86
+	begin  reduce 86
+	do  reduce 86
+	until  reduce 65
+	float  reduce 86
+	'('  reduce 86
+
+
+state 97
+	bloque_sentencias : sentencia_ejecutable .  (66)
+	bloque_sentencias : begin sentencias sentencia_ejecutable . end  (67)
+	sentencias : sentencias sentencia_ejecutable .  (87)
+
+	end  shift 131
+	ID  reduce 87
+	ASIGNACION  reduce 87
+	if  reduce 87
+	print  reduce 87
+	int  reduce 87
+	begin  reduce 87
+	do  reduce 87
+	until  reduce 66
+	float  reduce 87
+	'('  reduce 87
+
+
+state 98
+	control_ejecutable : do until '(' . condicion ')' ';'  (71)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 132
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 99
+	control_ejecutable : do bloque_sentencias until . '(' condicion ')' ';'  (69)
+	control_ejecutable : bloque_sentencias until . '(' condicion ')' ';'  (70)
+	control_ejecutable : do bloque_sentencias until . condicion ')' ';'  (73)
+	control_ejecutable : do bloque_sentencias until . '(' ')' ';'  (74)
+	control_ejecutable : do bloque_sentencias until . '(' condicion ';'  (75)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	'('  shift 133
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 134
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 100
+	control_ejecutable : do bloque_sentencias '(' . condicion ')' ';'  (72)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 135
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 101
+	salida_ejecutable : '(' CADENA ')' . ';'  (77)
+
+	';'  shift 136
+	.  error
+
+
+state 102
+	selecion_ejecutable : '(' condicion ')' . bloque_sentencias else bloque_sentencias end_if ';'  (35)
+	selecion_ejecutable : '(' condicion ')' . bloque_sentencias end_if ';'  (36)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 137
+	variable  goto 27
+
+
+state 103
+	control_ejecutable : bloque_sentencias until '(' . condicion ')' ';'  (70)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 138
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 104
+	asign : variable ASIGNACION ';' .  (84)
+
+	.  reduce 84
+
+
+state 105
+	expresion_aritmetica : expresion_aritmetica . '+' termino  (46)
+	expresion_aritmetica : expresion_aritmetica . '-' termino  (47)
+	asign : variable ASIGNACION expresion_aritmetica . ';'  (81)
+
+	'+'  shift 82
+	'-'  shift 83
+	';'  shift 139
+	.  error
+
+
+state 106
+	asign : variable expresion_aritmetica ';' .  (83)
+
+	.  reduce 83
+
+
+state 107
+	conjunto_sentencias : sentencias_declarativas begin sentencias_ejecutables end .  (3)
+
+	.  reduce 3
+
+
+state 108
+	sentencia_declarativa : tipo ID CTE_E ']' . ';'  (16)
+
+	';'  shift 140
+	.  error
+
+
+state 109
+	sentencia_declarativa : tipo ID '[' CTE_E . ']' ';'  (10)
+	sentencia_declarativa : tipo ID '[' CTE_E . ']'  (13)
+	sentencia_declarativa : tipo ID '[' CTE_E . ';'  (15)
+
+	';'  shift 141
+	']'  shift 142
+	.  error
+
+
+state 110
+	sentencia_declarativa : tipo ID '[' ']' . ';'  (19)
+
+	';'  shift 143
+	.  error
+
+
+state 111
+	sentencia_declarativa : tipo '[' CTE_E ']' . ';'  (18)
+
+	';'  shift 144
+	.  error
+
+
+state 112
+	sentencia_declarativa : ID '[' CTE_E ']' ';' .  (11)
+
+	.  reduce 11
+
+
+state 113
+	variable : ID '[' ID ']' .  (56)
+
+	.  reduce 56
+
+
+state 114
+	sentencia_declarativa : ID '[' CTE_E ']' . ';'  (11)
+	variable : ID '[' CTE_E ']' .  (57)
+
+	';'  shift 112
+	ID  reduce 57
+	CTE_E  reduce 57
+	CTE_F  reduce 57
+	ASIGNACION  reduce 57
+
+
+state 115
+	variable : ID '[' CTE_E . ']'  (57)
+
+	']'  shift 145
+	.  error
+
+
+state 116
+	invocacion_metodo : ID '.' ID . '(' ')'  (85)
+
+	'('  shift 146
+	.  error
+
+
+state 117
+	expresion_aritmetica : expresion_aritmetica '+' termino .  (46)
+	termino : termino . '*' factor  (49)
+	termino : termino . '/' factor  (50)
+
+	'*'  shift 85
+	'/'  shift 86
+	ID  reduce 46
+	CTE_E  reduce 46
+	CTE_F  reduce 46
+	ASIGNACION  reduce 46
+	MAYORIGUAL  reduce 46
+	MENORIGUAL  reduce 46
+	DESTINTO  reduce 46
+	IGUAL  reduce 46
+	if  reduce 46
+	print  reduce 46
+	int  reduce 46
+	begin  reduce 46
+	do  reduce 46
+	float  reduce 46
+	'+'  reduce 46
+	'-'  reduce 46
+	';'  reduce 46
+	'('  reduce 46
+	')'  reduce 46
+	'<'  reduce 46
+	'>'  reduce 46
+
+
+state 118
+	expresion_aritmetica : expresion_aritmetica '-' termino .  (47)
+	termino : termino . '*' factor  (49)
+	termino : termino . '/' factor  (50)
+
+	'*'  shift 85
+	'/'  shift 86
+	ID  reduce 47
+	CTE_E  reduce 47
+	CTE_F  reduce 47
+	ASIGNACION  reduce 47
+	MAYORIGUAL  reduce 47
+	MENORIGUAL  reduce 47
+	DESTINTO  reduce 47
+	IGUAL  reduce 47
+	if  reduce 47
+	print  reduce 47
+	int  reduce 47
+	begin  reduce 47
+	do  reduce 47
+	float  reduce 47
+	'+'  reduce 47
+	'-'  reduce 47
+	';'  reduce 47
+	'('  reduce 47
+	')'  reduce 47
+	'<'  reduce 47
+	'>'  reduce 47
+
+
+state 119
+	termino : termino '*' factor .  (49)
+
+	.  reduce 49
+
+
+state 120
+	termino : termino '/' factor .  (50)
+
+	.  reduce 50
+
+
+state 121
+	selecion_ejecutable : if '(' ')' bloque_sentencias . else bloque_sentencias end_if ';'  (33)
+	selecion_ejecutable : if '(' ')' bloque_sentencias . end_if ';'  (38)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	else  shift 147
+	end_if  shift 148
+	until  shift 68
+	.  error
+
+
+state 122
+	selecion_ejecutable : if '(' condicion ')' . bloque_sentencias else bloque_sentencias end_if ';'  (28)
+	selecion_ejecutable : if '(' condicion ')' . bloque_sentencias end_if ';'  (29)
+	selecion_ejecutable : if '(' condicion ')' . bloque_sentencias else bloque_sentencias ';'  (30)
+	selecion_ejecutable : if '(' condicion ')' . bloque_sentencias bloque_sentencias end_if ';'  (31)
+	selecion_ejecutable : if '(' condicion ')' . end_if ';'  (40)
+	selecion_ejecutable : if '(' condicion ')' . bloque_sentencias ';'  (41)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	end_if  shift 149
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 150
+	variable  goto 27
+
+
+state 123
+	selecion_ejecutable : if '(' condicion bloque_sentencias . else bloque_sentencias end_if ';'  (32)
+	selecion_ejecutable : if '(' condicion bloque_sentencias . end_if ';'  (39)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	else  shift 151
+	end_if  shift 152
+	until  shift 68
+	.  error
+
+
+state 124
+	selecion_ejecutable : if condicion ')' bloque_sentencias . else bloque_sentencias end_if ';'  (34)
+	selecion_ejecutable : if condicion ')' bloque_sentencias . end_if ';'  (37)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	else  shift 153
+	end_if  shift 154
+	until  shift 68
+	.  error
+
+
+state 125
+	condicion : expresion_aritmetica operador expresion_aritmetica .  (42)
+	expresion_aritmetica : expresion_aritmetica . '+' termino  (46)
+	expresion_aritmetica : expresion_aritmetica . '-' termino  (47)
+
+	'+'  shift 82
+	'-'  shift 83
+	ID  reduce 42
+	ASIGNACION  reduce 42
+	if  reduce 42
+	print  reduce 42
+	int  reduce 42
+	begin  reduce 42
+	do  reduce 42
+	float  reduce 42
+	';'  reduce 42
+	'('  reduce 42
+	')'  reduce 42
+
+
+state 126
+	salida_ejecutable : print CADENA ')' ';' .  (78)
+
+	.  reduce 78
+
+
+state 127
+	salida_ejecutable : print '(' CADENA ';' .  (80)
+
+	.  reduce 80
+
+
+state 128
+	salida_ejecutable : print '(' CADENA ')' . ';'  (76)
+
+	';'  shift 155
+	.  error
+
+
+state 129
+	salida_ejecutable : print '(' ')' ';' .  (79)
+
+	.  reduce 79
+
+
+state 130
+	bloque_sentencias : begin sentencias sentencia_declarativa end .  (68)
+
+	.  reduce 68
+
+
+state 131
+	bloque_sentencias : begin sentencias sentencia_ejecutable end .  (67)
+
+	.  reduce 67
+
+
+state 132
+	control_ejecutable : do until '(' condicion . ')' ';'  (71)
+
+	')'  shift 156
+	.  error
+
+
+state 133
+	control_ejecutable : do bloque_sentencias until '(' . condicion ')' ';'  (69)
+	control_ejecutable : bloque_sentencias until '(' . condicion ')' ';'  (70)
+	control_ejecutable : do bloque_sentencias until '(' . ')' ';'  (74)
+	control_ejecutable : do bloque_sentencias until '(' . condicion ';'  (75)
+
+	ID  shift 38
+	CTE_E  shift 39
+	CTE_F  shift 40
+	MAYORIGUAL  shift 46
+	MENORIGUAL  shift 47
+	DESTINTO  shift 48
+	IGUAL  shift 49
+	')'  shift 157
+	'<'  shift 51
+	'>'  shift 52
+	.  error
+
+	condicion  goto 158
+	expresion_aritmetica  goto 54
+	operador  goto 55
+	termino  goto 42
+	factor  goto 43
+	variable  goto 44
+	invocacion_metodo  goto 45
+
+
+state 134
+	control_ejecutable : do bloque_sentencias until condicion . ')' ';'  (73)
+
+	')'  shift 159
+	.  error
+
+
+state 135
+	control_ejecutable : do bloque_sentencias '(' condicion . ')' ';'  (72)
+
+	')'  shift 160
+	.  error
+
+
+state 136
+	salida_ejecutable : '(' CADENA ')' ';' .  (77)
+
+	.  reduce 77
+
+
+state 137
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias . else bloque_sentencias end_if ';'  (35)
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias . end_if ';'  (36)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	else  shift 161
+	end_if  shift 162
+	until  shift 68
+	.  error
+
+
+state 138
+	control_ejecutable : bloque_sentencias until '(' condicion . ')' ';'  (70)
+
+	')'  shift 163
+	.  error
+
+
+state 139
+	asign : variable ASIGNACION expresion_aritmetica ';' .  (81)
+
+	.  reduce 81
+
+
+state 140
+	sentencia_declarativa : tipo ID CTE_E ']' ';' .  (16)
+
+	.  reduce 16
+
+
+state 141
+	sentencia_declarativa : tipo ID '[' CTE_E ';' .  (15)
+
+	.  reduce 15
+
+
+142: shift/reduce conflict (shift 164, reduce 13) on ';'
+state 142
+	sentencia_declarativa : tipo ID '[' CTE_E ']' . ';'  (10)
+	sentencia_declarativa : tipo ID '[' CTE_E ']' .  (13)
+
+	';'  shift 164
+	$end  reduce 13
+	ID  reduce 13
+	ASIGNACION  reduce 13
+	if  reduce 13
+	else  reduce 13
+	end_if  reduce 13
+	print  reduce 13
+	int  reduce 13
+	begin  reduce 13
+	end  reduce 13
+	do  reduce 13
+	until  reduce 13
+	float  reduce 13
+	'('  reduce 13
+
+
+state 143
+	sentencia_declarativa : tipo ID '[' ']' ';' .  (19)
+
+	.  reduce 19
+
+
+state 144
+	sentencia_declarativa : tipo '[' CTE_E ']' ';' .  (18)
+
+	.  reduce 18
+
+
+state 145
+	variable : ID '[' CTE_E ']' .  (57)
+
+	.  reduce 57
+
+
+state 146
+	invocacion_metodo : ID '.' ID '(' . ')'  (85)
+
+	')'  shift 165
+	.  error
+
+
+state 147
+	selecion_ejecutable : if '(' ')' bloque_sentencias else . bloque_sentencias end_if ';'  (33)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 166
+	variable  goto 27
+
+
+state 148
+	selecion_ejecutable : if '(' ')' bloque_sentencias end_if . ';'  (38)
+
+	';'  shift 167
+	.  error
+
+
+state 149
+	selecion_ejecutable : if '(' condicion ')' end_if . ';'  (40)
+
+	';'  shift 168
+	.  error
+
+
+state 150
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias . else bloque_sentencias end_if ';'  (28)
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias . end_if ';'  (29)
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias . else bloque_sentencias ';'  (30)
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias . bloque_sentencias end_if ';'  (31)
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias . ';'  (41)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	else  shift 169
+	end_if  shift 170
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	until  shift 68
+	float  shift 4
+	';'  shift 171
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 172
+	variable  goto 27
+
+
+state 151
+	selecion_ejecutable : if '(' condicion bloque_sentencias else . bloque_sentencias end_if ';'  (32)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 173
+	variable  goto 27
+
+
+state 152
+	selecion_ejecutable : if '(' condicion bloque_sentencias end_if . ';'  (39)
+
+	';'  shift 174
+	.  error
+
+
+state 153
+	selecion_ejecutable : if condicion ')' bloque_sentencias else . bloque_sentencias end_if ';'  (34)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 175
+	variable  goto 27
+
+
+state 154
+	selecion_ejecutable : if condicion ')' bloque_sentencias end_if . ';'  (37)
+
+	';'  shift 176
+	.  error
+
+
+state 155
+	salida_ejecutable : print '(' CADENA ')' ';' .  (76)
+
+	.  reduce 76
+
+
+state 156
+	control_ejecutable : do until '(' condicion ')' . ';'  (71)
+
+	';'  shift 177
+	.  error
+
+
+state 157
+	control_ejecutable : do bloque_sentencias until '(' ')' . ';'  (74)
+
+	';'  shift 178
+	.  error
+
+
+state 158
+	control_ejecutable : do bloque_sentencias until '(' condicion . ')' ';'  (69)
+	control_ejecutable : bloque_sentencias until '(' condicion . ')' ';'  (70)
+	control_ejecutable : do bloque_sentencias until '(' condicion . ';'  (75)
+
+	';'  shift 179
+	')'  shift 180
+	.  error
+
+
+state 159
+	control_ejecutable : do bloque_sentencias until condicion ')' . ';'  (73)
+
+	';'  shift 181
+	.  error
+
+
+state 160
+	control_ejecutable : do bloque_sentencias '(' condicion ')' . ';'  (72)
+
+	';'  shift 182
+	.  error
+
+
+state 161
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias else . bloque_sentencias end_if ';'  (35)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 183
+	variable  goto 27
+
+
+state 162
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias end_if . ';'  (36)
+
+	';'  shift 184
+	.  error
+
+
+state 163
+	control_ejecutable : bloque_sentencias until '(' condicion ')' . ';'  (70)
+
+	';'  shift 185
+	.  error
+
+
+state 164
+	sentencia_declarativa : tipo ID '[' CTE_E ']' ';' .  (10)
+
+	.  reduce 10
+
+
+state 165
+	invocacion_metodo : ID '.' ID '(' ')' .  (85)
+
+	.  reduce 85
+
+
+state 166
+	selecion_ejecutable : if '(' ')' bloque_sentencias else bloque_sentencias . end_if ';'  (33)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	end_if  shift 186
+	until  shift 68
+	.  error
+
+
+state 167
+	selecion_ejecutable : if '(' ')' bloque_sentencias end_if ';' .  (38)
+
+	.  reduce 38
+
+
+state 168
+	selecion_ejecutable : if '(' condicion ')' end_if ';' .  (40)
+
+	.  reduce 40
+
+
+state 169
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else . bloque_sentencias end_if ';'  (28)
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else . bloque_sentencias ';'  (30)
+
+	ID  shift 12
+	ASIGNACION  shift 13
+	if  shift 14
+	print  shift 15
+	int  shift 2
+	begin  shift 16
+	do  shift 17
+	float  shift 4
+	'('  shift 18
+	.  error
+
+	sentencia_declarativa  goto 20
+	sentencia_ejecutable  goto 62
+	tipo  goto 9
+	lista_variables  goto 10
+	selecion_ejecutable  goto 22
+	control_ejecutable  goto 23
+	salida_ejecutable  goto 24
+	asign  goto 25
+	bloque_sentencias  goto 187
+	variable  goto 27
+
+
+state 170
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias end_if . ';'  (29)
+
+	';'  shift 188
+	.  error
+
+
+state 171
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias ';' .  (41)
+
+	.  reduce 41
+
+
+state 172
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias bloque_sentencias . end_if ';'  (31)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	end_if  shift 189
+	until  shift 68
+	.  error
+
+
+state 173
+	selecion_ejecutable : if '(' condicion bloque_sentencias else bloque_sentencias . end_if ';'  (32)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	end_if  shift 190
+	until  shift 68
+	.  error
+
+
+state 174
+	selecion_ejecutable : if '(' condicion bloque_sentencias end_if ';' .  (39)
+
+	.  reduce 39
+
+
+state 175
+	selecion_ejecutable : if condicion ')' bloque_sentencias else bloque_sentencias . end_if ';'  (34)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	end_if  shift 191
+	until  shift 68
+	.  error
+
+
+state 176
+	selecion_ejecutable : if condicion ')' bloque_sentencias end_if ';' .  (37)
+
+	.  reduce 37
+
+
+state 177
+	control_ejecutable : do until '(' condicion ')' ';' .  (71)
+
+	.  reduce 71
+
+
+state 178
+	control_ejecutable : do bloque_sentencias until '(' ')' ';' .  (74)
+
+	.  reduce 74
+
+
+state 179
+	control_ejecutable : do bloque_sentencias until '(' condicion ';' .  (75)
+
+	.  reduce 75
+
+
+state 180
+	control_ejecutable : do bloque_sentencias until '(' condicion ')' . ';'  (69)
+	control_ejecutable : bloque_sentencias until '(' condicion ')' . ';'  (70)
+
+	';'  shift 192
+	.  error
+
+
+state 181
+	control_ejecutable : do bloque_sentencias until condicion ')' ';' .  (73)
+
+	.  reduce 73
+
+
+state 182
+	control_ejecutable : do bloque_sentencias '(' condicion ')' ';' .  (72)
+
+	.  reduce 72
+
+
+state 183
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias else bloque_sentencias . end_if ';'  (35)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	end_if  shift 193
+	until  shift 68
+	.  error
+
+
+state 184
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias end_if ';' .  (36)
+
+	.  reduce 36
+
+
+state 185
+	control_ejecutable : bloque_sentencias until '(' condicion ')' ';' .  (70)
+
+	.  reduce 70
+
+
+state 186
+	selecion_ejecutable : if '(' ')' bloque_sentencias else bloque_sentencias end_if . ';'  (33)
+
+	';'  shift 194
+	.  error
+
+
+state 187
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else bloque_sentencias . end_if ';'  (28)
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else bloque_sentencias . ';'  (30)
+	control_ejecutable : bloque_sentencias . until '(' condicion ')' ';'  (70)
+
+	end_if  shift 195
+	until  shift 68
+	';'  shift 196
+	.  error
+
+
+state 188
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias end_if ';' .  (29)
+
+	.  reduce 29
+
+
+state 189
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias bloque_sentencias end_if . ';'  (31)
+
+	';'  shift 197
+	.  error
+
+
+state 190
+	selecion_ejecutable : if '(' condicion bloque_sentencias else bloque_sentencias end_if . ';'  (32)
+
+	';'  shift 198
+	.  error
+
+
+state 191
+	selecion_ejecutable : if condicion ')' bloque_sentencias else bloque_sentencias end_if . ';'  (34)
+
+	';'  shift 199
+	.  error
+
+
+192: reduce/reduce conflict (reduce 69, reduce 70) on until
+192: reduce/reduce conflict (reduce 69, reduce 70) on '('
+state 192
+	control_ejecutable : do bloque_sentencias until '(' condicion ')' ';' .  (69)
+	control_ejecutable : bloque_sentencias until '(' condicion ')' ';' .  (70)
+
+	.  reduce 69
+
+
+state 193
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias else bloque_sentencias end_if . ';'  (35)
+
+	';'  shift 200
+	.  error
+
+
+state 194
+	selecion_ejecutable : if '(' ')' bloque_sentencias else bloque_sentencias end_if ';' .  (33)
+
+	.  reduce 33
+
+
+state 195
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else bloque_sentencias end_if . ';'  (28)
+
+	';'  shift 201
+	.  error
+
+
+state 196
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else bloque_sentencias ';' .  (30)
+
+	.  reduce 30
+
+
+state 197
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias bloque_sentencias end_if ';' .  (31)
+
+	.  reduce 31
+
+
+state 198
+	selecion_ejecutable : if '(' condicion bloque_sentencias else bloque_sentencias end_if ';' .  (32)
+
+	.  reduce 32
+
+
+state 199
+	selecion_ejecutable : if condicion ')' bloque_sentencias else bloque_sentencias end_if ';' .  (34)
+
+	.  reduce 34
+
+
+state 200
+	selecion_ejecutable : '(' condicion ')' bloque_sentencias else bloque_sentencias end_if ';' .  (35)
+
+	.  reduce 35
+
+
+state 201
+	selecion_ejecutable : if '(' condicion ')' bloque_sentencias else bloque_sentencias end_if ';' .  (28)
+
+	.  reduce 28
+
+
+State 33 contains 1 shift/reduce conflict.
+State 91 contains 1 shift/reduce conflict.
+State 142 contains 1 shift/reduce conflict.
+State 192 contains 2 reduce/reduce conflicts.
+
+
+34 terminals, 22 nonterminals
+90 grammar rules, 202 states

@@ -171,16 +171,16 @@ public final static short MAYORIGUAL=262;
 public final static short MENORIGUAL=263;
 public final static short DESTINTO=264;
 public final static short IGUAL=265;
-public final static short IF=266;
-public final static short ELSE=267;
+public final static short if=266;
+public final static short else=267;
 public final static short end_if=268;
 public final static short print=269;
-public final static short INT=270;
+public final static short int=270;
 public final static short begin=271;
 public final static short end=272;
-public final static short DO=273;
+public final static short do=273;
 public final static short until=274;
-public final static short FLOAT=275;
+public final static short float=275;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
     0,    1,    1,    1,    2,    2,    3,    3,    4,    4,
@@ -1025,7 +1025,7 @@ case 49:
 break;
 case 59:
 //#line 125 "Gramatica.y"
-//{actualizarTablaNegativo(((Token)val_peek(0).obj).getLexema())}
+{actualizarTablaNegativo(((Token)val_peek(0).obj).getLexema())}
 break;
 case 75:
 //#line 147 "Gramatica.y"

@@ -26,7 +26,7 @@ public class AnalizadorLexico {
 	private final int F = 400;
 	private final int E = -1;
 	
-	
+	public Token token;
 										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; \n  %  otros
 	private int [][] transicionEstados = {{ 1, 2, E, 3, 1, 1, F, F,12, F, 8, 9,11,10, 0, 0, F, F, F, F, F, F, 0,15, E}, //0
 										  { 1, 1, 1, F, 1, 1, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //1
@@ -174,6 +174,7 @@ public class AnalizadorLexico {
 			else
 				indiceLectura++;
 		}
+		token = new Token(nroToken,cadena.toString(),nroLinea);
 		if(indiceLectura==ascii.size()) {
 			if (porcentaje) 
 				System.out.println("ERRROORRRR");
@@ -181,6 +182,7 @@ public class AnalizadorLexico {
 			}
 //		if (tablaSimbolos.existeClave(cadena.toString()))
 //			parserVal.sval = cadena.toString();
+		
 		return nroToken;	
 	}
 

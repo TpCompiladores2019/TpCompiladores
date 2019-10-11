@@ -35,5 +35,8 @@ public class Compilador {
 		for ( Lexico.Error e: AnalizadorLexico.listaErrores) {
 			System.out.println(e.toString());
 		}
+		
+		parser.imprimirInformacion();
+		parser.imprimirError();
 }
 }

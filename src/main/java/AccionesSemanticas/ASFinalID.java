@@ -22,10 +22,12 @@ public class ASFinalID implements IAccionSemantica{
 		if (tablaTokens.contieneClave(salida)) // Es palabra reservada
 			return tablaTokens.getToken(salida);
 
-		if (!tablaSimbolos.agregar(salida,null)) {
-			Error w = new Error("La variable ya fue declarada antes",AnalizadorLexico.nroLinea,"","ERROR");
-			AnalizadorLexico.listaErrores.add(w);//AGREGAR A WARNIGN
-		}
+		tablaSimbolos.agregar(salida,null);   //REVISARRRRRRRRRRRRRR SE COMENTO LO DE ABAJO
+		
+	//	if (!tablaSimbolos.agregar(salida,null)) {
+	//		Error w = new Error("La variable ya fue declarada antes",AnalizadorLexico.nroLinea,"","ERROR");
+		//	AnalizadorLexico.listaErrores.add(w);//AGREGAR A WARNIGN
+	//	}
 			// Si es palabra reservbada no se agrega a la tabla de simbolos //TODO Mirar proque no es STRING
 		return tablaTokens.getToken("IDENTIFICADOR");
 		}
