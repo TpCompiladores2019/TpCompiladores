@@ -6,6 +6,7 @@
 	import Lexico.Token;
 	import java.util.ArrayList;
 	import Lexico.Error;
+	import java.util.List;
 %}
 
 %token
@@ -120,10 +121,10 @@
 			;
 			
 	factor : variable
-	       | CTE_E
-		   | CTE_F
-		   | '-' CTE_E {actualizarTablaNegativo(((Token)$2.obj).getLexema())}
-		   | '-' CTE_F 
+	       | CTE_E {this.agregarConstante(((Token)$1.obj).getLexema(),"int",false);}
+		   | CTE_F {this.agregarConstante(((Token)$1.obj).getLexema(),"float",false);}
+		   | '-' CTE_E {this.agregarConstante(((Token)$1.obj).getLexema(),"int",true);}
+		   | '-' CTE_F {this.agregarConstante(((Token)$1.obj).getLexema(),"float",true);}
 		   | invocacion_metodo
 		   ;
 	
@@ -240,8 +241,6 @@ public void imprimirError() {
 	}
 }
 /*
-public void actualizarTablaNegativo
-
 public void agregarATablaSimbolos(Token[] tokensSentencia) {
 	//en 0 esta el tipo , en 1 el primer id, en 2 la coma, en 3 id, etc
 	ParserVal aux;
@@ -266,6 +265,49 @@ public void agregarATablaSimbolos(Token[] tokensSentencia) {
 		indice = indice +2;
 		}
 	}
-}*/
+}
+*/
+public void agregarConstante (String constante, String tipo, boolean esNegativa) {
+	if (esNegativa) 
+		constante = "-" + constante;
+	if (!tablaSimbolos.existeClave(constante))		
+		tablaSimbolos.agregar(constante, tipo);
+	System.out.println("Entro a agregarConstante");	
+}
+
+private List<Error> erroresSemanticos = new ArrayList<Error>();
+public void agregarVariable (String variable, String tipo) {
+	
+	if (!tablaSimbolos.existeClave(variable)) {
+		tablaSimbolos.agregar(variable, tipo);
+	}
+	else{
+		Error e = new Error ("La variable ya fue declarada.",AnalizadorLexico.nroLinea,"","Error");
+		erroresSemanticos.add(e);
+	}		
+}		
+//private List<Error> erroresSemanticos = new ArrayList<Error>()	;	
+public void actualizarTabla(String id,String tipo, String valor) {
+
+	if (tipo.equals("int")) {	
+		if (Integer.parseInt(valor) < -32768) {
+			Error nuevoError = new Error("El numero excede el menor valor posible",AnalizadorLexico.nroLinea," ","Error");
+			erroresSemanticos.add(nuevoError);		
+		}
+		else if (Integer.parseInt(valor) > 32767) {
+			Error nuevoError = new Error("El numero excede el mayor valor posible",AnalizadorLexico.nroLinea," ","Error");
+			erroresSemanticos.add(nuevoError);	
+		}
+		else tablaSimbolos.agregar(id, tipo);
+	}
+	else {
+		if ((Float.parseFloat(valor)> Float.MIN_NORMAL && Float.parseFloat(valor) < Float.MAX_VALUE) || (Float.parseFloat(valor)< -Float.MIN_NORMAL && Float.parseFloat(valor) > -Float.MAX_VALUE)
+				|| (Float.parseFloat(valor) == 0.0)) {
+			tablaSimbolos.agregar(id, tipo);
+		}else {Error nuevoError = new Error("El numero excede los rangos",AnalizadorLexico.nroLinea," ","Error");
+		erroresSemanticos.add(nuevoError);}
+	}
+	
+}
 
 

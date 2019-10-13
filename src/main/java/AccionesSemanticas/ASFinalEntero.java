@@ -8,7 +8,7 @@ public class ASFinalEntero implements IAccionSemantica {
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		AnalizadorLexico.indiceLectura--;
-		if (Integer.parseInt(cadena.toString())< -32768) { // TODO ver que onda porque llega sin signo en verdad
+/*		if (Integer.parseInt(cadena.toString())< -32768) { // TODO ver que onda porque llega sin signo en verdad
 			cadena = new StringBuilder();
 			cadena.append(-32768); // TODO se agrega con signo o sin???
 			Error nuevoError = new Error("El numero excede el men",AnalizadorLexico.nroLinea," ","WARNING");
@@ -27,7 +27,7 @@ public class ASFinalEntero implements IAccionSemantica {
 
 		}
 		tablaSimbolos.agregar(cadena.toString(),"int");
-
+*/
 		return tablaTokens.getToken("CONSTANTE E");
 	}
 	

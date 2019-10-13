@@ -21,7 +21,7 @@ public class Compilador {
 		TablaSimbolos tablaSimbolos =  new TablaSimbolos();
 		TablaTokens tablaTokens  = new TablaTokens();
 		//ParserVal parserVal = new ParserVal();
-		String path = "C:\\Users\\Juan\\Desktop\\datos.txt";
+		String path = "C:\\Users\\Larda\\Desktop\\datos.txt";
 		AnalizadorLexico analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,path);
 		Parser parser = new Parser(analizarLexico,tablaSimbolos);
 		

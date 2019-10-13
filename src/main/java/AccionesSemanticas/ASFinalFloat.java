@@ -12,12 +12,12 @@ public class ASFinalFloat implements IAccionSemantica{
 		
 		if ((Float.parseFloat(cadena.toString())> Float.MIN_NORMAL && Float.parseFloat(cadena.toString()) < Float.MAX_VALUE) || (Float.parseFloat(cadena.toString())< -Float.MIN_NORMAL && Float.parseFloat(cadena.toString()) > -Float.MAX_VALUE)
 			|| (Float.parseFloat(cadena.toString()) == 0.0)) {
-				tablaSimbolos.agregar(cadena.toString(),"float");
+				//tablaSimbolos.agregar(cadena.toString(),"float");
 				return tablaTokens.getToken("CONSTANTE F");
 		}
 		else {
-			Error nuevoError = new Error("El numero excede el rango de los Float",AnalizadorLexico.nroLinea," ","ERROR");
-			AnalizadorLexico.listaErrores.add(nuevoError);
+			// nuevoError = new Error("El numero excede el rango de los Float",AnalizadorLexico.nroLinea," ","ERROR");
+		//	AnalizadorLexico.listaErrores.add(nuevoError);
 			return -1;
 		}
 	}

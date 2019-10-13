@@ -16,14 +16,16 @@
 
 
 
-//#line 2 "Gramatica.y"
+//#line 2 "Gramatica1.y"
 	package Sintactico;
 
 	import Lexico.AnalizadorLexico;
 	import Lexico.TablaSimbolos;
 	import Lexico.Token;
 	import java.util.ArrayList;
-	import Lexico.Error;
+import java.util.List;
+
+import Lexico.Error;
 //#line 25 "Parser.java"
 
 
@@ -661,7 +663,7 @@ final static String yyrule[] = {
 "sentencias : sentencia_ejecutable",
 };
 
-//#line 193 "Gramatica.y"
+//#line 193 "Gramatica1.y"
 
 
 
@@ -711,37 +713,53 @@ public void imprimirError() {
 		}
 	}
 }
-/*
-public void actualizarTablaNegativo
 
-public void agregarATablaSimbolos(Token[] tokensSentencia) {
-	//en 0 esta el tipo , en 1 el primer id, en 2 la coma, en 3 id, etc
-	ParserVal aux;
-	int indice =0;
-	String tipoVariables;
-	if (valstk[indice] != null) {
-		tipoVariables = ((Token) valstk[indice].obj).getLexema();
-		indice++;
-		}
-	else
-		return;
-	int nroLinea = ((Token) valstk[indice].obj).getNroLinea();
-	while (indice < YYSTACKSIZE) {
-		String id = ((Token) valstk[indice].obj).getLexema();
-		if (!tablaSimbolos.existeClave(id))
-			tablaSimbolos.agregar(id, tipoVariables);
-		else {
-			Lexico.Error e = new Lexico.Error("Variable ya declarada",nroLinea," ","Error");		
-			errores.add(e);
-		}
-			
-		indice = indice +2;
-		}
+public void agregarConstante (String constante, String tipo, boolean esNegativa) {
+	System.out.println("Constante que entra: " + constante);
+	if (esNegativa) 
+		constante = "-" + constante;
+	if (!tablaSimbolos.existeClave(constante))		
+		tablaSimbolos.agregar(constante, tipo);
+	System.out.println("Entro a agregarConstante, valor:" + constante);	
+}
+
+private List<Error> erroresSemanticos = new ArrayList<Error>();
+public void agregarVariable (String variable, String tipo) {
+	
+	if (!tablaSimbolos.existeClave(variable)) {
+		tablaSimbolos.agregar(variable, tipo);
 	}
-}*/
+	else{
+		Error e = new Error ("La variable ya fue declarada.",AnalizadorLexico.nroLinea,"","Error");
+		erroresSemanticos.add(e);
+	}		
+}		
+//private List<Error> erroresSemanticos = new ArrayList<Error>()	;	
+public void actualizarTabla(String id,String tipo, String valor) {
+
+	if (tipo.equals("int")) {	
+		if (Integer.parseInt(valor) < -32768) {
+			Error nuevoError = new Error("El numero excede el menor valor posible",AnalizadorLexico.nroLinea," ","Error");
+			erroresSemanticos.add(nuevoError);		
+		}
+		else if (Integer.parseInt(valor) > 32767) {
+			Error nuevoError = new Error("El numero excede el mayor valor posible",AnalizadorLexico.nroLinea," ","Error");
+			erroresSemanticos.add(nuevoError);	
+		}
+		else tablaSimbolos.agregar(id, tipo);
+	}
+	else {
+		if ((Float.parseFloat(valor)> Float.MIN_NORMAL && Float.parseFloat(valor) < Float.MAX_VALUE) || (Float.parseFloat(valor)< -Float.MIN_NORMAL && Float.parseFloat(valor) > -Float.MAX_VALUE)
+				|| (Float.parseFloat(valor) == 0.0)) {
+			tablaSimbolos.agregar(id, tipo);
+		}else {Error nuevoError = new Error("El numero excede los rangos",AnalizadorLexico.nroLinea," ","Error");
+		erroresSemanticos.add(nuevoError);}
+	}
+	
+}
 
 
-//#line 673 "Parser.java"
+//#line 714 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -896,246 +914,258 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 9:
-//#line 59 "Gramatica.y"
+//#line 59 "Gramatica1.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(2).obj).getNroLinea() + ": Sentencia declarativa");}
 break;
 case 10:
-//#line 60 "Gramatica.y"
+//#line 60 "Gramatica1.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia declarativa");}
 break;
 case 11:
-//#line 61 "Gramatica.y"
+//#line 61 "Gramatica1.y"
 {this.addError("Error en declaracion, falta definir el tipo.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 12:
-//#line 62 "Gramatica.y"
+//#line 62 "Gramatica1.y"
 {this.addError("Error en declaracion, falta definir el tipo.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 13:
-//#line 63 "Gramatica.y"
+//#line 63 "Gramatica1.y"
 {this.addError("Error en declaracion, falta ';'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 14:
-//#line 64 "Gramatica.y"
+//#line 64 "Gramatica1.y"
 {this.addError("Error en declaracion, falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 15:
-//#line 65 "Gramatica.y"
+//#line 65 "Gramatica1.y"
 {this.addError("Error en declaracion, falta ']'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 16:
-//#line 66 "Gramatica.y"
+//#line 66 "Gramatica1.y"
 {this.addError("Error en declaracion, falta '['.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 17:
-//#line 67 "Gramatica.y"
+//#line 67 "Gramatica1.y"
 {this.addError("Error en declaracion, falta variables.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 18:
-//#line 68 "Gramatica.y"
+//#line 68 "Gramatica1.y"
 {this.addError("Error en declaracion, falta identificador.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 19:
-//#line 69 "Gramatica.y"
+//#line 69 "Gramatica1.y"
 {this.addError("Error en declaracion, falta constante.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 28:
-//#line 86 "Gramatica.y"
+//#line 86 "Gramatica1.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(8).obj).getNroLinea() + ": Sentencia if-else");}
 break;
 case 29:
-//#line 87 "Gramatica.y"
+//#line 87 "Gramatica1.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(6).obj).getNroLinea() + ": Sentencia if");}
 break;
 case 30:
-//#line 88 "Gramatica.y"
+//#line 88 "Gramatica1.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 31:
-//#line 89 "Gramatica.y"
+//#line 89 "Gramatica1.y"
 {this.addError("Falta 'end_if'.",((Token) val_peek(1).obj).getNroLinea());}
 break;
 case 32:
-//#line 90 "Gramatica.y"
+//#line 90 "Gramatica1.y"
 {this.addError("Falta 'else'.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 33:
-//#line 91 "Gramatica.y"
+//#line 91 "Gramatica1.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 34:
-//#line 92 "Gramatica.y"
+//#line 92 "Gramatica1.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 35:
-//#line 93 "Gramatica.y"
+//#line 93 "Gramatica1.y"
 {this.addError( "Falta ')'.",((Token)val_peek(5).obj).getNroLinea());}
 break;
 case 36:
-//#line 94 "Gramatica.y"
+//#line 94 "Gramatica1.y"
 {this.addError("Falta condicion.",((Token)val_peek(6).obj).getNroLinea());}
 break;
 case 37:
-//#line 95 "Gramatica.y"
+//#line 95 "Gramatica1.y"
 {this.addError("Falta ')'.",((Token)val_peek(7).obj).getNroLinea());}
 break;
 case 38:
-//#line 96 "Gramatica.y"
+//#line 96 "Gramatica1.y"
 {this.addError("Falta 'if'.",((Token)val_peek(7).obj).getNroLinea());}
 break;
 case 39:
-//#line 97 "Gramatica.y"
+//#line 97 "Gramatica1.y"
 {this.addError("Falta 'if'.",((Token)val_peek(5).obj).getNroLinea());}
 break;
 case 40:
-//#line 98 "Gramatica.y"
+//#line 98 "Gramatica1.y"
 {this.addError("Falta '('.",((Token)val_peek(5).obj).getNroLinea());}
 break;
 case 41:
-//#line 99 "Gramatica.y"
+//#line 99 "Gramatica1.y"
 {this.addError("Falta condicion.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 42:
-//#line 100 "Gramatica.y"
+//#line 100 "Gramatica1.y"
 {this.addError("Falta ')'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 43:
-//#line 101 "Gramatica.y"
+//#line 101 "Gramatica1.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 44:
-//#line 102 "Gramatica.y"
+//#line 102 "Gramatica1.y"
 {this.addError("Falta 'end_if'.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 45:
-//#line 103 "Gramatica.y"
+//#line 103 "Gramatica1.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 47:
-//#line 107 "Gramatica.y"
+//#line 107 "Gramatica1.y"
 {this.addError("Falta expresion del lado izquierdo.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 48:
-//#line 108 "Gramatica.y"
+//#line 108 "Gramatica1.y"
 {this.addError("Falta operador.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 49:
-//#line 109 "Gramatica.y"
+//#line 109 "Gramatica1.y"
 {this.addError("Falta expresion del lado derecho.",((Token)val_peek(0).obj).getNroLinea());}
 break;
+case 57:
+//#line 123 "Gramatica1.y"
+{this.agregarConstante(((Token)val_peek(0).obj).getLexema(),"int",false);}
+break;
+case 58:
+//#line 124 "Gramatica1.y"
+{this.agregarConstante(((Token)val_peek(0).obj).getLexema(),"float",false);}
+break;
 case 59:
-//#line 125 "Gramatica.y"
-//{actualizarTablaNegativo(((Token)val_peek(0).obj).getLexema())}
+//#line 125 "Gramatica1.y"
+{this.agregarConstante(((Token)val_peek(0).obj).getLexema(),"int",true);}
+break;
+case 60:
+//#line 126 "Gramatica1.y"
+{this.agregarConstante(((Token)val_peek(0).obj).getLexema(),"float",true);}
 break;
 case 75:
-//#line 147 "Gramatica.y"
+//#line 147 "Gramatica1.y"
 {this.addError("Falta 'begin'.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 76:
-//#line 148 "Gramatica.y"
+//#line 148 "Gramatica1.y"
 {/*Error sentencias*/}
 break;
 case 77:
-//#line 149 "Gramatica.y"
+//#line 149 "Gramatica1.y"
 {/*Error sencia_ejecutable*/}
 break;
 case 78:
-//#line 150 "Gramatica.y"
+//#line 150 "Gramatica1.y"
 {this.addError("Falta 'end'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 79:
-//#line 151 "Gramatica.y"
+//#line 151 "Gramatica1.y"
 {this.addError("Falta 'begin'.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 80:
-//#line 152 "Gramatica.y"
+//#line 152 "Gramatica1.y"
 {/*Error sentencias*/}
 break;
 case 81:
-//#line 153 "Gramatica.y"
+//#line 153 "Gramatica1.y"
 {/*Errorsentencia_declarativa*/}
 break;
 case 82:
-//#line 154 "Gramatica.y"
+//#line 154 "Gramatica1.y"
 {this.addError("Falta 'end'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 83:
-//#line 158 "Gramatica.y"
+//#line 158 "Gramatica1.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(6).obj).getNroLinea() + ": Sentencia until");}
 break;
 case 84:
-//#line 159 "Gramatica.y"
+//#line 159 "Gramatica1.y"
 {this.addError("Falta 'do'.",((Token)val_peek(5).obj).getNroLinea());}
 break;
 case 85:
-//#line 160 "Gramatica.y"
+//#line 160 "Gramatica1.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(5).obj).getNroLinea());}
 break;
 case 86:
-//#line 161 "Gramatica.y"
+//#line 161 "Gramatica1.y"
 {this.addError("Falta 'until'.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 87:
-//#line 162 "Gramatica.y"
+//#line 162 "Gramatica1.y"
 {this.addError("Falta '('.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 88:
-//#line 163 "Gramatica.y"
+//#line 163 "Gramatica1.y"
 {this.addError("Falta condicion.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 89:
-//#line 164 "Gramatica.y"
+//#line 164 "Gramatica1.y"
 {this.addError("Falta ')'.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 90:
-//#line 165 "Gramatica.y"
+//#line 165 "Gramatica1.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 91:
-//#line 168 "Gramatica.y"
+//#line 168 "Gramatica1.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(4).obj).getNroLinea() + ": Sentencia print");}
 break;
 case 92:
-//#line 169 "Gramatica.y"
+//#line 169 "Gramatica1.y"
 {this.addError("Falta 'print'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 93:
-//#line 170 "Gramatica.y"
+//#line 170 "Gramatica1.y"
 {this.addError("Falta '('.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 94:
-//#line 171 "Gramatica.y"
+//#line 171 "Gramatica1.y"
 {this.addError("Solo se puede definir una cadena.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 95:
-//#line 172 "Gramatica.y"
+//#line 172 "Gramatica1.y"
 {this.addError("Falta ')'.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 96:
-//#line 173 "Gramatica.y"
+//#line 173 "Gramatica1.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 97:
-//#line 176 "Gramatica.y"
+//#line 176 "Gramatica1.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(3).obj).getNroLinea() + ": Asignacion");}
 break;
 case 98:
-//#line 177 "Gramatica.y"
+//#line 177 "Gramatica1.y"
 {this.addError("Falta variable.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 99:
-//#line 178 "Gramatica.y"
+//#line 178 "Gramatica1.y"
 {this.addError("Falta ':='.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 100:
-//#line 179 "Gramatica.y"
+//#line 179 "Gramatica1.y"
 {this.addError("Falta expresion.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 101:
-//#line 180 "Gramatica.y"
+//#line 180 "Gramatica1.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
-//#line 1062 "Parser.java"
+//#line 1115 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
