@@ -1,0 +1,37 @@
+Tokens Detectados: 
+Linea 1 Palabra Reservada: int
+Linea 1 Identificador: b
+Linea 1: ;
+Linea 2 Palabra Reservada: int
+Linea 2 Identificador: b
+Linea 2: ,
+Linea 2 Identificador: c
+Linea 2: ,
+Linea 2 Identificador: e
+Linea 2: ,
+Linea 2 Identificador: f
+Linea 2: ;
+Linea 3 Palabra Reservada: int
+Linea 3 Identificador: c
+Linea 3: [
+Linea 3 Constante Entera: 10
+Linea 3: ;
+Linea 4 Palabra Reservada: begin
+Linea 5 Palabra Reservada: print
+Linea 5: (
+Linea 5 Cadena: hola
+Linea 5: )
+Linea 5: ;
+Linea 6 Palabra Reservada: end
+
+Errores Detectados: 
+ERROR--> Linea 2: La variable ya fue declarada antes
+ERROR--> Linea 3: La variable ya fue declarada antes
+
+Tabla de Simbolos: 
+b--> {tipo=}
+c--> {tipo=}
+e--> {tipo=}
+f--> {tipo=}
+hola--> {tipo=cadena}
+10--> {tipo=int}

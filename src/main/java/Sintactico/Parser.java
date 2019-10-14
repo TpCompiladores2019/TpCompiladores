@@ -694,22 +694,26 @@ public int yyparser() {
 	return yyparse();
 }
 
-public void imprimirInformacion() {
+public String informacionEstructuras() {
+	String informacion="";
 	if (!listaCorrectas.isEmpty()){
-		System.out.println("Estructuras Sintacticas: ");
+		informacion = "\nEstructuras Sintacticas: \n";
 		for (String info : listaCorrectas) {
-			System.out.println(info);
+			informacion+=info + "\n";
 		}
 	}
+	return informacion;
 }
 
-public void imprimirError() {
+public String informacionError() {
+	String informacion = "";
 	if (!listaErrores.isEmpty()){
-		System.out.println("Errores Sintacticos: ");
+		informacion = "\nErrores Sintacticos: \n";
 		for (Error e : listaErrores) {
-			System.out.println(e);
+			informacion += e +"\n";
 		}
 	}
+	return informacion;
 }
 /*
 public void actualizarTablaNegativo

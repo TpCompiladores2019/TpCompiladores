@@ -1,6 +1,7 @@
 package Lexico;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,9 +21,24 @@ import AccionesSemanticas.ASErrorCaracterFaltante;
 import AccionesSemanticas.ASFinal;
 import AccionesSemanticas.ASError;
 import AccionesSemanticas.IAccionSemantica;
-import Sintactico.ParserVal;
+
 
 public class AnalizadorLexico {
+	
+	public AnalizadorLexico(TablaSimbolos tablaSimbolos, TablaTokens tablaTokens,File ruta) throws IOException {
+		this.tablaSimbolos = tablaSimbolos;
+		this.tablaTokens = tablaTokens;
+		tablaTokens.CompletarTabla();
+		inicializarColumnas();
+		fr = new FileReader(ruta);
+		int numAscii;
+		while ((numAscii=fr.read())!=-1) {
+			ascii.add(numAscii);
+		}
+		ascii.add(32);
+	}
+	
+	
 	private final int F = 400;
 	private final int E = -1;
 	
@@ -89,7 +105,8 @@ public class AnalizadorLexico {
 
 	public static List <Error>listaErrores = new ArrayList<Error>();
 	public static List <Error>listaWarning = new ArrayList<Error>();
-		
+	public static List <String> listaCorrectas = new ArrayList<String>();
+	
 	private Hashtable<Character,Integer> columnas=new Hashtable<Character,Integer>();
 	
 	private void inicializarColumnas() {
@@ -130,19 +147,7 @@ public class AnalizadorLexico {
 	
 
 	
-	public AnalizadorLexico(TablaSimbolos tablaSimbolos, TablaTokens tablaTokens,String path) throws IOException {
-		this.tablaSimbolos = tablaSimbolos;
-		this.tablaTokens = tablaTokens;
-		tablaTokens.CompletarTabla();
-		inicializarColumnas();
-		fr = new FileReader(path);
-		int numAscii;
-		while ((numAscii=fr.read())!=-1) {
-			ascii.add(numAscii);
-		}
-		ascii.add(32);
-	}
-	
+
 	public void checkPorcentaje(char c) {
 		if (c=='%') {
 			porcentaje=!porcentaje;
@@ -162,11 +167,8 @@ public class AnalizadorLexico {
 			if(numAscii != 13) {
 				char caracterleido = (char) numAscii;
 				checkPorcentaje(caracterleido);
-				System.out.println(caracterleido);
 				indiceLectura++;
 				int columna = getColumna(caracterleido);
-				//System.out.println("estado" + estadoActual);
-				//System.out.println("Columna: " + columna);
 				if (accionesSemanticas[estadoActual][columna] != null) 
 					nroToken = accionesSemanticas[estadoActual][columna].ejecutar(caracterleido,cadena,tablaTokens,tablaSimbolos);
 				estadoActual = transicionEstados[estadoActual][columna];
@@ -177,12 +179,9 @@ public class AnalizadorLexico {
 		token = new Token(nroToken,cadena.toString(),nroLinea);
 		if(indiceLectura==ascii.size()) {
 			if (porcentaje) 
-				System.out.println("ERRROORRRR");
+				listaErrores.add(new Error("No cierra cadena", nroLinea, "", "ERROR"));
 			return 0;
 			}
-//		if (tablaSimbolos.existeClave(cadena.toString()))
-//			parserVal.sval = cadena.toString();
-		
 		return nroToken;	
 	}
 

@@ -11,8 +11,8 @@ public class ASFinalEntero implements IAccionSemantica {
 		if (Integer.parseInt(cadena.toString())< -32768) { // TODO ver que onda porque llega sin signo en verdad
 			cadena = new StringBuilder();
 			cadena.append(-32768); // TODO se agrega con signo o sin???
-			Error nuevoError = new Error("El numero excede el men",AnalizadorLexico.nroLinea," ","WARNING");
-			AnalizadorLexico.listaErrores.add(nuevoError);
+			Error nuevoError = new Error("El numero excede el menor entero posible.",AnalizadorLexico.nroLinea," ","WARNING");
+			AnalizadorLexico.listaWarning.add(nuevoError);
 
 			// TODO warning de fuera de rango y cambio de valor al minimo
 		}
@@ -20,14 +20,14 @@ public class ASFinalEntero implements IAccionSemantica {
 			cadena = new StringBuilder();
 			cadena.append(32767);
 
-			Error nuevoError = new Error("El numero excede el mayor entero posible",AnalizadorLexico.nroLinea," ","WARNING");
-			AnalizadorLexico.listaErrores.add(nuevoError);
+			Error nuevoError = new Error("El numero excede el mayor entero posible.",AnalizadorLexico.nroLinea," ","WARNING");
+			AnalizadorLexico.listaWarning.add(nuevoError);
 
 			// TODO warning de fuera de rango y cambio de valor al MAXIMO
 
 		}
 		tablaSimbolos.agregar(cadena.toString(),"int");
-
+		AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Constante Entera: " + cadena.toString());
 		return tablaTokens.getToken("CONSTANTE E");
 	}
 	

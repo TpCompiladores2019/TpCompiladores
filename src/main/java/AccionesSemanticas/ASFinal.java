@@ -8,6 +8,7 @@ public class ASFinal implements IAccionSemantica {
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		AnalizadorLexico.indiceLectura--;
+		AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + ": " + cadena.toString());
 		return tablaTokens.getToken(cadena.toString());
 	}
 

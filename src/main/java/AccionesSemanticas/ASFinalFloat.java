@@ -13,6 +13,7 @@ public class ASFinalFloat implements IAccionSemantica{
 		if ((Float.parseFloat(cadena.toString())> Float.MIN_NORMAL && Float.parseFloat(cadena.toString()) < Float.MAX_VALUE) || (Float.parseFloat(cadena.toString())< -Float.MIN_NORMAL && Float.parseFloat(cadena.toString()) > -Float.MAX_VALUE)
 			|| (Float.parseFloat(cadena.toString()) == 0.0)) {
 				tablaSimbolos.agregar(cadena.toString(),"float");
+				AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Constante Float: " + cadena.toString());
 				return tablaTokens.getToken("CONSTANTE F");
 		}
 		else {

@@ -1,42 +1,134 @@
 package com.g3.TpCompiladores;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
+import java.io.File;
+
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+
+
+import javax.swing.JFileChooser;
 
 import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 import Sintactico.Parser;
-
+import Lexico.Error;
 
 public class Compilador {
 
 	static int posicion;
+	private TablaSimbolos tablaSimbolos;
+	private TablaTokens tablaTokens;
+	private AnalizadorLexico analizarLexico ;
+	private FileWriter fw;
 	
-	public static void main(String[] args) throws IOException {
-		
-		TablaSimbolos tablaSimbolos =  new TablaSimbolos();
-		TablaTokens tablaTokens  = new TablaTokens();
-		//ParserVal parserVal = new ParserVal();
-		String path = "C:\\Users\\Juan\\Desktop\\datos.txt";
-		AnalizadorLexico analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,path);
-		Parser parser = new Parser(analizarLexico,tablaSimbolos);
-		
+	public Compilador(File ruta) throws IOException {
+		this.tablaSimbolos = new TablaSimbolos();
+		this.tablaTokens = new TablaTokens();
+		this.analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,ruta);
+	}
+	
+	public void mostrarInfoLexico() {
 		int nroToken=-1;
-		/*while (nroToken != 0) {
+		while (nroToken != 0) {
 			nroToken=analizarLexico.yylex();
-		}*/
-
-		System.out.println(parser.yyparser());
-		tablaSimbolos.imprimir();
-		for ( Lexico.Error e: AnalizadorLexico.listaErrores) {
-			System.out.println(e.toString());
 		}
+
+		try {
+			fw = new FileWriter("InformacionLexico.txt");
+			String informacion ="";
+			
+			if (!AnalizadorLexico.listaCorrectas.isEmpty()) {
+				informacion = "Tokens Detectados: \n";
+				for (String info : AnalizadorLexico.listaCorrectas) {
+					informacion += info + "\n";
+				}
+			}
+			
+			if(!AnalizadorLexico.listaWarning.isEmpty()) {
+				informacion += "\nWarnings Detectados: \n";
+				for (Error warning : AnalizadorLexico.listaWarning) {
+					informacion += warning + "\n"; 
+				}
+			}
+			
+			if (!AnalizadorLexico.listaErrores.isEmpty()) {
+				informacion += "\nErrores Detectados: \n";
+				for (Error errores : AnalizadorLexico.listaErrores) {
+					informacion += errores + "\n";
+				}
+			}
+			
+			informacion += "\nTabla de Simbolos: \n" ;
+			for (String key : tablaSimbolos.tablaSimbolos.keySet()) {
+				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key.toString()) + "\n";
+			}
 		
-		parser.imprimirInformacion();
-		parser.imprimirError();
-}
-}
+			fw.write(informacion);
+			fw.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}	
+	}
+	
+	public void mostrarInfoSintactico() {
+		
+		try {
+			fw = new FileWriter("InformacionSintactico.txt");
+			Parser parser = new Parser(analizarLexico,tablaSimbolos);
+			System.out.println(parser.yyparser()); //hay que borrar
+			String informacion ="";
+			
+			if (!AnalizadorLexico.listaCorrectas.isEmpty()) {
+				informacion = "Tokens Detectados: \n";
+				for (String info : AnalizadorLexico.listaCorrectas) {
+					informacion += info + "\n";
+				}
+			}
+			
+			informacion += parser.informacionEstructuras();
+			
+			informacion += parser.informacionError();
+			
+			if (!AnalizadorLexico.listaErrores.isEmpty()) {
+				informacion += "\nErrores Lexicos Detectados: \n";
+				for (Error errores : AnalizadorLexico.listaErrores) {
+					informacion += errores + "\n";
+				}
+			}
+			
+			informacion += "\nTabla de Simbolos: \n" ;
+			for (String key : tablaSimbolos.tablaSimbolos.keySet()) {
+				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key.toString()) + "\n";
+			}
+			
+			
+			
+			
+			fw.write(informacion);
+			fw.close();
+
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		
+	}
+	
+	}
+	
+
+	/*
+	 * System.out.println(parser.yyparser());
+	tablaSimbolos.imprimir();
+	for ( Lexico.Error e: AnalizadorLexico.listaErrores) {
+		System.out.println(e.toString());
+	}
+	
+	parser.imprimirInformacion();
+	parser.imprimirError();*/
+

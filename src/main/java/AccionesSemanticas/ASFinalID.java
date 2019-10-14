@@ -13,22 +13,24 @@ public class ASFinalID implements IAccionSemantica{
 		if (cadena.length() > 25) {
 			salida = cadena.substring(0, 24);
 			Error w = new Error("La variable "+ cadena + " fue truncada",AnalizadorLexico.nroLinea,"","WARNING");
-			AnalizadorLexico.listaWarning.add(w);//AGREGAR A WARNIGN
+			AnalizadorLexico.listaWarning.add(w);
 		}
 		else
 			salida = cadena.toString();	
 		//cadena = salida; para que vuelva modifcado, hay que ver como se hace
 				
-		if (tablaTokens.contieneClave(salida)) // Es palabra reservada
+		if (tablaTokens.contieneClave(salida)) { // Es palabra reservada
+			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Palabra Reservada: " + cadena.toString());
 			return tablaTokens.getToken(salida);
+		}
 
-		tablaSimbolos.agregar(salida,null);   //REVISARRRRRRRRRRRRRR SE COMENTO LO DE ABAJO
 		
-	//	if (!tablaSimbolos.agregar(salida,null)) {
-	//		Error w = new Error("La variable ya fue declarada antes",AnalizadorLexico.nroLinea,"","ERROR");
-		//	AnalizadorLexico.listaErrores.add(w);//AGREGAR A WARNIGN
-	//	}
-			// Si es palabra reservbada no se agrega a la tabla de simbolos //TODO Mirar proque no es STRING
+		if (!tablaSimbolos.agregar(salida,"")) {
+			Error w = new Error("La variable ya fue declarada antes",AnalizadorLexico.nroLinea,"","ERROR");
+			AnalizadorLexico.listaErrores.add(w);
+		}
+		
+		AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Identificador: " + salida);
 		return tablaTokens.getToken("IDENTIFICADOR");
 		}
 	
