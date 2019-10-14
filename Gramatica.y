@@ -58,7 +58,8 @@
 							;
 							
 	sentencia_declarativa : tipo lista_variables ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia declarativa");}
-						  | tipo ID '[' CTE_E ']' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia declarativa");}
+						  | tipo ID '[' CTE_E ']' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia declarativa");
+						  	this.agregarVariable}
 						  | ID '[' CTE_E ']' ';' {this.addError("Error en declaracion, falta definir el tipo.",((Token)$2.obj).getNroLinea());}
 						  | lista_variables ';' {this.addError("Error en declaracion, falta definir el tipo.",((Token)$1.obj).getNroLinea());}
 						  | tipo ID '[' CTE_E ']'  {this.addError("Error en declaracion, falta ';'.",((Token)$2.obj).getNroLinea());}
@@ -267,13 +268,37 @@ public void agregarATablaSimbolos(Token[] tokensSentencia) {
 	}
 }
 */
+
+private void chequeoEnteros (String valor) {	
+		if (Integer.parseInt(valor) < -32768) {
+			Error nuevoError = new Error("Constante entera fuera de rango",AnalizadorLexico.nroLinea," ","Error");
+			erroresSemanticos.add(nuevoError);
+		}
+		else if (Integer.parseInt(valor) > 32767) {
+			Error nuevoError = new Error("Constante entera fuera de rango",AnalizadorLexico.nroLinea," ","Error");
+			erroresSemanticos.add(nuevoError);
+		}
+		else
+			tablaSimbolos.agregar(String.valueOf(valor), "int");
+}
+
+private void chequeoFlotantes (String valor) {	
+
+	if (( (Float.parseFloat(valor)> Float.MIN_NORMAL && Float.parseFloat(valor) < Float.MAX_VALUE)
+		|| (Float.parseFloat(valor))< -Float.MIN_NORMAL && Float.parseFloat(valor) > -Float.MAX_VALUE)
+			|| (Float.parseFloat(valor) == 0.0)) {
+				tablaSimbolos.agregar(valor,"float");}
+}
+
 public void agregarConstante (String constante, String tipo, boolean esNegativa) {
+	System.out.println("Constante que entra: " + constante);
 	if (esNegativa) 
 		constante = "-" + constante;
-	if (!tablaSimbolos.existeClave(constante))		
-		tablaSimbolos.agregar(constante, tipo);
-	System.out.println("Entro a agregarConstante");	
-}
+	if (!tablaSimbolos.existeClave(constante))
+		if (tipo.equals("int"))
+			chequeoEnteros(constante);
+		else
+			chequeoFlotantes(constante);
 
 private List<Error> erroresSemanticos = new ArrayList<Error>();
 public void agregarVariable (String variable, String tipo) {
