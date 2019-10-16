@@ -60,7 +60,7 @@ public class TablaTokens {
 		tokens.put(";",(int)';');	
 		tokens.put("[",(int)'[');		
 		tokens.put("]",(int)']');
-		// %?? _??
+		tokens.put(".",(int)'.');
 		//Comparadores
 		tokens.put("==",(int)IGUAL);
 		tokens.put("<>",(int)DISTINTO);

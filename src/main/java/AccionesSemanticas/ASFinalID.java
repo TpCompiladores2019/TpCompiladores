@@ -2,6 +2,7 @@ package AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
 import Lexico.Error;
+import Lexico.Registro;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
@@ -17,20 +18,18 @@ public class ASFinalID implements IAccionSemantica{
 		}
 		else
 			salida = cadena.toString();	
-		//cadena = salida; para que vuelva modifcado, hay que ver como se hace
+
 				
-		if (tablaTokens.contieneClave(salida)) { // Es palabra reservada
+		if (tablaTokens.contieneClave(salida)) { 
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Palabra Reservada: " + cadena.toString());
 			return tablaTokens.getToken(salida);
 		}
 
 		
-		if (!tablaSimbolos.agregar(salida,"")) {
-			Error w = new Error("La variable ya fue declarada antes",AnalizadorLexico.nroLinea,"","ERROR");
-			AnalizadorLexico.listaErrores.add(w);
-		}
+		tablaSimbolos.agregar(salida,new Registro("")); 
 		
 		AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Identificador: " + salida);
+
 		return tablaTokens.getToken("IDENTIFICADOR");
 		}
 	

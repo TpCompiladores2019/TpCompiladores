@@ -4,16 +4,14 @@ import java.util.HashMap;
 
 public class TablaSimbolos {
 
-	public HashMap<String, HashMap<String,String>> tablaSimbolos = new HashMap<String, HashMap<String,String>>();
+	public HashMap<String, Registro> tablaSimbolos = new HashMap<String, Registro>();
 	
-	public boolean agregar(String variable, String tipo) {
-		HashMap<String, String> informacion = new HashMap<String, String>();
-		informacion.put("tipo", tipo);
-		
+	public boolean agregar(String variable,Registro registro) {
 		if (!tablaSimbolos.containsKey(variable)) {
-			tablaSimbolos.put(variable,informacion);
+			tablaSimbolos.put(variable,registro);
 		}
 		else{
+			tablaSimbolos.get(variable).incrementarRef();
 			return false;
 		}
 		return true;

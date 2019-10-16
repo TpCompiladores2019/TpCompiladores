@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-import javax.swing.JFileChooser;
 
 import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
@@ -62,7 +61,9 @@ public class Compilador {
 			
 			informacion += "\nTabla de Simbolos: \n" ;
 			for (String key : tablaSimbolos.tablaSimbolos.keySet()) {
-				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key.toString()) + "\n";
+				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key).getTipo() + "\n";
+				System.out.println("key: " + key + " tipo: " + tablaSimbolos.tablaSimbolos.get(key).getTipo());
+				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.tablaSimbolos.get(key).getCantRef());
 			}
 		
 			fw.write(informacion);
@@ -101,10 +102,10 @@ public class Compilador {
 			
 			informacion += "\nTabla de Simbolos: \n" ;
 			for (String key : tablaSimbolos.tablaSimbolos.keySet()) {
-				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key.toString()) + "\n";
+				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key).getTipo() + "\n";
+				System.out.println("key: " + key + " tipo: " + tablaSimbolos.tablaSimbolos.get(key).getTipo());
+				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.tablaSimbolos.get(key).getCantRef());
 			}
-			
-			
 			
 			
 			fw.write(informacion);

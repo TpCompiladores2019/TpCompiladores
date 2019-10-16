@@ -16,9 +16,7 @@ public class ASErrorCaracterFaltante implements IAccionSemantica{
 		else
 			simboloEsperado = "=";
 		
-	/*elsif (ultimoChar es letra)
-			no es error si el caracter es un char (no tiene que ser un simbolo)
-		*/	
+	
 		
 		Error nuevoError = new Error("Se espera " + simboloEsperado+ " luego de ",AnalizadorLexico.nroLinea,"'"+ultimoChar+"'","ERROR");
 		AnalizadorLexico.listaErrores.add(nuevoError);
