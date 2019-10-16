@@ -33,7 +33,7 @@ public class AnalizadorLexico {
 	private int [][] transicionEstados = {{ 1, 2, E, 3, 1, 1, F, F,12, F, 8, 9,11,10, 0, 0, F, F, F, F, F, F, 0,15, E}, //0
 										  { 1, 1, 1, F, 1, 1, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //1
 										  { F, 2, F, 4, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //2
-										  { E, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //3
+										  { F, 4, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //3
 										  { F, 4, F, F, 5, 5, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //4
 										  { E, 7, E, E, E, E, 6, 6, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //5
 										  { E, 7, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E, E}, //6
@@ -68,7 +68,7 @@ public class AnalizadorLexico {
 			{AS1 ,AS1 ,AS9 ,AS1 ,AS1 ,AS1 ,AS8 ,AS8 ,AS1 ,AS8 ,AS1 ,AS1 ,AS1 ,AS1 ,AS5 ,AS5 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS7 ,AS5, AS9}, //0
 		    {AS1 ,AS1 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2, AS9}, //1
 			{AS3 ,AS1 ,AS3 ,AS1 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3, AS9}, //2
-			{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //3
+			{AS13,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //3
 			{AS4 ,AS1 ,AS4 ,AS4 ,AS1 ,AS1 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4 ,AS4, AS9}, //4
 			{AS11,AS1 ,AS11,AS11,AS11,AS11,AS1 ,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //5
 			{AS11,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //6

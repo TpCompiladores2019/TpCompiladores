@@ -39,72 +39,83 @@ Linea 7: ]
 Linea 7: +
 Linea 7 Constante Entera: 5
 Linea 7: ;
-Linea 8 Palabra Reservada: end
-Linea 9 Palabra Reservada: end_if
-Linea 11 Palabra Reservada: if
-Linea 11: (
-Linea 11 Identificador: a
-Linea 11: >
-Linea 11 Identificador: b
-Linea 11: )
+Linea 8 Identificador: z
+Linea 8: :=
+Linea 8 Identificador: a
+Linea 8: .
+Linea 8 Identificador: first
+Linea 8: (
+Linea 8: )
+Linea 8: *
+Linea 8 Constante Entera: 2
+Linea 8: ;
+Linea 9 Palabra Reservada: end
+Linea 10 Palabra Reservada: end_if
+Linea 12 Palabra Reservada: if
+Linea 12: (
 Linea 12 Identificador: a
-Linea 12: :=
-Linea 12 Constante Entera: 3
-Linea 12: ;
-Linea 13 Palabra Reservada: else
-Linea 14 Identificador: b
-Linea 14: :=
-Linea 14 Constante Entera: 3
-Linea 14: ;
-Linea 15 Palabra Reservada: end_if
-Linea 16 Palabra Reservada: if
-Linea 16: (
-Linea 16 Identificador: a
-Linea 16: >
-Linea 16 Identificador: b
-Linea 16: )
-Linea 17 Palabra Reservada: begin
-Linea 18 Identificador: pepe
-Linea 18: :=
-Linea 18 Constante Entera: 3
-Linea 18: ;
-Linea 19 Palabra Reservada: if
-Linea 19: (
-Linea 19 Identificador: a
-Linea 19: >
-Linea 19 Identificador: b
-Linea 19: )
-Linea 20 Identificador: ricardo
-Linea 20: :=
-Linea 20: -
-Linea 20 Constante Entera: 4
-Linea 20: ;
-Linea 21 Palabra Reservada: end_if
-Linea 22 Palabra Reservada: end
-Linea 23 Palabra Reservada: end_if
-Linea 24 Palabra Reservada: print
-Linea 24: (
-Linea 24 Identificador: hola
-Linea 24: )
-Linea 24: ;
-Linea 25 Palabra Reservada: end
+Linea 12: >
+Linea 12 Identificador: b
+Linea 12: )
+Linea 13 Identificador: a
+Linea 13: :=
+Linea 13 Constante Entera: 3
+Linea 13: ;
+Linea 14 Palabra Reservada: else
+Linea 15 Identificador: b
+Linea 15: :=
+Linea 15 Constante Entera: 3
+Linea 15: ;
+Linea 16 Palabra Reservada: end_if
+Linea 17 Palabra Reservada: if
+Linea 17: (
+Linea 17 Identificador: a
+Linea 17: >
+Linea 17 Identificador: b
+Linea 17: )
+Linea 18 Palabra Reservada: begin
+Linea 19 Identificador: pepe
+Linea 19: :=
+Linea 19 Constante Entera: 3
+Linea 19: ;
+Linea 20 Palabra Reservada: if
+Linea 20: (
+Linea 20 Identificador: a
+Linea 20: >
+Linea 20 Identificador: b
+Linea 20: )
+Linea 21 Identificador: ricardo
+Linea 21: :=
+Linea 21: -
+Linea 21 Constante Entera: 4
+Linea 21: ;
+Linea 22 Palabra Reservada: end_if
+Linea 23 Palabra Reservada: end
+Linea 24 Palabra Reservada: end_if
+Linea 25 Palabra Reservada: print
+Linea 25: (
+Linea 25 Identificador: hola
+Linea 25: )
+Linea 25: ;
+Linea 26 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 2: Sentencia declarativa
 Linea 6: Asignacion
 Linea 7: Asignacion
+Linea 8: Asignacion
 Linea 4: Sentencia IF
-Linea 12: Asignacion
-Linea 14: Asignacion
-Linea 11: Sentencia IF-ELSE
-Linea 18: Asignacion
-Linea 20: Asignacion
-Linea 19: Sentencia IF
-Linea 16: Sentencia IF
+Linea 13: Asignacion
+Linea 15: Asignacion
+Linea 12: Sentencia IF-ELSE
+Linea 19: Asignacion
+Linea 21: Asignacion
+Linea 20: Sentencia IF
+Linea 17: Sentencia IF
 
 Errores Sintacticos: 
 Error--> Linea 1: Error en declaracion, la coleccion solo permite constantes enteras.
-Error--> Linea 24: Solo se puede definir una cadena.
+Error--> Linea 25: Solo se puede definir una cadena.
 
 Tabla de Simbolos: 
 a--> 
@@ -118,5 +129,7 @@ q-->
 3--> int
 5--> int
 v--> 
+z--> 
 ricardo--> 
+first--> 
 pepe--> 

@@ -1,12 +1,10 @@
 Tokens Detectados: 
-Linea 1 Palabra Reservada: begin
-Linea 2 Identificador: b
-Linea 2: :=
-Linea 2: -
-Linea 2 Constante Float: 20.1
-Linea 2: ;
-Linea 3 Palabra Reservada: end
+Linea 1 Identificador: hola
+Linea 1: .
+Linea 1 Identificador: hola
+Linea 2: .
+Linea 2 Identificador: larda
 
 Tabla de Simbolos: 
-b--> 
-20.1--> float
+larda--> 
+hola--> 

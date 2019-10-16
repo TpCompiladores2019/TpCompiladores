@@ -170,8 +170,9 @@
 		  | variable ASIGNACION expresion_aritmetica {this.addError("Falta ';'.",((Token)$3.obj).getNroLinea());}
 		  ;
 		 
-	invocacion_metodo : ID '.' ID '(' ')' //Falta
-					  ;
+	invocacion_metodo : ID '.' ID '(' ')' 
+					  | ID '.' ID '(' {this.addError("Falta ').",((Token)$4.obj).getNroLinea());}
+					  ; ID '.' ID ')' {this.addError("Falta variable.",((Token)$1.obj).getNroLinea());}
 
 %%
 
