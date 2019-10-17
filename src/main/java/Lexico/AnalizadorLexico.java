@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import AccionesSemanticas.ASFinalOAC;
+import AccionesSemanticas.ASFinalOperAsigComp;
 import AccionesSemanticas.ASAgregar;
 import AccionesSemanticas.ASAumentarNumLinea;
+import AccionesSemanticas.ASCerrarComentario;
 import AccionesSemanticas.ASFinalCadena;
 import AccionesSemanticas.ASFinalID;
 import AccionesSemanticas.ASFinalEntero;
@@ -18,7 +19,7 @@ import AccionesSemanticas.ASFinalFloat;
 import AccionesSemanticas.ASConsumirComentario;
 import AccionesSemanticas.ASErrorCadenaMultilinea;
 import AccionesSemanticas.ASErrorCaracterFaltante;
-import AccionesSemanticas.ASFinal;
+import AccionesSemanticas.ASFinalSimple;
 import AccionesSemanticas.ASError;
 import AccionesSemanticas.IAccionSemantica;
 
@@ -27,7 +28,8 @@ public class AnalizadorLexico {
 	
 	private final int F = 400;
 	private final int E = -1;
-	
+	public static boolean comentarioAbierto= false;
+
 	private Token token;
 										//	L  D  _  .  E  e  -  +  /  *  :  > <  =  ' ' tb [  ] (   )  ,  ; \n  %  otros
 	private int [][] transicionEstados = {{ 1, 2, E, 3, 1, 1, F, F,12, F, 8, 9,11,10, 0, 0, F, F, F, F, F, F, 0,15, E}, //0
@@ -55,12 +57,13 @@ public class AnalizadorLexico {
 	private IAccionSemantica AS5 = null;
 	private IAccionSemantica AS6 = new ASFinalCadena();
 	private IAccionSemantica AS7 = new ASAumentarNumLinea();
-	private IAccionSemantica AS8 = new ASFinalOAC(); //mirar nombre
+	private IAccionSemantica AS8 = new ASFinalOperAsigComp(); //mirar nombre
 	private IAccionSemantica AS9 = new ASError();
 	private IAccionSemantica AS10 = new ASConsumirComentario();
 	private IAccionSemantica AS11 = new ASErrorCaracterFaltante();
 	private IAccionSemantica AS12 = new ASErrorCadenaMultilinea();
-	private IAccionSemantica AS13 = new ASFinal();
+	private IAccionSemantica AS13 = new ASFinalSimple();
+	private IAccionSemantica AS14 = new ASCerrarComentario();
 	
 	private IAccionSemantica [][] accionesSemanticas={
 //			   0   1    2    3    4    5    6    7    8    9   10   11    12   13  14   15   16   17   18   19   20   21    22  23	24  
@@ -79,7 +82,7 @@ public class AnalizadorLexico {
 			{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS8,AS13,AS8,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13, AS9}, //11
 			{AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS10,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13,AS13, AS9},  //12
 			{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5, AS5}, //13
-			{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5, AS5}, //14
+			{AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS14 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS5 ,AS7 ,AS5, AS5}, //14
 			{AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS1 ,AS12 ,AS6, AS9},//15 
 			};
 		
@@ -192,6 +195,9 @@ public class AnalizadorLexico {
 		if(indiceLectura==ascii.size()) {
 			if (porcentaje) 
 				listaErrores.add(new Error("No cierra cadena", nroLinea, "", "ERROR"));
+			else
+				if (comentarioAbierto)
+					listaErrores.add(new Error ("El programa termina con un comentario abierto",nroLinea,"","Error"));
 			return 0;
 			}
 		return nroToken;	

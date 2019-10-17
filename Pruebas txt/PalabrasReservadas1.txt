@@ -1,5 +1,0 @@
-if
-else
-end_if
-print
-int

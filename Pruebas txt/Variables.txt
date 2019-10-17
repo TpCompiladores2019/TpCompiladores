@@ -1,5 +1,0 @@
-identificador
-palabrademasde25caracteres
-hola_f25
-MiVariable
-mivariable

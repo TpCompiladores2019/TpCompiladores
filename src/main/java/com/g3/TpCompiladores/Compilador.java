@@ -20,7 +20,7 @@ public class Compilador {
 	private TablaSimbolos tablaSimbolos;
 	private TablaTokens tablaTokens;
 	private AnalizadorLexico analizarLexico ;
-	private FileWriter fw;
+	private FileWriter fw;	
 	
 	public Compilador(File ruta) throws IOException {
 		this.tablaSimbolos = new TablaSimbolos();
@@ -44,6 +44,9 @@ public class Compilador {
 					informacion += info + "\n";
 				}
 			}
+			else {
+				informacion += "Sin tokens \n";
+			}
 			
 			if(!AnalizadorLexico.listaWarning.isEmpty()) {
 				informacion += "\nWarnings Detectados: \n";
@@ -51,12 +54,18 @@ public class Compilador {
 					informacion += warning + "\n"; 
 				}
 			}
+			else {
+				informacion += "\nSin Warnings detectados \n";
+			}
 			
 			if (!AnalizadorLexico.listaErrores.isEmpty()) {
 				informacion += "\nErrores Detectados: \n";
 				for (Error errores : AnalizadorLexico.listaErrores) {
 					informacion += errores + "\n";
 				}
+			}
+			else {
+				informacion += "\nSin errores detectados \n";
 			}
 			
 			informacion += "\nTabla de Simbolos: \n" ;
@@ -79,14 +88,26 @@ public class Compilador {
 		try {
 			fw = new FileWriter("InformacionSintactico.txt");
 			Parser parser = new Parser(analizarLexico,tablaSimbolos);
-			System.out.println(parser.yyparser()); //hay que borrar
+			int sintactico =parser.yyparser(); 
+			
+			
 			String informacion ="";
 			
+			if (sintactico == 0) {
+				informacion = "El programa llego al final. \n";
+			}
+			else {
+				informacion = "El programa no pudo compilar. \n";
+			}
+			
 			if (!AnalizadorLexico.listaCorrectas.isEmpty()) {
-				informacion = "Tokens Detectados: \n";
+				informacion += "\nTokens Detectados: \n";
 				for (String info : AnalizadorLexico.listaCorrectas) {
 					informacion += info + "\n";
 				}
+			}
+			else {
+				informacion += "\nSin tokens \n";
 			}
 			
 			informacion += parser.informacionEstructuras();
@@ -99,12 +120,14 @@ public class Compilador {
 					informacion += errores + "\n";
 				}
 			}
+			else {
+				informacion += "\nSin errores lexicos \n";
+			}
+			
 			
 			informacion += "\nTabla de Simbolos: \n" ;
 			for (String key : tablaSimbolos.tablaSimbolos.keySet()) {
 				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key).getTipo() + "\n";
-				System.out.println("key: " + key + " tipo: " + tablaSimbolos.tablaSimbolos.get(key).getTipo());
-				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.tablaSimbolos.get(key).getCantRef());
 			}
 			
 			
@@ -120,16 +143,6 @@ public class Compilador {
 		
 	}
 	
-	}
+}
 	
-
-	/*
-	 * System.out.println(parser.yyparser());
-	tablaSimbolos.imprimir();
-	for ( Lexico.Error e: AnalizadorLexico.listaErrores) {
-		System.out.println(e.toString());
-	}
-	
-	parser.imprimirInformacion();
-	parser.imprimirError();*/
 

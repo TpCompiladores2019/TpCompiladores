@@ -11,7 +11,9 @@ public class ASErrorCaracterFaltante implements IAccionSemantica{
 		
 		String simboloEsperado = new String();
 		char ultimoChar = cadena.charAt(cadena.length()-1);
-		if ( ( ultimoChar == '.')|| (ultimoChar == 'E') || (ultimoChar == 'e') || (ultimoChar == '+') || (ultimoChar == '-'))
+		if ( ultimoChar == '.')
+			simboloEsperado = "un digito o un identificador";		
+		else if ( (ultimoChar == 'E') || (ultimoChar == 'e') || (ultimoChar == '+') || (ultimoChar == '-'))
 			simboloEsperado="un digito";
 		else
 			simboloEsperado = "=";
