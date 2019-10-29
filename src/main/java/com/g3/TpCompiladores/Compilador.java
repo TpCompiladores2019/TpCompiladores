@@ -133,6 +133,7 @@ public class Compilador {
 			
 			fw.write(informacion);
 			fw.close();
+			
 
 			
 		} catch (IOException e1) {
