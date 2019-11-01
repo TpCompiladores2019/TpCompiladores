@@ -5,7 +5,7 @@ import Lexico.Error;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASErrorCadenaMultilinea implements IAccionSemantica {
+public class ASErrorCadenaMultilinea extends IAccionSemantica {
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		cadena.delete(0, cadena.length());

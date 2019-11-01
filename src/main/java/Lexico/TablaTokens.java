@@ -1,10 +1,10 @@
 package Lexico;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 public class TablaTokens {
 
-	private Hashtable<String,Integer> tokens = new Hashtable<String,Integer>();
+	private HashMap<String,Integer> tokens = new HashMap<String,Integer>();
 	
 	public final static int YYERRCODE=256;
 	public final static int ID=257;
@@ -26,6 +26,9 @@ public class TablaTokens {
 	public final static int DO=273;
 	public final static int UNTIL=274;
 	public final static int FLOAT=275;
+	public final static int FIRST=276;
+	public final static int LAST = 277;
+	public final static int LENGHT = 278;
 	
 	public void CompletarTabla() {
 		//Palabras Reservadas
@@ -39,6 +42,9 @@ public class TablaTokens {
 		tokens.put("do", DO);
 		tokens.put("until", UNTIL);
 		tokens.put("float", FLOAT);
+		tokens.put("first",LENGHT);
+		tokens.put("last",LAST);
+		tokens.put("lenght", LENGHT);
 		//Identificador
 		tokens.put("IDENTIFICADOR",ID);
 		//Constantes
@@ -78,7 +84,6 @@ public class TablaTokens {
 	}
 
 	public boolean contieneClave(String clave) {
-		
 		return tokens.containsKey(clave);
 	}
 	

@@ -5,7 +5,7 @@ import Lexico.Registro;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASFinalCadena implements IAccionSemantica{
+public class ASFinalCadena extends IAccionSemantica{
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 	

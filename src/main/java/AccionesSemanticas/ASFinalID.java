@@ -6,7 +6,7 @@ import Lexico.Registro;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASFinalID implements IAccionSemantica{
+public class ASFinalID extends IAccionSemantica{
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		AnalizadorLexico.indiceLectura--; // 

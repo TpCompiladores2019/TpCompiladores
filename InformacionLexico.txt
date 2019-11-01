@@ -1,0 +1,45 @@
+Tokens Detectados: 
+Linea 1 Palabra Reservada: int
+Linea 1 Identificador: a
+Linea 1: ,
+Linea 1 Identificador: b
+Linea 1: ,
+Linea 1 Identificador: c
+Linea 1: ;
+Linea 3 Palabra Reservada: float
+Linea 3 Identificador: d
+Linea 3: ,
+Linea 3 Identificador: e
+Linea 3: ,
+Linea 3 Identificador: f
+Linea 3: ;
+Linea 5 Palabra Reservada: begin
+Linea 7 Identificador: a
+Linea 7: :=
+Linea 7 Constante Entera: 32768
+Linea 7: ;
+Linea 8 Identificador: b
+Linea 8: :=
+Linea 8 Constante Entera: 32768
+Linea 8: ;
+Linea 9 Identificador: b
+Linea 9: :=
+Linea 9 Constante Entera: 32767
+Linea 9: ;
+Linea 12 Palabra Reservada: end
+
+Warnings Detectados: 
+ERROR--> Linea 7: El numero 40000 excede el mayor entero posible, por lo que se procede a asignar 32768.  
+ERROR--> Linea 8: El numero 32768 excede el mayor entero posible, por lo que se procede a asignar 32768.  
+
+Sin errores detectados 
+
+Tabla de Simbolos: 
+a--> 
+b--> 
+c--> 
+d--> 
+e--> 
+f--> 
+32768--> int
+32767--> int

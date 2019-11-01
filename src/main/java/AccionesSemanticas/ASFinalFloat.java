@@ -6,23 +6,21 @@ import Lexico.Registro;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASFinalFloat implements IAccionSemantica{
+public class ASFinalFloat extends IAccionSemantica{
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		AnalizadorLexico.indiceLectura--;
+		Double numeroFloat = Double.parseDouble(cadena.toString());
 		
-		if ((Float.parseFloat(cadena.toString())> Float.MIN_NORMAL && Float.parseFloat(cadena.toString()) < Float.MAX_VALUE) || (Float.parseFloat(cadena.toString())< -Float.MIN_NORMAL && Float.parseFloat(cadena.toString()) > -Float.MAX_VALUE)
-			|| (Float.parseFloat(cadena.toString()) == 0.0)) {
-				tablaSimbolos.agregar(cadena.toString(),new Registro("float"));
-				AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Constante Float: " + cadena.toString());
-				return tablaTokens.getToken("CONSTANTE F");
+		if ((numeroFloat<Float.MIN_NORMAL && numeroFloat > Float.MAX_VALUE) || numeroFloat != 0.0) {
+			Error nuevoError = new Error("El numero " + cadena.toString() + " excede el rango de los Float",AnalizadorLexico.nroLinea," ","WARNING");
+			AnalizadorLexico.listaWarning.add(nuevoError);
+			cadena.delete(0, cadena.length());
+			cadena.append(String.valueOf(Float.MAX_VALUE));
 		}
-		else {
-			Error nuevoError = new Error("El numero excede el rango de los Float",AnalizadorLexico.nroLinea," ","ERROR");
-			AnalizadorLexico.listaErrores.add(nuevoError);
-			
-			return tablaTokens.getToken("CONSTANTE F");
-		}
+		tablaSimbolos.agregar(cadena.toString(),new Registro("float"));
+		AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Constante Float: " + cadena.toString());
+		return tablaTokens.getToken("CONSTANTE F");
 	}
 
 }

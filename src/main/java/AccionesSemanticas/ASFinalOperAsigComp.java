@@ -4,7 +4,7 @@ import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASFinalOperAsigComp implements IAccionSemantica {
+public class ASFinalOperAsigComp extends IAccionSemantica {
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		cadena.append(caracter);

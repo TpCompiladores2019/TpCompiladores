@@ -5,7 +5,7 @@ import Lexico.Error;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public class ASErrorCaracterFaltante implements IAccionSemantica{
+public class ASErrorCaracterFaltante extends IAccionSemantica{
 
 	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 		

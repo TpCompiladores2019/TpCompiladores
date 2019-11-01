@@ -3,10 +3,10 @@ package AccionesSemanticas;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
-public interface IAccionSemantica {
+public abstract class IAccionSemantica {
 	
-	// TODO LA TABLA DE SIMBOLOS ES POR PARAMETROS O LA HACEMOS STATIC Y ENTONCES: TABLASIMBOLOS.GETTOKEN() ??	
-	public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos);
+
+	public abstract int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos);
 	
 	
 	

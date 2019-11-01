@@ -7,93 +7,78 @@ Linea 1: ,
 Linea 1 Identificador: b
 Linea 1: ,
 Linea 1 Identificador: c
-Linea 1: ,
-Linea 1 Identificador: d
 Linea 1: ;
-Linea 2 Palabra Reservada: int
-Linea 2 Identificador: a
-Linea 2: ;
 Linea 3 Palabra Reservada: float
+Linea 3 Identificador: d
+Linea 3: ,
 Linea 3 Identificador: e
 Linea 3: ,
 Linea 3 Identificador: f
-Linea 3: ,
-Linea 3 Identificador: g
-Linea 3: ,
-Linea 3 Identificador: h
 Linea 3: ;
-Linea 4 Palabra Reservada: begin
-Linea 5 Identificador: a
-Linea 5: :=
-Linea 5 Identificador: b
-Linea 5: +
-Linea 5 Identificador: c
-Linea 5: +
-Linea 5 Identificador: d
-Linea 5: +
-Linea 5 Identificador: b
-Linea 5: +
-Linea 5 Identificador: c
-Linea 5: +
-Linea 5 Constante Entera: 1
-Linea 5: ;
-Linea 6 Identificador: e
-Linea 6: :=
-Linea 6 Identificador: f
-Linea 6: +
-Linea 6 Identificador: h
-Linea 6: +
-Linea 6 Identificador: g
-Linea 6: ;
+Linea 5 Palabra Reservada: begin
 Linea 7 Identificador: a
 Linea 7: :=
-Linea 7 Identificador: e
-Linea 7: +
-Linea 7 Identificador: f
-Linea 7: +
-Linea 7 Identificador: c
-Linea 7: +
-Linea 7 Constante Entera: 1
+Linea 7 Constante Entera: 32768
 Linea 7: ;
-Linea 8 Identificador: e
-Linea 8: :=
-Linea 8 Identificador: e
-Linea 8: +
 Linea 8 Identificador: b
-Linea 8: +
-Linea 8 Identificador: c
-Linea 8: +
-Linea 8 Constante Float: 1.0
+Linea 8: :=
+Linea 8 Constante Entera: 32768
 Linea 8: ;
-Linea 9 Palabra Reservada: end
+Linea 9 Identificador: b
+Linea 9: :=
+Linea 9 Constante Entera: 32767
+Linea 9: ;
+Linea 10 Identificador: a
+Linea 10: :=
+Linea 10: -
+Linea 10 Constante Entera: 32768
+Linea 10: ;
+Linea 11 Identificador: b
+Linea 11: :=
+Linea 11: -
+Linea 11 Constante Entera: 32768
+Linea 11: ;
+Linea 12 Identificador: b
+Linea 12: :=
+Linea 12: -
+Linea 12 Constante Entera: 32767
+Linea 12: ;
+Linea 15 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
-Linea 2: Sentencia declarativa
 Linea 3: Sentencia declarativa
-Linea 5: Asignacion
-Linea 6: Asignacion
 Linea 7: Asignacion
 Linea 8: Asignacion
-
-Errores Sintacticos: 
-Error--> Linea 2: Error en declaracion, variable o coleccion 'a' redeclarada
-Error--> Linea 7: Error tipos incompatibles.
-Error--> Linea 7: Error tipos incompatibles.
-Error--> Linea 7: Error tipos incompatibles.
-Error--> Linea 8: Error tipos incompatibles.
-Error--> Linea 8: Error tipos incompatibles.
+Linea 9: Asignacion
+Linea 10: Asignacion
+Linea 11: Asignacion
+Linea 12: Asignacion
 
 Sin errores lexicos 
 
+Warning Lexicos Detectados: 
+WARNING--> Linea 7: El numero 40000 excede el mayor entero posible, por lo que se procede a asignar 32768.  
+WARNING--> Linea 8: El numero 32768 excede el mayor entero posible, por lo que se procede a asignar 32768.  
+WARNING--> Linea 10: El numero 40000 excede el mayor entero posible, por lo que se procede a asignar 32768.  
+WARNING--> Linea 11: El numero 32768 excede el mayor entero posible, por lo que se procede a asignar 32768.  
+
 Tabla de Simbolos: 
 a--> int
-1--> int
+a--> 3
 b--> int
+b--> 5
 c--> int
-1.0--> float
-d--> int
+c--> 1
+d--> float
+d--> 1
 e--> float
+e--> 1
 f--> float
-g--> float
-h--> float
+f--> 1
+-32767--> int
+-32767--> 1
+-32768--> int
+-32768--> 2
+32767--> int
+32767--> 3

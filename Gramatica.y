@@ -103,34 +103,27 @@
 						| IF '(' condicion ')' END_IF {this.addError("Falta bloque de sentencias.",((Token)$4.obj).getNroLinea());}
 						;
 						
-	condicion : expresion_aritmetica operador expresion_aritmetica 
+	condicion : expresion_aritmetica operador expresion_aritmetica {
+															if (!sonCompatibles(tablaSimbolos.tablaSimbolos.get((  (Token)$1.obj) .getLexema()).getTipo()))	
+																this.addError("Error tipos incompatibles en comparacion.",((Token)$3.obj).getNroLinea());
+															else
+																System.out.println("son compatibles ");
+															listaCompatibilidad.clear();}
 			  | operador expresion_aritmetica {this.addError("Falta expresion del lado izquierdo.",((Token)$1.obj).getNroLinea());}
 			  | expresion_aritmetica operador error{this.addError("Falta expresion del lado derecho.",((Token)$2.obj).getNroLinea());}
 			  ;
 			 
-	expresion_aritmetica : expresion_aritmetica '+' termino {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
-															else
-																System.out.println("son compatibles ");}
-						 | expresion_aritmetica '-' termino {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
-															else
-																System.out.println("son compatibles ");}
-						 | termino
+	expresion_aritmetica : expresion_aritmetica '+' termino 
+						 | expresion_aritmetica '-' termino 
+						 | termino 
 						 ;
 						 
-	termino : termino '*' factor {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
-															else
-																System.out.println("son compatibles ");}
-			| termino '/' factor {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
-															else
-																System.out.println("son compatibles ");}
-			| factor
+	termino : termino '*' factor 
+			| termino '/' factor 
+			| factor 
 			;
 			
-	factor : variable
+	factor : variable {ci.asignarFactor((Token)$1.obj);}
 	       | CTE_E {actualizarTablaPositivo(((Token)$1.obj).getLexema());}
 		   | CTE_F 
 		   | '-' CTE_E {actualizarTablaNegativo(((Token)$2.obj).getLexema());}
@@ -146,6 +139,9 @@
 								if (!estaDeclarada(((Token)$3.obj)))
 									this.addError("Error variable '"+((Token)$3.obj).getLexema() + "' no declarada.",((Token)$3.obj).getNroLinea());
 								else
+									if (!tablaSimbolos.tablaSimbolos.get(((Token)$3.obj).getTipo().equals("int")  )
+										this.addError("Error El tipo del subindice no es entero");
+								else
 									if (tablaSimbolos.tablaSimbolos.get(((Token)$3.obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 										this.addError("Error '"+((Token)$3.obj).getLexema() + "' es una coleccion.",((Token)$3.obj).getNroLinea());}
 										
@@ -155,9 +151,7 @@
 										if (tablaSimbolos.tablaSimbolos.get(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
 											this.addError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",((Token)$1.obj).getNroLinea());}
 			 | ID {	if (!estaDeclarada(((Token)$1.obj)))
-						this.addError("Error variable '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());
-					else
-						listaAsignacion.add((Token)$1.obj).getToken)}
+						this.addError("Error variable '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());}
 			 ;
 	
 	operador : '<'
@@ -190,12 +184,12 @@
 					  ;
 
 	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Asignacion");
-														  														  
-														  if (!sonCompatibles(listaAsignacion))
-															this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
-														  else
+															
+															if (!sonCompatibles(tablaSimbolos.tablaSimbolos.get((  (Token)$1.obj) .getLexema()).getTipo()))	
+																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
+															else
 																System.out.println("son compatibles ");
-														  
+															listaCompatibilidad.clear();	
 														}
 		  | ASIGNACION expresion_aritmetica ';' {this.addError("Falta variable.",((Token)$1.obj).getNroLinea());}
 		  | variable expresion_aritmetica ';' {this.addError("Falta ':='.",((Token)$1.obj).getNroLinea());}
@@ -209,11 +203,6 @@
 					  ;
 
 %%
-public void inicCompatibilidad(){
-	compatibilidadIniciada = true;
-	listaAsignacion.clear();
-	listaAsignacion.add((Token)$1.obj).getTipo);
-}
 
 
 
@@ -222,10 +211,11 @@ private AnalizadorLexico lexico;
 private TablaSimbolos tablaSimbolos;
 private ArrayList<Error> listaErrores = new ArrayList<Error>();
 private ArrayList<String> listaCorrectas = new ArrayList<String>();
-private ArrayList<String> listaAsignacion = new ArrayList<String>();
-private ArrayList<Token> listaVariables = new ArrayList<Token>();
-private boolean compatibilidadIniciada = false;
 
+private ArrayList<Token> listaVariables = new ArrayList<Token>();
+private ArrayList<String> listaCompatibilidad = new ArrayList<String>();
+
+private CodigoIntermedio ci = new CodigoIntermedio();
 
 public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos) {
 	this.lexico = lexico;
@@ -355,4 +345,12 @@ public boolean esCompatible(Token t1, Token t2){
 	if (tablaSimbolos.tablaSimbolos.get(t1.getLexema()).getTipo().equals(tablaSimbolos.tablaSimbolos.get(t2.getLexema()).getTipo()))
 		return true;
 	return false;
+}
+
+public boolean sonCompatibles(String tipoAComparar){
+	for (String tipo : listaCompatibilidad){
+		if (!tipo.equals(tipoAComparar))
+			return false;
+	}
+	return true;
 }

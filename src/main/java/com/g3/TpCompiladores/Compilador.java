@@ -69,10 +69,10 @@ public class Compilador {
 			}
 			
 			informacion += "\nTabla de Simbolos: \n" ;
-			for (String key : tablaSimbolos.tablaSimbolos.keySet()) {
-				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key).getTipo() + "\n";
-				System.out.println("key: " + key + " tipo: " + tablaSimbolos.tablaSimbolos.get(key).getTipo());
-				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.tablaSimbolos.get(key).getCantRef());
+			for (String key : tablaSimbolos.getKeySet()) {
+				informacion += key + "--> " + tablaSimbolos.getToken(key).getTipo() + "\n";
+				System.out.println("key: " + key + " tipo: " + tablaSimbolos.getToken(key).getTipo());
+				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.getToken(key).getCantRef());
 			}
 		
 			fw.write(informacion);
@@ -124,10 +124,21 @@ public class Compilador {
 				informacion += "\nSin errores lexicos \n";
 			}
 			
+			if (!AnalizadorLexico.listaWarning.isEmpty()) {
+				informacion += "\nWarning Lexicos Detectados: \n";
+				for (Error errores : AnalizadorLexico.listaWarning) {
+					informacion += errores + "\n";
+				}
+			}
+			else {
+				informacion += "\nSin warning lexicos \n";
+			}
+			
 			
 			informacion += "\nTabla de Simbolos: \n" ;
-			for (String key : tablaSimbolos.tablaSimbolos.keySet()) {
-				informacion += key + "--> " + tablaSimbolos.tablaSimbolos.get(key).getTipo() + "\n";
+			for (String key : tablaSimbolos.getKeySet()) {
+				informacion += key + "--> " + tablaSimbolos.getToken(key).getTipo() + "\n";
+				informacion += key + "--> " + tablaSimbolos.getToken(key).getCantRef() + "\n";
 			}
 			
 			

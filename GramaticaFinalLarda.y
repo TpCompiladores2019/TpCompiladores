@@ -116,7 +116,7 @@
 																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
 															else
 																System.out.println("son compatibles ");}
-						 | termino
+						 | termino 
 						 ;
 						 
 	termino : termino '*' factor {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
@@ -127,7 +127,7 @@
 																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
 															else
 																System.out.println("son compatibles ");}
-			| factor
+			| factor {listaAsignacion.add(Token)$1.obj).getTipo)}
 			;
 			
 	factor : variable
@@ -209,23 +209,15 @@
 					  ;
 
 %%
-public void inicCompatibilidad(){
-	compatibilidadIniciada = true;
-	listaAsignacion.clear();
-	listaAsignacion.add((Token)$1.obj).getTipo);
-}
-
-
-
 
 private AnalizadorLexico lexico;
 private TablaSimbolos tablaSimbolos;
 private ArrayList<Error> listaErrores = new ArrayList<Error>();
 private ArrayList<String> listaCorrectas = new ArrayList<String>();
-private ArrayList<String> listaAsignacion = new ArrayList<String>();
 private ArrayList<Token> listaVariables = new ArrayList<Token>();
-private boolean compatibilidadIniciada = false;
 
+private List<String> listaCompatibilidad = new ArrayList<String>();
+private boolean inicioCompatibilidad = false;
 
 public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos) {
 	this.lexico = lexico;

@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 import AccionesSemanticas.ASFinalOperAsigComp;
@@ -57,7 +57,7 @@ public class AnalizadorLexico {
 	private IAccionSemantica AS5 = null;
 	private IAccionSemantica AS6 = new ASFinalCadena();
 	private IAccionSemantica AS7 = new ASAumentarNumLinea();
-	private IAccionSemantica AS8 = new ASFinalOperAsigComp(); //mirar nombre
+	private IAccionSemantica AS8 = new ASFinalOperAsigComp();
 	private IAccionSemantica AS9 = new ASError();
 	private IAccionSemantica AS10 = new ASConsumirComentario();
 	private IAccionSemantica AS11 = new ASErrorCaracterFaltante();
@@ -96,7 +96,7 @@ public class AnalizadorLexico {
 		public static List <Error>listaWarning = new ArrayList<Error>();
 		public static List <String> listaCorrectas = new ArrayList<String>();
 		
-		private Hashtable<Character,Integer> columnas=new Hashtable<Character,Integer>();
+		private HashMap<Character,Integer> columnas=new HashMap<Character,Integer>();
 	
 		private TablaSimbolos tablaSimbolos;
 		private TablaTokens tablaTokens;
