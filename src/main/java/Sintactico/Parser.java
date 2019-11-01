@@ -1270,7 +1270,6 @@ public void run()
 //## Constructors ###############################################
 /**
  * Default constructor.  Turn off with -Jnoconstruct .
-
  */
 public Parser()
 {

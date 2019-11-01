@@ -193,6 +193,9 @@
 					   ;
 	
 	salida_ejecutable : PRINT '(' CADENA ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
+					  | PRINT '(' variable ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
+					  | PRINT '(' CTE_E ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
+					  | PRINT '(' CTE_F ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
 					  | '(' CADENA ')' ';' {this.addError("Falta 'PRINT'.",((Token)$1.obj).getNroLinea());}
 					  | PRINT CADENA ')' ';' {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
 					  | PRINT '(' error ')' ';' {this.addError("Solo se puede definir una cadena.",((Token)$2.obj).getNroLinea());}
