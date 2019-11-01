@@ -43,7 +43,19 @@ Linea 12: :=
 Linea 12: -
 Linea 12 Constante Entera: 32767
 Linea 12: ;
-Linea 15 Palabra Reservada: end
+Linea 13 Identificador: e
+Linea 13: :=
+Linea 13 Constante Float: 3.4028235E38
+Linea 13: ;
+Linea 14 Identificador: e
+Linea 14: :=
+Linea 14 Constante Float: 0.0
+Linea 14: ;
+Linea 15 Identificador: e
+Linea 15: :=
+Linea 15 Constante Float: 1.17549435E-38
+Linea 15: ;
+Linea 17 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
@@ -54,6 +66,9 @@ Linea 9: Asignacion
 Linea 10: Asignacion
 Linea 11: Asignacion
 Linea 12: Asignacion
+Linea 13: Asignacion
+Linea 14: Asignacion
+Linea 15: Asignacion
 
 Sin errores lexicos 
 
@@ -62,23 +77,31 @@ WARNING--> Linea 7: El numero 40000 excede el mayor entero posible, por lo que s
 WARNING--> Linea 8: El numero 32768 excede el mayor entero posible, por lo que se procede a asignar 32768.  
 WARNING--> Linea 10: El numero 40000 excede el mayor entero posible, por lo que se procede a asignar 32768.  
 WARNING--> Linea 11: El numero 32768 excede el mayor entero posible, por lo que se procede a asignar 32768.  
+WARNING--> Linea 13: El numero 4.E39 excede el rango de los Float 
+WARNING--> Linea 15: El numero 0.1E-45 excede el rango de los Float 
 
 Tabla de Simbolos: 
 a--> int
 a--> 3
 b--> int
 b--> 5
+0.0--> float
+0.0--> 1
 c--> int
 c--> 1
 d--> float
 d--> 1
 e--> float
-e--> 1
+e--> 4
 f--> float
 f--> 1
+1.17549435E-38--> float
+1.17549435E-38--> 1
 -32767--> int
 -32767--> 1
 -32768--> int
 -32768--> 2
+3.4028235E38--> float
+3.4028235E38--> 1
 32767--> int
 32767--> 3
