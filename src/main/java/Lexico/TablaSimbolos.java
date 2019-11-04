@@ -2,6 +2,7 @@ package Lexico;
 
 import java.util.HashMap;
 import java.util.Set;
+import Lexico.Registro;
 
 public class TablaSimbolos {
 

@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import AccionesSemanticas.ASFinalOperAsigComp;
-import AccionesSemanticas.ASAgregar;
-import AccionesSemanticas.ASAumentarNumLinea;
-import AccionesSemanticas.ASCerrarComentario;
-import AccionesSemanticas.ASFinalCadena;
-import AccionesSemanticas.ASFinalID;
-import AccionesSemanticas.ASFinalEntero;
-import AccionesSemanticas.ASFinalFloat;
-import AccionesSemanticas.ASConsumirComentario;
-import AccionesSemanticas.ASErrorCadenaMultilinea;
-import AccionesSemanticas.ASErrorCaracterFaltante;
-import AccionesSemanticas.ASFinalSimple;
-import AccionesSemanticas.ASError;
+import AccionesSemanticas.IAccionSemantica.ASFinalOperAsigComp;
+import AccionesSemanticas.IAccionSemantica.ASAgregar;
+import AccionesSemanticas.IAccionSemantica.ASAumentarNumLinea;
+import AccionesSemanticas.IAccionSemantica.ASCerrarComentario;
+import AccionesSemanticas.IAccionSemantica.ASFinalCadena;
+import AccionesSemanticas.IAccionSemantica.ASFinalID;
+import AccionesSemanticas.IAccionSemantica.ASFinalEntero;
+import AccionesSemanticas.IAccionSemantica.ASFinalFloat;
+import AccionesSemanticas.IAccionSemantica.ASConsumirComentario;
+import AccionesSemanticas.IAccionSemantica.ASErrorCadenaMultilinea;
+import AccionesSemanticas.IAccionSemantica.ASErrorCaracterFaltante;
+import AccionesSemanticas.IAccionSemantica.ASFinalSimple;
+import AccionesSemanticas.IAccionSemantica.ASError;
 import AccionesSemanticas.IAccionSemantica;
 
 
