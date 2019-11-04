@@ -21,6 +21,7 @@ import AccionesSemanticas.IAccionSemantica.ASErrorCadenaMultilinea;
 import AccionesSemanticas.IAccionSemantica.ASErrorCaracterFaltante;
 import AccionesSemanticas.IAccionSemantica.ASFinalSimple;
 import AccionesSemanticas.IAccionSemantica.ASError;
+import AccionesSemanticas.IAccionSemantica.ASActivarPorcentaje;
 import AccionesSemanticas.IAccionSemantica;
 
 
@@ -47,7 +48,7 @@ public class AnalizadorLexico {
 										  { F, F, F, F, F, F, F,13, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, E}, //12
 										  {13,13,13,13,13,13,13,14,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13, 13}, //13 
 										  {13,13,13,13,13,13,13,14, 0,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13, 13}, //14
-										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, 0, F, E}, //15
+										  {15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15, F, F, E}, //15
 								};
 
 	private IAccionSemantica AS1; 
@@ -64,18 +65,18 @@ public class AnalizadorLexico {
 	private IAccionSemantica AS12;
 	private IAccionSemantica AS13;
 	private IAccionSemantica AS14;
-	
+	private IAccionSemantica AS15;
 
 		
 		
 		public static int indiceLectura =0;	
 		public static int nroLinea = 1;
-		private boolean porcentaje=false;
 
 
 		public static List <Error>listaErrores = new ArrayList<Error>();
 		public static List <Error>listaWarning = new ArrayList<Error>();
 		public static List <String> listaCorrectas = new ArrayList<String>();
+		public static boolean porcentajeAbierto;
 		
 		private HashMap<Character,Integer> columnas=new HashMap<Character,Integer>();
 	
@@ -105,7 +106,7 @@ public class AnalizadorLexico {
 		AS12 = new ASErrorCadenaMultilinea(tablaTokens,tablaSimbolos);
 		AS13 = new ASFinalSimple(tablaTokens,tablaSimbolos);
 		AS14 = new ASCerrarComentario(tablaTokens,tablaSimbolos);
-		
+		AS15 = new ASActivarPorcentaje(tablaTokens,tablaSimbolos);
 		cargarMatrizAS();
 		
 		
@@ -124,7 +125,7 @@ public class AnalizadorLexico {
 		this.accionesSemanticas= new IAccionSemantica[][] {
 //				   0   1    2    3    4    5    6    7    8    9   10   11    12   13  14   15   16   17   18   19   20   21    22  23	24  
 //				   L   D    _    .    E    e    -    +    /    *    :    >    <    =   ' '  tb    [    ]    (    )    ,    ;    \n   %  otros
-				{AS1 ,AS1 ,AS9 ,AS1 ,AS1 ,AS1 ,AS8 ,AS8 ,AS1 ,AS8 ,AS1 ,AS1 ,AS1 ,AS1 ,AS5 ,AS5 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS7 ,AS5, AS9}, //0
+				{AS1 ,AS1 ,AS9 ,AS1 ,AS1 ,AS1 ,AS8 ,AS8 ,AS1 ,AS8 ,AS1 ,AS1 ,AS1 ,AS1 ,AS5 ,AS5 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS8 ,AS7 ,AS15, AS9}, //0
 			    {AS1 ,AS1 ,AS1 ,AS2 ,AS1 ,AS1 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2 ,AS2, AS9}, //1
 				{AS3 ,AS1 ,AS3 ,AS1 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3 ,AS3, AS9}, //2
 				{AS13,AS1 ,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS11,AS9}, //3
@@ -190,11 +191,8 @@ public class AnalizadorLexico {
 		return token;
 	}
 
-	public void checkPorcentaje(char c) {
-		if (c=='%') {
-			porcentaje=!porcentaje;
-		}
-	}
+
+
 	
 	public int yylex() {
 		
@@ -207,7 +205,6 @@ public class AnalizadorLexico {
 			numAscii = ascii.get(indiceLectura);
 			if(numAscii != 13) {
 				char caracterleido = (char) numAscii;
-				checkPorcentaje(caracterleido);
 				indiceLectura++;
 				int columna = getColumna(caracterleido);
 				if (accionesSemanticas[estadoActual][columna] != null) 
@@ -218,9 +215,15 @@ public class AnalizadorLexico {
 				indiceLectura++;
 		}
 		token = new Token(nroToken,cadena.toString(),nroLinea);
+		
 		if(indiceLectura==ascii.size()) {
-			if (porcentaje) 
-				listaErrores.add(new Error("No cierra cadena", nroLinea, "", "ERROR"));
+			if (porcentajeAbierto) {
+				AnalizadorLexico.listaCorrectas.add("Linea " +nroLinea + " Cadena: " + cadena.toString());
+				Error nuevoWarning = new Error("La cadena no fue cerrada correctamente",nroLinea,"","WARNING");//Chequear
+				listaWarning.add(nuevoWarning);
+				tablaSimbolos.agregar(cadena.toString(), new Registro("Cadena"));
+			}
+				
 			else
 				if (comentarioAbierto)
 					listaErrores.add(new Error ("El programa termina con un comentario abierto",nroLinea,"","Error"));

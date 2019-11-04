@@ -107,13 +107,14 @@ public abstract class IAccionSemantica {
 		}
 
 		public int ejecutar(char caracter, StringBuilder cadena) {
-			cadena.delete(0, cadena.length());
-			Error nuevoError = new Error("La cadena no permite salto de linea",AnalizadorLexico.nroLinea,"","ERROR");
-			AnalizadorLexico.listaErrores.add(nuevoError);	
+			tablaSimbolos.agregar(cadena.toString(),new Registro("Cadena"));
+			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Cadena: " + cadena.toString());
+			Error nuevoError = new Error("La cadena no fue cerrada correctamente",AnalizadorLexico.nroLinea,"","WARNING");//Chequear
+			AnalizadorLexico.listaWarning.add(nuevoError);	
 			AnalizadorLexico.nroLinea++;
-			return OTROS;
-		}
-
+			AnalizadorLexico.porcentajeAbierto=false;
+			return tablaTokens.getToken(CADENA);	
+		}	
 	}
 
 	public static class ASErrorCaracterFaltante extends IAccionSemantica{
@@ -156,7 +157,7 @@ public abstract class IAccionSemantica {
 
 			tablaSimbolos.agregar(cadena.toString(),new Registro("Cadena"));
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Cadena: " + cadena.toString());
-
+			AnalizadorLexico.porcentajeAbierto=false;
 			return tablaTokens.getToken(CADENA);
 		}
 
@@ -276,6 +277,23 @@ public abstract class IAccionSemantica {
 			return tablaTokens.getToken(cadena.toString());
 		}
 
+	}
+	
+
+	public static class ASActivarPorcentaje extends IAccionSemantica {
+	
+		public ASActivarPorcentaje(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		@Override
+		public int ejecutar(char caracter, StringBuilder cadena) {
+			AnalizadorLexico.porcentajeAbierto=true;
+			return -1;
+		}
+		
+		
+	
 	}
 
 	

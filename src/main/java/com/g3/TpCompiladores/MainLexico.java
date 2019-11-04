@@ -8,14 +8,8 @@ import javax.swing.JFileChooser;
 public class MainLexico {
 
 	public static void main(String[] args) throws IOException {
-		JFileChooser file = new JFileChooser();
-		file.showOpenDialog(file);
-		File ruta = file.getSelectedFile();
-		if (ruta != null) {
 			Compilador compilador = new Compilador(args[0]);
 			compilador.mostrarInfoLexico();
-			
-		}
 	}
 	
 }
