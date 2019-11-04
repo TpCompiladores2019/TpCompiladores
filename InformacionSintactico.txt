@@ -1,4 +1,4 @@
-El programa llego al final. 
+El programa no pudo compilar. 
 
 Tokens Detectados: 
 Linea 1 Palabra Reservada: int
@@ -8,137 +8,22 @@ Linea 1 Identificador: b
 Linea 1: ,
 Linea 1 Identificador: c
 Linea 1: ;
-Linea 3 Palabra Reservada: float
-Linea 3 Identificador: d
-Linea 3: ,
-Linea 3 Identificador: e
-Linea 3: ,
-Linea 3 Identificador: f
-Linea 3: ;
-Linea 5 Palabra Reservada: begin
-Linea 7 Identificador: a
-Linea 7: :=
-Linea 7: /
-Linea 7: -
-Linea 7 Constante Entera: 2
-Linea 7: ;
-Linea 8 Identificador: b
-Linea 8: :=
-Linea 8: ;
-Linea 9 Identificador: b
-Linea 9: :=
-Linea 9 Constante Entera: 32767
-Linea 9: ;
-Linea 10 Identificador: a
-Linea 10: :=
-Linea 10: -
-Linea 10: ;
-Linea 11 Identificador: b
-Linea 11: :=
-Linea 11: -
-Linea 11: ;
-Linea 13 Identificador: b
-Linea 13: :=
-Linea 13: -
-Linea 13 Constante Entera: 32767
-Linea 13: ;
-Linea 14 Identificador: e
-Linea 14: :=
-Linea 14 Constante Float: 3.4028235E38
-Linea 14: ;
-Linea 15 Identificador: e
-Linea 15: :=
-Linea 15 Constante Float: 0.0
-Linea 15: ;
-Linea 16 Identificador: e
-Linea 16: :=
-Linea 16 Constante Float: 1.17549435E-38
-Linea 16: ;
-Linea 17 Identificador: e
-Linea 17: :=
-Linea 17: -
-Linea 17 Constante Float: 3.4028235E38
-Linea 17: ;
-Linea 18 Identificador: e
-Linea 18: :=
-Linea 18: -
-Linea 18 Constante Float: 1.17549435E-38
-Linea 18: ;
-Linea 19 Identificador: e
-Linea 19: :=
-Linea 19: -
-Linea 19 Constante Float: 20.0
-Linea 19: ;
-Linea 20 Identificador: p
-Linea 20: :=
-Linea 20 Constante Entera: 30
-Linea 20: ;
-Linea 21 Palabra Reservada: end
+Linea 2 Palabra Reservada: int
+Linea 2 Constante Entera: 123
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
-Linea 3: Sentencia declarativa
-Linea 7: Asignacion
-Linea 8: Asignacion
-Linea 9: Asignacion
-Linea 10: Asignacion
-Linea 11: Asignacion
-Linea 13: Asignacion
-Linea 14: Asignacion
-Linea 15: Asignacion
-Linea 16: Asignacion
-Linea 17: Asignacion
-Linea 18: Asignacion
-Linea 19: Asignacion
-Linea 20: Asignacion
-
-Errores Sintacticos: 
-Error--> Linea 20: Error variable 'p' no declarada.
 
 Sin errores lexicos 
 
-Warning Lexicos Detectados: 
-WARNING--> Linea 7: El numero 40000 excede el mayor entero posible, se trunca a 32768.  
-WARNING--> Linea 8: El numero 32768 excede el mayor entero posible, se trunca a 32768.  
-WARNING--> Linea 10: El numero 40000 excede el mayor entero posible, se trunca a 32768.  
-WARNING--> Linea 11: El numero 32768 excede el mayor entero posible, se trunca a 32768.  
-WARNING--> Linea 14: El numero 4.E39 excede el rango de los Float, fue truncado a 3.4028235E38. 
-WARNING--> Linea 16: El numero 0.1E-45 excede el rango de los Float, fue truncado a 1.17549435E-38. 
-WARNING--> Linea 17: El numero 4.E39 excede el rango de los Float, fue truncado a 3.4028235E38. 
-WARNING--> Linea 18: El numero 0.1E-45 excede el rango de los Float, fue truncado a 1.17549435E-38. 
+Sin warning lexicos 
 
 Tabla de Simbolos: 
 a--> int
-a--> 3
+a--> 1
 b--> int
-b--> 5
+b--> 1
+123--> int
+123--> 1
 c--> int
 c--> 1
-d--> float
-d--> 1
-e--> float
-e--> 7
--2--> int
--2--> 1
-f--> float
-f--> 1
-0.0--> float
-0.0--> 1
--3.4028235E38--> float
--3.4028235E38--> 1
-1.17549435E-38--> float
-1.17549435E-38--> 1
--32767--> int
--32767--> 1
--20.0--> float
--20.0--> 1
--32768--> int
--32768--> 2
-30--> int
-30--> 1
-3.4028235E38--> float
-3.4028235E38--> 1
--1.17549435E-38--> float
--1.17549435E-38--> 1
-32767--> int
-32767--> 3

@@ -90,15 +90,19 @@
 		 
 	lista_variables : lista_variables ',' ID {listaVariables.add(((Token)$3.obj));}
 					| ID {listaVariables.add(((Token)$1.obj));}
+			//		| CTE_E {this.addError("Error, no se puede declarar constante enteras",((Token)$1.obj).getNroLinea());}
+			//		| CTE_F {this.addError("Error, no se puede declarar constante flotantes",((Token)$1.obj).getNroLinea());}
+			//		| lista_variables ',' ID {listaVariables.add(((Token)$3.obj));}
 			//		| lista_variables ID {this.addError("Error, falta ','",((Token)$2.obj).getNroLinea());} MIRARRRRRRRRRRRRRRRRR
 					;
 					
 	sentencia_ejecutable : seleccion_ejecutable ';'
-						  | control_ejecutable 
-						  | salida_ejecutable
-						  | asign
-					//	  | sentencia_declarativa {this.addError("Error, no se permite sentencia declarativa dentro de las ejecutables",((Token)$1.obj).getNroLinea());} 
+						  | control_ejecutable ';'
+						  | salida_ejecutable ';'
+						  | asign 
 						  | seleccion_ejecutable {this.addError("Error, falta ';'",((Token)$1.obj).getNroLinea());}
+						  | control_ejecutable {this.addError("Error, falta ';'",((Token)$1.obj).getNroLinea());}
+						  | salida_ejecutable {this.addError("Error, falta ';'",((Token)$1.obj).getNroLinea());}
 						  ;
 	
 	seleccion_ejecutable : IF '(' condicion ')' bloque_sentencias ELSE bloque_sentencias END_IF {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia IF-ELSE");}
@@ -115,6 +119,7 @@
 						| IF '(' ')' bloque_sentencias END_IF {this.addError("Falta condicion.",((Token)$2.obj).getNroLinea());}
 						| IF '(' condicion bloque_sentencias END_IF {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
 						| IF '(' condicion ')' END_IF {this.addError("Falta bloque de sentencias.",((Token)$4.obj).getNroLinea());}
+					//	| IF '(' condicion ')' bloque_sentencias ELSE bloque_sentencias {this.addError("Falta 'end_if.",((Token)$7.obj).getNroLinea());}
 					//	| IF '(' condicion ')' bloque_sentencias {this.addError("Falta 'end_if.",((Token)$5.obj).getNroLinea());}
 						;
 						
@@ -186,30 +191,30 @@
 	bloque_sentencias : sentencia_ejecutable 
 			| BEGIN sentencias_ejecutables END
 			| BEGIN END
-		//	| sentencias_ejecutables END {this.addError("Error, falta BEGIN dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());}
-		//	| BEGIN sentencias_ejecutables {this.addError("Error, falta END dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());}
-		//	| sentencias_ejecutables {this.addError("Error, falta BEGIN y END dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());}
+		//	| sentencias_ejecutables END {this.addError("Error, falta BEGIN dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());}  //GENERA SHIFT REDUCE
+		//	| BEGIN sentencias_ejecutables {this.addError("Error, falta END dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());}  //GENERA SHIFT REDUCE
+		//	| sentencias_ejecutables {this.addError("Error, falta BEGIN y END dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());} GENERA SHIFT REDUCE Y REDUCE REDUCE
 			;
 	
-	control_ejecutable : DO bloque_sentencias UNTIL '(' condicion ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia until");}
-					   | DO UNTIL '(' condicion ')' ';' {this.addError("Falta bloque de sentencias.",((Token)$1.obj).getNroLinea());}
-					   | DO bloque_sentencias '(' condicion ')' ';' {this.addError("Falta 'until'.",((Token)$2.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL condicion ')' ';' {this.addError("Falta '('.",((Token)$3.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL '(' ')' ';' {this.addError("Falta condicion.",((Token)$4.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL '(' condicion ';' {this.addError("Falta ')'.",((Token)$5.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL '(' condicion ')' {this.addError("Falta ';'.",((Token)$6.obj).getNroLinea());}
-					//   | bloque_sentencias UNTIL '(' condicion ')' {this.addError("Falta ';'.",((Token)$1.obj).getNroLinea());}
+	control_ejecutable : DO bloque_sentencias UNTIL '(' condicion ')'  {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia until");}
+					   | DO UNTIL '(' condicion ')'  {this.addError("Falta bloque de sentencias.",((Token)$1.obj).getNroLinea());}
+					   | DO bloque_sentencias '(' condicion ')'  {this.addError("Falta 'until'.",((Token)$2.obj).getNroLinea());}
+					   | DO bloque_sentencias UNTIL condicion ')' {this.addError("Falta '('.",((Token)$3.obj).getNroLinea());}
+					   | DO bloque_sentencias UNTIL '(' ')'  {this.addError("Falta condicion.",((Token)$4.obj).getNroLinea());}
+					   | DO bloque_sentencias UNTIL '(' condicion {this.addError("Falta ')'.",((Token)$5.obj).getNroLinea());}
+				//	   | DO bloque_sentencias UNTIL '(' condicion ')' {this.addError("Falta ';'.",((Token)$6.obj).getNroLinea());}
+				//     | bloque_sentencias UNTIL '(' condicion ')' {this.addError("Falta 'do'.",((Token)$1.obj).getNroLinea());} // TIRA REDUCE/REDUCE FALTA DO
 					   ;
 	
-	salida_ejecutable : PRINT '(' CADENA ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
-					  | PRINT '(' variable ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
-					  | PRINT '(' CTE_E ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
-					  | PRINT '(' CTE_F ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
-					  | '(' CADENA ')' ';' {this.addError("Falta 'PRINT'.",((Token)$1.obj).getNroLinea());}
-					  | PRINT CADENA ')' ';' {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
-					  | PRINT '(' error ')' ';' {this.addError("Solo se puede definir una cadena.",((Token)$2.obj).getNroLinea());}
-					  | PRINT '(' CADENA ';' {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
-					  | PRINT '(' CADENA ')' {this.addError("Falta ';'.",((Token)$4.obj).getNroLinea());}
+	imprimir: factor
+			| CADENA
+	
+	salida_ejecutable : PRINT '(' imprimir ')'  {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
+					  | '(' imprimir ')'  {this.addError("Falta 'PRINT'.",((Token)$1.obj).getNroLinea());}
+					  | PRINT imprimir ')'  {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
+					  | PRINT '(' ')'  {this.addError("Falta cadena .",((Token)$2.obj).getNroLinea());}
+					  | PRINT '(' imprimir  {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
+				//	  | PRINT '(' imprimir ')' {this.addError("Falta ';'.",((Token)$4.obj).getNroLinea());}
 					  ;
 
 	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Asignacion");
@@ -233,6 +238,7 @@
 	invocacion_metodo : ID '.' metodo '(' ')' 
 					  | ID '.' metodo ')' {this.addError("Falta '(.'",((Token)$3.obj).getNroLinea());}
 					  | ID '.' '(' ')' {this.addError("Falta metodo.",((Token)$2.obj).getNroLinea());}
+				//	  | ID '.' metodo '('  {this.addError("Falta ')'.",((Token)$4.obj).getNroLinea());} GENERA SHIFT/REDUCE
 					  ;
 
 %%
