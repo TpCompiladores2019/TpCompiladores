@@ -22,10 +22,10 @@ public class Compilador {
 	private AnalizadorLexico analizarLexico ;
 	private FileWriter fw;	
 	
-	public Compilador(File ruta) throws IOException {
+	public Compilador(String args) throws IOException {
 		this.tablaSimbolos = new TablaSimbolos();
 		this.tablaTokens = new TablaTokens();
-		this.analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,ruta);
+		this.analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,args);
 	}
 	
 	public void mostrarInfoLexico() {
@@ -70,9 +70,9 @@ public class Compilador {
 			
 			informacion += "\nTabla de Simbolos: \n" ;
 			for (String key : tablaSimbolos.getKeySet()) {
-				informacion += key + "--> " + tablaSimbolos.getToken(key).getTipo() + "\n";
-				System.out.println("key: " + key + " tipo: " + tablaSimbolos.getToken(key).getTipo());
-				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.getToken(key).getCantRef());
+				informacion += key + "--> " + tablaSimbolos.getClave(key).getTipo() + "\n";
+				System.out.println("key: " + key + " tipo: " + tablaSimbolos.getClave(key).getTipo());
+				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.getClave(key).getCantRef());
 			}
 		
 			fw.write(informacion);
@@ -137,8 +137,8 @@ public class Compilador {
 			
 			informacion += "\nTabla de Simbolos: \n" ;
 			for (String key : tablaSimbolos.getKeySet()) {
-				informacion += key + "--> " + tablaSimbolos.getToken(key).getTipo() + "\n";
-				informacion += key + "--> " + tablaSimbolos.getToken(key).getCantRef() + "\n";
+				informacion += key + "--> " + tablaSimbolos.getClave(key).getTipo() + "\n";
+				informacion += key + "--> " + tablaSimbolos.getClave(key).getCantRef() + "\n";
 			}
 			
 			

@@ -105,12 +105,12 @@ public class AnalizadorLexico {
 		private ArrayList<Integer> ascii = new ArrayList<Integer>();
 	
 	
-	public AnalizadorLexico(TablaSimbolos tablaSimbolos, TablaTokens tablaTokens,File ruta) throws IOException {
+	public AnalizadorLexico(TablaSimbolos tablaSimbolos, TablaTokens tablaTokens,String args) throws IOException {
 		this.tablaSimbolos = tablaSimbolos;
 		this.tablaTokens = tablaTokens;
-		tablaTokens.CompletarTabla();
+		tablaTokens.completarTabla();
 		inicializarColumnas();
-		fr = new FileReader(ruta);
+		fr = new FileReader(args);
 		int numAscii;
 		while ((numAscii=fr.read())!=-1) {
 			ascii.add(numAscii);

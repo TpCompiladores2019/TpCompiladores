@@ -12,7 +12,7 @@ public class MainLexico {
 		file.showOpenDialog(file);
 		File ruta = file.getSelectedFile();
 		if (ruta != null) {
-			Compilador compilador = new Compilador(ruta);
+			Compilador compilador = new Compilador(args[0]);
 			compilador.mostrarInfoLexico();
 			
 		}

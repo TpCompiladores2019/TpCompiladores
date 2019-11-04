@@ -8,15 +8,12 @@ public class TablaSimbolos {
 
 	private HashMap<String, Registro> tablaSimbolos = new HashMap<String, Registro>();
 	
-	public boolean agregar(String variable,Registro registro) {
-		if (!tablaSimbolos.containsKey(variable)) {
+	public void agregar(String variable,Registro registro) {
+		if (!tablaSimbolos.containsKey(variable)) 
 			tablaSimbolos.put(variable,registro);
-		}
-		else{
+		else
 			tablaSimbolos.get(variable).incrementarRef();
-			return false;
-		}
-		return true;
+		
 	}
 
 	
@@ -24,7 +21,7 @@ public class TablaSimbolos {
 		return tablaSimbolos.containsKey(clave);
 	}
 	
-	public Registro getToken(String clave) {
+	public Registro getClave(String clave) {
 		return tablaSimbolos.get(clave);
 	}
 	

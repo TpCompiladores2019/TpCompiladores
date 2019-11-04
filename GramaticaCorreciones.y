@@ -118,7 +118,7 @@
 					//	| IF '(' condicion ')' bloque_sentencias {this.addError("Falta 'end_if.",((Token)$5.obj).getNroLinea());}
 						;
 						
-	condicion : expresion_aritmetica operador expresion_aritmetica {if (!sonCompatibles(tablaSimbolos.getToken(((Token)$1.obj).getLexema()).getTipo()))	
+	condicion : expresion_aritmetica operador expresion_aritmetica {if (!sonCompatibles(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()))	
 																this.addError("Error tipos incompatibles en comparacion.",((Token)$3.obj).getNroLinea());
 															listaCompatibilidad.clear();}
 			  | operador expresion_aritmetica {this.addError("Falta expresion del lado izquierdo.",((Token)$1.obj).getNroLinea());}
@@ -132,38 +132,47 @@
 						 
 	termino : termino '*' factor 
 			| termino '/' factor 
-			| factor {listaCompatibilidad.add((Token)$1.obj).getLexema().getTipo();)}
+			| factor {listaCompatibilidad.add(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());}
 			;
 			
 	factor : variable {}
-	       | CTE_E {actualizarTablaPositivo(((Token)$1.obj).getLexema())}
+	       | CTE_E {actualizarTablaPositivo(((Token)$1.obj).getLexema());}
 		   | CTE_F 
 		   | '-' CTE_E {actualizarTablaNegativo(((Token)$2.obj).getLexema());}
 		   | '-' CTE_F {actualizarTablaNegativoFloat(((Token)$2.obj).getLexema());}
 		   | invocacion_metodo
 		   ;
 	
-	variable : ID '[' ID ']' {	if (!estaDeclarada(((Token)$1.obj)))
+	variable : ID '[' ID ']' {	if (!estaDeclarada(((Token)$1.obj))){
 									this.addError("Error coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());
+									tablaSimbolos.eliminarClave(((Token)$1.obj).getLexema());
+								}
 								else
-									if (tablaSimbolos.getToken(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
+									if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
 										this.addError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",((Token)$1.obj).getNroLinea());
-								if (!estaDeclarada(((Token)$3.obj)))
+								if (!estaDeclarada(((Token)$3.obj))){
 									this.addError("Error variable '"+((Token)$3.obj).getLexema() + "' no declarada.",((Token)$3.obj).getNroLinea());
+									tablaSimbolos.eliminarClave(((Token)$3.obj).getLexema());
+								}
+									
 								else
-									if (!tablaSimbolos.getToken(((Token)$3.obj).getLexema()).getTipo().equals("int"))
+									if (!tablaSimbolos.getClave(((Token)$3.obj).getLexema()).getTipo().equals("int"))
 										this.addError("Error El tipo del subindice no es entero",((Token)$3.obj).getNroLinea());
 								else
-									if (tablaSimbolos.getToken(((Token)$3.obj).getLexema()).getUso().equals("Nombre de Coleccion"))
+									if (tablaSimbolos.getClave(((Token)$3.obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 										this.addError("Error '"+((Token)$3.obj).getLexema() + "' es una coleccion.",((Token)$3.obj).getNroLinea());}
 										
-			 | ID '[' CTE_E ']' {	if (!estaDeclarada(((Token)$1.obj)))
+			 | ID '[' CTE_E ']' {	if (!estaDeclarada(((Token)$1.obj))){
 										this.addError("Error coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());
+										tablaSimbolos.eliminarClave(((Token)$1.obj).getLexema());
+									}
 									else
-										if (tablaSimbolos.getToken(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
+										if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
 											this.addError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",((Token)$1.obj).getNroLinea());}
-			 | ID {	if (!estaDeclarada(((Token)$1.obj)))
-						this.addError("Error variable '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());}
+			 | ID {	if (!estaDeclarada(((Token)$1.obj))){
+						this.addError("Error variable '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());
+						tablaSimbolos.eliminarClave(((Token)$1.obj).getLexema());}
+				}
 			 ;
 	
 	operador : '<'
@@ -205,7 +214,7 @@
 
 	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Asignacion");
 															
-															if (!sonCompatibles(tablaSimbolos.getToken(((Token)$1.obj) .getLexema()).getTipo()))	
+															if (!sonCompatibles(tablaSimbolos.getClave(((Token)$1.obj) .getLexema()).getTipo()))	
 																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
 																
 															listaCompatibilidad.clear();	
@@ -289,16 +298,14 @@ public String informacionError() {
 
 
 public void actualizarTablaPositivo(String lexema) {
-		if(lexema == "32768"){
-			if (tablaSimbolos.tablaSimbolos.get(lexema).getCantRef()==1){
-				tablaSimbolos.tablaSimbolos.remove(lexema);
-			}
+		if(lexema.equals("32768")){
+			if (tablaSimbolos.getClave(lexema).getCantRef()==1)
+				tablaSimbolos.eliminarClave(lexema);
 			else
-				tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
+				tablaSimbolos.getClave(lexema).decrementarRef();
 		
-		if(tablaSimbolos.tablaSimbolos.containsKey("32767")) {
-			tablaSimbolos.tablaSimbolos.get("32767").incrementarRef();
-		}
+		if(tablaSimbolos.existeClave("32767")) 
+			tablaSimbolos.getClave("32767").incrementarRef();
 		else
 			tablaSimbolos.agregar("32767", new Registro("int"));
 	}
@@ -306,51 +313,31 @@ public void actualizarTablaPositivo(String lexema) {
 
 public void actualizarTablaNegativo(String lexema) {
 	String lexemaNuevo = "-" + lexema;
-	if(tablaSimbolos.tablaSimbolos.containsKey(lexema)) {
-		if (tablaSimbolos.tablaSimbolos.get(lexema).getCantRef()==1){
-			tablaSimbolos.tablaSimbolos.remove(lexema);
-		}
+	if(tablaSimbolos.existeClave(lexema)) {
+		if (tablaSimbolos.getClave(lexema).getCantRef()==1)
+			tablaSimbolos.eliminarClave(lexema);
 		else
-			tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
+			tablaSimbolos.getClave(lexema).decrementarRef();
 	}
-	if(tablaSimbolos.tablaSimbolos.containsKey(lexemaNuevo)) {
-		tablaSimbolos.tablaSimbolos.get(lexemaNuevo).incrementarRef();
-	}
+	if(tablaSimbolos.existeClave(lexemaNuevo)) 
+		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
 	else
 		tablaSimbolos.agregar(lexemaNuevo, new Registro("int"));
 }
 
 
-public void actualizarTablaNegativo(String lexema) {
-	String lexemaNuevo = "-" + lexema;
-	if ((Integer.parseInt(lexemaNuevo))>= Short.MIN_VALUE){
-		if(tablaSimbolos.existeClave(lexema)) {
-			if (tablaSimbolos.getToken(lexema).getCantRef()==1)
-				tablaSimbolos.eliminarClave(lexema);
-			else
-				tablaSimbolos.getToken(lexema).decrementarRef();
-		}
-		if(tablaSimbolos.existeClave(lexemaNuevo)) {
-			tablaSimbolos.getToken(lexemaNuevo).incrementarRef();
-		}
-		else
-			tablaSimbolos.agregar(lexemaNuevo, new Registro("int"));
-	}
-}
-
 public void actualizarTablaNegativoFloat(String lexema) {
 	String lexemaNuevo = "-" + lexema;
-	if ((Float.parseFloat(lexemaNuevo)< -Float.MIN_NORMAL && Float.parseFloat(lexemaNuevo) > -Float.MAX_VALUE)) {
-		if (tablaSimbolos.existeClave(lexema))
-			if(tablaSimbolos.tablaSimbolos.get(lexema).getCantRef() == 1) 
-				tablaSimbolos.tablaSimbolos.remove(lexema);
-			else
-				tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
-		if(tablaSimbolos.tablaSimbolos.containsKey(lexemaNuevo)) 
-			tablaSimbolos.tablaSimbolos.get(lexemaNuevo).incrementarRef();
+	if (tablaSimbolos.existeClave(lexema))
+		if(tablaSimbolos.getClave(lexema).getCantRef() == 1) 
+			tablaSimbolos.eliminarClave(lexema);
 		else
-			tablaSimbolos.agregar(lexemaNuevo, new Registro("float"));
-	}
+			tablaSimbolos.getClave(lexema).decrementarRef();
+	if(tablaSimbolos.existeClave(lexemaNuevo)) 
+		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
+	else
+		tablaSimbolos.agregar(lexemaNuevo, new Registro("float"));
+
 }
 
 public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
@@ -361,12 +348,12 @@ public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
 		t = listaVariables.get(0);
 		listaVariables.remove(0);
 		lexema = t.getLexema();
-		if(!tablaSimbolos.getToken(lexema).getDeclarada()) {
-			tablaSimbolos.getToken(lexema).setTipo(tipo.getLexema());
-			tablaSimbolos.getToken(lexema).setDeclarada(true);
-			tablaSimbolos.getToken(lexema).setUso(uso);
-			if(tablaSimbolos.getToken(lexema).getUso().equals("Nombre de Coleccion")) {
-				tablaSimbolos.getToken(lexema).setTamanioColeccion(Integer.parseInt(cteE.getLexema()));
+		if(!tablaSimbolos.getClave(lexema).getDeclarada()) {
+			tablaSimbolos.getClave(lexema).setTipo(tipo.getLexema());
+			tablaSimbolos.getClave(lexema).setDeclarada(true);
+			tablaSimbolos.getClave(lexema).setUso(uso);
+			if(tablaSimbolos.getClave(lexema).getUso().equals("Nombre de Coleccion")) {
+				tablaSimbolos.getClave(lexema).setTamanioColeccion(Integer.parseInt(cteE.getLexema()));
 			}
 		}
 		else
@@ -375,14 +362,14 @@ public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
 }
 
 public boolean estaDeclarada(Token t){
-	if (tablaSimbolos.getToken(t.getLexema()).getDeclarada())
+	if (tablaSimbolos.getClave(t.getLexema()).getDeclarada())
 		return true;
 	else
 		return false;
 }
 
 public boolean esCompatible(Token t1, Token t2){
-	if (tablaSimbolos.getToken(t1.getLexema()).getTipo().equals(tablaSimbolos.getToken(t2.getLexema()).getTipo()))
+	if (tablaSimbolos.getClave(t1.getLexema()).getTipo().equals(tablaSimbolos.getClave(t2.getLexema()).getTipo()))
 		return true;
 	return false;
 }

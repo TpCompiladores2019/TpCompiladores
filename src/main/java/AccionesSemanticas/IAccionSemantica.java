@@ -7,7 +7,11 @@ import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
 
 public abstract class IAccionSemantica {
-	
+	public static final int OTROS = -1;
+	public static final String CTE = "CONSTANTE E";
+	public static final String CTF = "CONSTANTE F";
+	public static final String CADENA = "CADENA";
+	public static final String ID = "IDENTIFICADOR";
 
 	public abstract int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos);
 	
@@ -15,8 +19,7 @@ public abstract class IAccionSemantica {
 	public static class ASAgregar extends IAccionSemantica {
 		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 			cadena.append(caracter);
-			//return tablaTokens.getToken(cadena.toString());  NO VA PORQUE SI TENEMOS: palabra y palabras, simepre corta en la mas corta
-			return -1;
+			return OTROS;
 		}
 	}
 	
@@ -24,7 +27,7 @@ public abstract class IAccionSemantica {
 
 		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 			AnalizadorLexico.nroLinea++;
-			return -1;
+			return OTROS;
 		}
 
 	}
@@ -33,7 +36,7 @@ public abstract class IAccionSemantica {
 
 		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 			AnalizadorLexico.comentarioAbierto = false;
-			return -1;
+			return OTROS;
 		}
 
 	}
@@ -45,7 +48,7 @@ public abstract class IAccionSemantica {
 			AnalizadorLexico.indiceLectura--;
 			AnalizadorLexico.comentarioAbierto = true;
 			cadena.delete(0,cadena.length());
-			return -1;
+			return OTROS;
 		}
 		
 	}
@@ -56,12 +59,12 @@ public abstract class IAccionSemantica {
 		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
 			Error nuevoError = new Error("Token ",AnalizadorLexico.nroLinea,"'"+caracter+"' invalido","ERROR");
 			AnalizadorLexico.listaErrores.add(nuevoError);
-			if (cadena.length() != 0) {// es porque la cadena quiere arrancar con este caracter
+			if (cadena.length() != 0) {
 				IAccionSemantica ASaux = new ASFinalID();
 				ASaux.ejecutar(caracter, cadena, tablaTokens, tablaSimbolos);
 				AnalizadorLexico.indiceLectura++;
 			}
-			return -1;
+			return OTROS;
 		}
 
 	}
@@ -73,7 +76,7 @@ public abstract class IAccionSemantica {
 			Error nuevoError = new Error("La cadena no permite salto de linea",AnalizadorLexico.nroLinea,"","ERROR");
 			AnalizadorLexico.listaErrores.add(nuevoError);	
 			AnalizadorLexico.nroLinea++;
-			return -1;
+			return OTROS;
 		}
 
 	}
@@ -98,7 +101,7 @@ public abstract class IAccionSemantica {
 			AnalizadorLexico.indiceLectura--;
 			
 			cadena.delete(0, cadena.length());
-			return -1;
+			return OTROS;
 		}
 
 	}
@@ -111,7 +114,7 @@ public abstract class IAccionSemantica {
 			tablaSimbolos.agregar(cadena.toString(),new Registro("Cadena"));
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Cadena: " + cadena.toString());
 
-			return tablaTokens.getToken("CADENA");
+			return tablaTokens.getToken(CADENA);
 		}
 
 	}
@@ -131,7 +134,7 @@ public abstract class IAccionSemantica {
 				cadena.append("32768");
 			}	
 			tablaSimbolos.agregar(cadena.toString(),new Registro("int"));
-			return tablaTokens.getToken("CONSTANTE E");
+			return tablaTokens.getToken(CTE);
 		}
 		
 	}
@@ -157,7 +160,7 @@ public abstract class IAccionSemantica {
 			
 			tablaSimbolos.agregar(cadena.toString(),new Registro("float"));
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Constante Float: " + cadena.toString());
-			return tablaTokens.getToken("CONSTANTE F");
+			return tablaTokens.getToken(CTF);
 		}
 
 	}
@@ -186,7 +189,7 @@ public abstract class IAccionSemantica {
 			
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Identificador: " + salida);
 
-			return tablaTokens.getToken("IDENTIFICADOR");
+			return tablaTokens.getToken(ID);
 			}
 		
 	}

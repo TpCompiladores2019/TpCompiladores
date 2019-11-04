@@ -608,7 +608,7 @@ final static String yyrule[] = {
 "invocacion_metodo : ID '.' '(' ')'",
 };
 
-//#line 230 "GramaticaCorreciones.y"
+//#line 239 "GramaticaCorreciones.y"
 
 
 
@@ -671,16 +671,14 @@ public String informacionError() {
 
 
 public void actualizarTablaPositivo(String lexema) {
-		if(lexema == "32768"){
-			if (tablaSimbolos.tablaSimbolos.get(lexema).getCantRef()==1){
-				tablaSimbolos.tablaSimbolos.remove(lexema);
-			}
+		if(lexema.equals("32768")){
+			if (tablaSimbolos.getClave(lexema).getCantRef()==1)
+				tablaSimbolos.eliminarClave(lexema);
 			else
-				tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
+				tablaSimbolos.getClave(lexema).decrementarRef();
 		
-		if(tablaSimbolos.tablaSimbolos.containsKey("32767")) {
-			tablaSimbolos.tablaSimbolos.get("32767").incrementarRef();
-		}
+		if(tablaSimbolos.existeClave("32767")) 
+			tablaSimbolos.getClave("32767").incrementarRef();
 		else
 			tablaSimbolos.agregar("32767", new Registro("int"));
 	}
@@ -688,51 +686,31 @@ public void actualizarTablaPositivo(String lexema) {
 
 public void actualizarTablaNegativo(String lexema) {
 	String lexemaNuevo = "-" + lexema;
-	if(tablaSimbolos.tablaSimbolos.containsKey(lexema)) {
-		if (tablaSimbolos.tablaSimbolos.get(lexema).getCantRef()==1){
-			tablaSimbolos.tablaSimbolos.remove(lexema);
-		}
+	if(tablaSimbolos.existeClave(lexema)) {
+		if (tablaSimbolos.getClave(lexema).getCantRef()==1)
+			tablaSimbolos.eliminarClave(lexema);
 		else
-			tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
+			tablaSimbolos.getClave(lexema).decrementarRef();
 	}
-	if(tablaSimbolos.tablaSimbolos.containsKey(lexemaNuevo)) {
-		tablaSimbolos.tablaSimbolos.get(lexemaNuevo).incrementarRef();
-	}
+	if(tablaSimbolos.existeClave(lexemaNuevo)) 
+		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
 	else
 		tablaSimbolos.agregar(lexemaNuevo, new Registro("int"));
 }
 
 
-public void actualizarTablaNegativo(String lexema) {
-	String lexemaNuevo = "-" + lexema;
-	if ((Integer.parseInt(lexemaNuevo))>= Short.MIN_VALUE){
-		if(tablaSimbolos.existeClave(lexema)) {
-			if (tablaSimbolos.getToken(lexema).getCantRef()==1)
-				tablaSimbolos.eliminarClave(lexema);
-			else
-				tablaSimbolos.getToken(lexema).decrementarRef();
-		}
-		if(tablaSimbolos.existeClave(lexemaNuevo)) {
-			tablaSimbolos.getToken(lexemaNuevo).incrementarRef();
-		}
-		else
-			tablaSimbolos.agregar(lexemaNuevo, new Registro("int"));
-	}
-}
-
 public void actualizarTablaNegativoFloat(String lexema) {
 	String lexemaNuevo = "-" + lexema;
-	if ((Float.parseFloat(lexemaNuevo)< -Float.MIN_NORMAL && Float.parseFloat(lexemaNuevo) > -Float.MAX_VALUE)) {
-		if (tablaSimbolos.existeClave(lexema))
-			if(tablaSimbolos.tablaSimbolos.get(lexema).getCantRef() == 1) 
-				tablaSimbolos.tablaSimbolos.remove(lexema);
-			else
-				tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
-		if(tablaSimbolos.tablaSimbolos.containsKey(lexemaNuevo)) 
-			tablaSimbolos.tablaSimbolos.get(lexemaNuevo).incrementarRef();
+	if (tablaSimbolos.existeClave(lexema))
+		if(tablaSimbolos.getClave(lexema).getCantRef() == 1) 
+			tablaSimbolos.eliminarClave(lexema);
 		else
-			tablaSimbolos.agregar(lexemaNuevo, new Registro("float"));
-	}
+			tablaSimbolos.getClave(lexema).decrementarRef();
+	if(tablaSimbolos.existeClave(lexemaNuevo)) 
+		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
+	else
+		tablaSimbolos.agregar(lexemaNuevo, new Registro("float"));
+
 }
 
 public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
@@ -743,12 +721,12 @@ public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
 		t = listaVariables.get(0);
 		listaVariables.remove(0);
 		lexema = t.getLexema();
-		if(!tablaSimbolos.getToken(lexema).getDeclarada()) {
-			tablaSimbolos.getToken(lexema).setTipo(tipo.getLexema());
-			tablaSimbolos.getToken(lexema).setDeclarada(true);
-			tablaSimbolos.getToken(lexema).setUso(uso);
-			if(tablaSimbolos.getToken(lexema).getUso().equals("Nombre de Coleccion")) {
-				tablaSimbolos.getToken(lexema).setTamanioColeccion(Integer.parseInt(cteE.getLexema()));
+		if(!tablaSimbolos.getClave(lexema).getDeclarada()) {
+			tablaSimbolos.getClave(lexema).setTipo(tipo.getLexema());
+			tablaSimbolos.getClave(lexema).setDeclarada(true);
+			tablaSimbolos.getClave(lexema).setUso(uso);
+			if(tablaSimbolos.getClave(lexema).getUso().equals("Nombre de Coleccion")) {
+				tablaSimbolos.getClave(lexema).setTamanioColeccion(Integer.parseInt(cteE.getLexema()));
 			}
 		}
 		else
@@ -757,14 +735,14 @@ public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
 }
 
 public boolean estaDeclarada(Token t){
-	if (tablaSimbolos.getToken(t.getLexema()).getDeclarada())
+	if (tablaSimbolos.getClave(t.getLexema()).getDeclarada())
 		return true;
 	else
 		return false;
 }
 
 public boolean esCompatible(Token t1, Token t2){
-	if (tablaSimbolos.getToken(t1.getLexema()).getTipo().equals(tablaSimbolos.getToken(t2.getLexema()).getTipo()))
+	if (tablaSimbolos.getClave(t1.getLexema()).getTipo().equals(tablaSimbolos.getClave(t2.getLexema()).getTipo()))
 		return true;
 	return false;
 }
@@ -776,7 +754,7 @@ public boolean sonCompatibles(String tipoAComparar){
 	}
 	return true;
 }
-//#line 708 "Parser.java"
+//#line 686 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1075,7 +1053,7 @@ case 49:
 break;
 case 50:
 //#line 121 "GramaticaCorreciones.y"
-{if (!sonCompatibles(tablaSimbolos.getToken(((Token)val_peek(2).obj).getLexema()).getTipo()))	
+{if (!sonCompatibles(tablaSimbolos.getClave(((Token)val_peek(2).obj).getLexema()).getTipo()))	
 																this.addError("Error tipos incompatibles en comparacion.",((Token)val_peek(0).obj).getNroLinea());
 															listaCompatibilidad.clear();}
 break;
@@ -1089,7 +1067,7 @@ case 52:
 break;
 case 58:
 //#line 135 "GramaticaCorreciones.y"
-{listaCompatibilidad.add((Token)val_peek(0).obj).getLexema().getTipo();)}
+{listaCompatibilidad.add(tablaSimbolos.getClave(((Token)val_peek(0).obj).getLexema()).getTipo());}
 break;
 case 59:
 //#line 138 "GramaticaCorreciones.y"
@@ -1097,7 +1075,7 @@ case 59:
 break;
 case 60:
 //#line 139 "GramaticaCorreciones.y"
-{actualizarTablaPositivo(((Token)val_peek(0).obj).getLexema())}
+{actualizarTablaPositivo(((Token)val_peek(0).obj).getLexema());}
 break;
 case 62:
 //#line 141 "GramaticaCorreciones.y"
@@ -1109,132 +1087,141 @@ case 63:
 break;
 case 65:
 //#line 146 "GramaticaCorreciones.y"
-{	if (!estaDeclarada(((Token)val_peek(3).obj)))
+{	if (!estaDeclarada(((Token)val_peek(3).obj))){
 									this.addError("Error coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",((Token)val_peek(3).obj).getNroLinea());
+									tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
+								}
 								else
-									if (tablaSimbolos.getToken(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
+									if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
 										this.addError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",((Token)val_peek(3).obj).getNroLinea());
-								if (!estaDeclarada(((Token)val_peek(1).obj)))
+								if (!estaDeclarada(((Token)val_peek(1).obj))){
 									this.addError("Error variable '"+((Token)val_peek(1).obj).getLexema() + "' no declarada.",((Token)val_peek(1).obj).getNroLinea());
+									tablaSimbolos.eliminarClave(((Token)val_peek(1).obj).getLexema());
+								}
+									
 								else
-									if (!tablaSimbolos.getToken(((Token)val_peek(1).obj).getLexema()).getTipo().equals("int"))
+									if (!tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo().equals("int"))
 										this.addError("Error El tipo del subindice no es entero",((Token)val_peek(1).obj).getNroLinea());
 								else
-									if (tablaSimbolos.getToken(((Token)val_peek(1).obj).getLexema()).getUso().equals("Nombre de Coleccion"))
+									if (tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 										this.addError("Error '"+((Token)val_peek(1).obj).getLexema() + "' es una coleccion.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 66:
-//#line 160 "GramaticaCorreciones.y"
-{	if (!estaDeclarada(((Token)val_peek(3).obj)))
+//#line 165 "GramaticaCorreciones.y"
+{	if (!estaDeclarada(((Token)val_peek(3).obj))){
 										this.addError("Error coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",((Token)val_peek(3).obj).getNroLinea());
+										tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
+									}
 									else
-										if (tablaSimbolos.getToken(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
+										if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
 											this.addError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 67:
-//#line 165 "GramaticaCorreciones.y"
-{	if (!estaDeclarada(((Token)val_peek(0).obj)))
-						this.addError("Error variable '"+((Token)val_peek(0).obj).getLexema() + "' no declarada.",((Token)val_peek(0).obj).getNroLinea());}
+//#line 172 "GramaticaCorreciones.y"
+{	if (!estaDeclarada(((Token)val_peek(0).obj))){
+						this.addError("Error variable '"+((Token)val_peek(0).obj).getLexema() + "' no declarada.",((Token)val_peek(0).obj).getNroLinea());
+						tablaSimbolos.eliminarClave(((Token)val_peek(0).obj).getLexema());}
+				}
 break;
 case 77:
-//#line 185 "GramaticaCorreciones.y"
+//#line 194 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(6).obj).getNroLinea() + ": Sentencia until");}
 break;
 case 78:
-//#line 186 "GramaticaCorreciones.y"
+//#line 195 "GramaticaCorreciones.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(5).obj).getNroLinea());}
 break;
 case 79:
-//#line 187 "GramaticaCorreciones.y"
+//#line 196 "GramaticaCorreciones.y"
 {this.addError("Falta 'until'.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 80:
-//#line 188 "GramaticaCorreciones.y"
+//#line 197 "GramaticaCorreciones.y"
 {this.addError("Falta '('.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 81:
-//#line 189 "GramaticaCorreciones.y"
+//#line 198 "GramaticaCorreciones.y"
 {this.addError("Falta condicion.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 82:
-//#line 190 "GramaticaCorreciones.y"
+//#line 199 "GramaticaCorreciones.y"
 {this.addError("Falta ')'.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 83:
-//#line 191 "GramaticaCorreciones.y"
+//#line 200 "GramaticaCorreciones.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 84:
-//#line 195 "GramaticaCorreciones.y"
+//#line 204 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(4).obj).getNroLinea() + ": Sentencia PRINT");}
 break;
 case 85:
-//#line 196 "GramaticaCorreciones.y"
+//#line 205 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(4).obj).getNroLinea() + ": Sentencia PRINT");}
 break;
 case 86:
-//#line 197 "GramaticaCorreciones.y"
+//#line 206 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(4).obj).getNroLinea() + ": Sentencia PRINT");}
 break;
 case 87:
-//#line 198 "GramaticaCorreciones.y"
+//#line 207 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(4).obj).getNroLinea() + ": Sentencia PRINT");}
 break;
 case 88:
-//#line 199 "GramaticaCorreciones.y"
+//#line 208 "GramaticaCorreciones.y"
 {this.addError("Falta 'PRINT'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 89:
-//#line 200 "GramaticaCorreciones.y"
+//#line 209 "GramaticaCorreciones.y"
 {this.addError("Falta '('.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 90:
-//#line 201 "GramaticaCorreciones.y"
+//#line 210 "GramaticaCorreciones.y"
 {this.addError("Solo se puede definir una cadena.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 91:
-//#line 202 "GramaticaCorreciones.y"
+//#line 211 "GramaticaCorreciones.y"
 {this.addError("Falta ')'.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 92:
-//#line 203 "GramaticaCorreciones.y"
+//#line 212 "GramaticaCorreciones.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 93:
-//#line 206 "GramaticaCorreciones.y"
+//#line 215 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(3).obj).getNroLinea() + ": Asignacion");
 															
-															if (!sonCompatibles(tablaSimbolos.getToken(((Token)val_peek(3).obj) .getLexema()).getTipo()))	
+															if (!sonCompatibles(tablaSimbolos.getClave(((Token)val_peek(3).obj) .getLexema()).getTipo()))	
 																this.addError("Error tipos incompatibles.",((Token)val_peek(1).obj).getNroLinea());
 																
 															listaCompatibilidad.clear();	
 														}
 break;
 case 94:
-//#line 213 "GramaticaCorreciones.y"
+//#line 222 "GramaticaCorreciones.y"
 {this.addError("Falta variable.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 95:
-//#line 214 "GramaticaCorreciones.y"
+//#line 223 "GramaticaCorreciones.y"
 {this.addError("Falta ':='.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 96:
-//#line 215 "GramaticaCorreciones.y"
+//#line 224 "GramaticaCorreciones.y"
 {this.addError("Falta expresion.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 97:
-//#line 216 "GramaticaCorreciones.y"
+//#line 225 "GramaticaCorreciones.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 102:
-//#line 225 "GramaticaCorreciones.y"
+//#line 234 "GramaticaCorreciones.y"
 {this.addError("Falta '(.'",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 103:
-//#line 226 "GramaticaCorreciones.y"
+//#line 235 "GramaticaCorreciones.y"
 {this.addError("Falta metodo.",((Token)val_peek(2).obj).getNroLinea());}
 break;
-//#line 1161 "Parser.java"
+//#line 1148 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
