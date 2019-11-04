@@ -1086,7 +1086,8 @@ case 54:
 break;
 case 60:
 //#line 140 "GramaticaCorreciones.y"
-{listaCompatibilidad.add(tablaSimbolos.getClave(((Token)val_peek(0).obj).getLexema()).getTipo());}
+{//listaCompatibilidad.add(tablaSimbolos.getClave(((Token)val_peek(0).obj).getLexema()).getTipo());}
+}
 break;
 case 61:
 //#line 143 "GramaticaCorreciones.y"
@@ -1189,11 +1190,11 @@ break;
 case 92:
 //#line 220 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(3).obj).getNroLinea() + ": Asignacion");
-															
+													/*		
 															if (!sonCompatibles(tablaSimbolos.getClave(((Token)val_peek(3).obj) .getLexema()).getTipo()))	
 																this.addError("Error tipos incompatibles.",((Token)val_peek(1).obj).getNroLinea());
 																
-															listaCompatibilidad.clear();	
+															listaCompatibilidad.clear();	*/
 														}
 break;
 case 93:

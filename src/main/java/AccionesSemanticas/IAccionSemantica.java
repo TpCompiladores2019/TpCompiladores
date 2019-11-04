@@ -13,11 +13,26 @@ public abstract class IAccionSemantica {
 	public static final String CADENA = "CADENA";
 	public static final String ID = "IDENTIFICADOR";
 
-	public abstract int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos);
+	private static TablaTokens tablaTokens;
+	private static TablaSimbolos tablaSimbolos;
+	
+	
+	public IAccionSemantica(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		this.tablaSimbolos=tablaSimbolos;
+		this.tablaTokens=tablaTokens;
+	}
+	
+	
+	public abstract int ejecutar(char caracter, StringBuilder cadena);
 	
 	
 	public static class ASAgregar extends IAccionSemantica {
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASAgregar(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+			// TODO Auto-generated constructor stub
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			cadena.append(caracter);
 			return OTROS;
 		}
@@ -25,7 +40,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASAumentarNumLinea extends IAccionSemantica{
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASAumentarNumLinea(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			AnalizadorLexico.nroLinea++;
 			return OTROS;
 		}
@@ -34,7 +53,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASCerrarComentario extends IAccionSemantica {
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASCerrarComentario(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			AnalizadorLexico.comentarioAbierto = false;
 			return OTROS;
 		}
@@ -44,7 +67,11 @@ public abstract class IAccionSemantica {
 
 	public static class ASConsumirComentario extends IAccionSemantica {
 	
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASConsumirComentario(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			AnalizadorLexico.indiceLectura--;
 			AnalizadorLexico.comentarioAbierto = true;
 			cadena.delete(0,cadena.length());
@@ -56,12 +83,16 @@ public abstract class IAccionSemantica {
 	public static class ASError extends IAccionSemantica {
 
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASError(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			Error nuevoError = new Error("Token ",AnalizadorLexico.nroLinea,"'"+caracter+"' invalido","ERROR");
 			AnalizadorLexico.listaErrores.add(nuevoError);
 			if (cadena.length() != 0) {
-				IAccionSemantica ASaux = new ASFinalID();
-				ASaux.ejecutar(caracter, cadena, tablaTokens, tablaSimbolos);
+				IAccionSemantica ASaux = new ASFinalID(tablaTokens,tablaSimbolos);
+				ASaux.ejecutar(caracter, cadena);
 				AnalizadorLexico.indiceLectura++;
 			}
 			return OTROS;
@@ -71,7 +102,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASErrorCadenaMultilinea extends IAccionSemantica {
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASErrorCadenaMultilinea(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			cadena.delete(0, cadena.length());
 			Error nuevoError = new Error("La cadena no permite salto de linea",AnalizadorLexico.nroLinea,"","ERROR");
 			AnalizadorLexico.listaErrores.add(nuevoError);	
@@ -83,7 +118,11 @@ public abstract class IAccionSemantica {
 
 	public static class ASErrorCaracterFaltante extends IAccionSemantica{
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASErrorCaracterFaltante(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			
 			String simboloEsperado = new String();
 			char ultimoChar = cadena.charAt(cadena.length()-1);
@@ -108,7 +147,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASFinalCadena extends IAccionSemantica{
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASFinalCadena(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 		
 
 			tablaSimbolos.agregar(cadena.toString(),new Registro("Cadena"));
@@ -121,7 +164,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASFinalEntero extends IAccionSemantica {
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASFinalEntero(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			AnalizadorLexico.indiceLectura--;
 			Short nro;
 			try {
@@ -141,7 +188,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASFinalFloat extends IAccionSemantica{
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASFinalFloat(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			AnalizadorLexico.indiceLectura--;
 			Double numeroFloat = Double.parseDouble(cadena.toString());
 			if (numeroFloat > Float.MAX_VALUE) {
@@ -167,7 +218,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASFinalID extends IAccionSemantica{
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASFinalID(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			AnalizadorLexico.indiceLectura--; // 
 			String salida;
 			if (cadena.length() > 25) {
@@ -196,7 +251,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASFinalOperAsigComp extends IAccionSemantica {
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASFinalOperAsigComp(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			cadena.append(caracter);
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + ": " + cadena.toString());
 			return tablaTokens.getToken(cadena.toString());
@@ -207,7 +266,11 @@ public abstract class IAccionSemantica {
 	
 	public static class ASFinalSimple extends IAccionSemantica {
 
-		public int ejecutar(char caracter, StringBuilder cadena, TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+		public ASFinalSimple(TablaTokens tablaTokens, TablaSimbolos tablaSimbolos) {
+			super(tablaTokens, tablaSimbolos);
+		}
+
+		public int ejecutar(char caracter, StringBuilder cadena) {
 			AnalizadorLexico.indiceLectura--;
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + ": " + cadena.toString());
 			return tablaTokens.getToken(cadena.toString());
