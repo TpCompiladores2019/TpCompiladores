@@ -1,15 +1,37 @@
 Tokens Detectados: 
-Linea 1 Cadena: hola
-Linea 2 Cadena: pepe 
-Linea 3 Cadena: jajajajaj 
+Linea 1 Palabra Reservada: int
+Linea 1 Identificador: a
+Linea 1: ,
+Linea 1 Identificador: b
+Linea 1: ,
+Linea 1 Identificador: c
+Linea 1: ;
+Linea 2 Palabra Reservada: int
+Linea 2 Identificador: fe
+Linea 2: ;
+Linea 3 Palabra Reservada: float
+Linea 3 Identificador: d
+Linea 3: ,
+Linea 3 Identificador: e
+Linea 3: ,
+Linea 3 Identificador: f
+Linea 3: ;
+Linea 5 Palabra Reservada: begin
+Linea 6 Identificador: a
+Linea 6: :=
+Linea 6 Identificador: b
+Linea 6: ;
+Linea 7 Palabra Reservada: end
 
-Warnings Detectados: 
-WARNING--> Linea 2: La cadena no fue cerrada correctamente
-WARNING--> Linea 3: La cadena no fue cerrada correctamente
+Sin Warnings detectados 
 
 Sin errores detectados 
 
 Tabla de Simbolos: 
-jajajajaj --> Cadena
-hola--> Cadena
-pepe --> Cadena
+a--> 
+b--> 
+c--> 
+d--> 
+e--> 
+f--> 
+fe--> 

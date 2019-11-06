@@ -6,8 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
-
+import CodigoIntermedio.AnalizadorTercetos;
 import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
@@ -21,11 +20,13 @@ public class Compilador {
 	private TablaTokens tablaTokens;
 	private AnalizadorLexico analizarLexico ;
 	private FileWriter fw;	
+	private AnalizadorTercetos analizadorTerceto;
 	
 	public Compilador(String args) throws IOException {
 		this.tablaSimbolos = new TablaSimbolos();
 		this.tablaTokens = new TablaTokens();
 		this.analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,args);
+		this.analizadorTerceto = new AnalizadorTercetos();
 	}
 	
 	public void mostrarInfoLexico() {
@@ -87,7 +88,7 @@ public class Compilador {
 		
 		try {
 			fw = new FileWriter("InformacionSintactico.txt");
-			Parser parser = new Parser(analizarLexico,tablaSimbolos);
+			Parser parser = new Parser(analizarLexico,tablaSimbolos,analizadorTerceto);
 			int sintactico =parser.yyparser(); 
 			
 			

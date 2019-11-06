@@ -25,7 +25,10 @@
 	import java.util.ArrayList;
 	import Lexico.Error;
 	import Lexico.Registro;
-//#line 26 "Parser.java"
+	import CodigoIntermedio.AnalizadorTercetos;
+	import CodigoIntermedio.TercetoIndividual;
+	import CodigoIntermedio.TercetoS;
+//#line 29 "Parser.java"
 
 
 
@@ -619,7 +622,7 @@ final static String yyrule[] = {
 "invocacion_metodo : ID '.' '(' ')'",
 };
 
-//#line 245 "GramaticaCorreciones.y"
+//#line 304 "GramaticaCorreciones.y"
 
 
 
@@ -632,10 +635,13 @@ private ArrayList<String> listaCorrectas = new ArrayList<String>();
 private ArrayList<Token> listaVariables = new ArrayList<Token>();
 private ArrayList<String> listaCompatibilidad = new ArrayList<String>();
 
+private AnalizadorTercetos analizadorTerceto;
 
-public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos) {
+
+public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos, AnalizadorTercetos terceto) {
 	this.lexico = lexico;
 	this.tablaSimbolos = tablaSimbolos;
+	this.analizadorTerceto= terceto;
 }
 
 public int yylex() {
@@ -758,14 +764,17 @@ public boolean esCompatible(Token t1, Token t2){
 	return false;
 }
 
+
+
+/*
 public boolean sonCompatibles(String tipoAComparar){
 	for (String tipo : listaCompatibilidad){
 		if (!tipo.equals(tipoAComparar))
 			return false;
 	}
 	return true;
-}
-//#line 697 "Parser.java"
+}*/
+//#line 706 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -920,192 +929,258 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 5:
-//#line 53 "GramaticaCorreciones.y"
+//#line 56 "GramaticaCorreciones.y"
 {this.addError("Error, falta BEGIN.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 6:
-//#line 54 "GramaticaCorreciones.y"
+//#line 57 "GramaticaCorreciones.y"
 {this.addError("Error, falta END.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 7:
-//#line 55 "GramaticaCorreciones.y"
+//#line 58 "GramaticaCorreciones.y"
 {this.addError("Error, falta los delimitadores BEGIN y END.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 8:
-//#line 56 "GramaticaCorreciones.y"
+//#line 59 "GramaticaCorreciones.y"
 {this.addError("Error, falta BEGIN.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 9:
-//#line 57 "GramaticaCorreciones.y"
+//#line 60 "GramaticaCorreciones.y"
 {this.addError("Error, falta END.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 10:
-//#line 58 "GramaticaCorreciones.y"
+//#line 61 "GramaticaCorreciones.y"
 {this.addError("Error, falta los delimitadores BEGIN  y END.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 11:
-//#line 59 "GramaticaCorreciones.y"
+//#line 62 "GramaticaCorreciones.y"
 {this.addError("Error, falta sentencias ejecutables.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 16:
-//#line 71 "GramaticaCorreciones.y"
+//#line 74 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(2).obj).getNroLinea() + ": Sentencia declarativa");
 														actualizarTablaVariables(((Token)val_peek(2).obj),"Variable",((Token)val_peek(2).obj));}
 break;
 case 17:
-//#line 73 "GramaticaCorreciones.y"
+//#line 76 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia declarativa");
 														listaVariables.add(((Token)val_peek(4).obj));
 														actualizarTablaVariables(((Token)val_peek(5).obj),"Nombre de Coleccion",((Token)val_peek(2).obj));}
 break;
 case 18:
-//#line 76 "GramaticaCorreciones.y"
+//#line 79 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta definir el tipo.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 19:
-//#line 77 "GramaticaCorreciones.y"
+//#line 80 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta definir el tipo.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 20:
-//#line 78 "GramaticaCorreciones.y"
+//#line 81 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta ';'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 21:
-//#line 79 "GramaticaCorreciones.y"
+//#line 82 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 22:
-//#line 80 "GramaticaCorreciones.y"
+//#line 83 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta ']'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 23:
-//#line 81 "GramaticaCorreciones.y"
+//#line 84 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta '['.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 24:
-//#line 82 "GramaticaCorreciones.y"
+//#line 85 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta variables.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 25:
-//#line 83 "GramaticaCorreciones.y"
+//#line 86 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, falta identIFicador.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 26:
-//#line 84 "GramaticaCorreciones.y"
+//#line 87 "GramaticaCorreciones.y"
 {this.addError("Error en declaracion, la coleccion solo permite constantes enteras.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 29:
-//#line 91 "GramaticaCorreciones.y"
+//#line 94 "GramaticaCorreciones.y"
 {listaVariables.add(((Token)val_peek(0).obj));}
 break;
 case 30:
-//#line 92 "GramaticaCorreciones.y"
+//#line 95 "GramaticaCorreciones.y"
 {listaVariables.add(((Token)val_peek(0).obj));}
 break;
 case 35:
-//#line 103 "GramaticaCorreciones.y"
+//#line 106 "GramaticaCorreciones.y"
 {this.addError("Error, falta ';'",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 36:
-//#line 104 "GramaticaCorreciones.y"
+//#line 107 "GramaticaCorreciones.y"
 {this.addError("Error, falta ';'",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 37:
-//#line 105 "GramaticaCorreciones.y"
+//#line 108 "GramaticaCorreciones.y"
 {this.addError("Error, falta ';'",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 38:
-//#line 108 "GramaticaCorreciones.y"
+//#line 111 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(7).obj).getNroLinea() + ": Sentencia IF-ELSE");}
 break;
 case 39:
-//#line 109 "GramaticaCorreciones.y"
+//#line 112 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia IF");}
 break;
 case 40:
-//#line 110 "GramaticaCorreciones.y"
+//#line 113 "GramaticaCorreciones.y"
 {this.addError("Falta 'ELSE'.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 41:
-//#line 111 "GramaticaCorreciones.y"
+//#line 114 "GramaticaCorreciones.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 42:
-//#line 112 "GramaticaCorreciones.y"
+//#line 115 "GramaticaCorreciones.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 43:
-//#line 113 "GramaticaCorreciones.y"
+//#line 116 "GramaticaCorreciones.y"
 {this.addError( "Falta ')'.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 44:
-//#line 114 "GramaticaCorreciones.y"
+//#line 117 "GramaticaCorreciones.y"
 {this.addError("Falta condicion.",((Token)val_peek(5).obj).getNroLinea());}
 break;
 case 45:
-//#line 115 "GramaticaCorreciones.y"
+//#line 118 "GramaticaCorreciones.y"
 {this.addError("Falta ')'.",((Token)val_peek(6).obj).getNroLinea());}
 break;
 case 46:
-//#line 116 "GramaticaCorreciones.y"
+//#line 119 "GramaticaCorreciones.y"
 {this.addError("Falta 'IF'.",((Token)val_peek(6).obj).getNroLinea());}
 break;
 case 47:
-//#line 117 "GramaticaCorreciones.y"
+//#line 120 "GramaticaCorreciones.y"
 {this.addError("Falta 'IF'.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 48:
-//#line 118 "GramaticaCorreciones.y"
+//#line 121 "GramaticaCorreciones.y"
 {this.addError("Falta '('.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 49:
-//#line 119 "GramaticaCorreciones.y"
+//#line 122 "GramaticaCorreciones.y"
 {this.addError("Falta condicion.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 50:
-//#line 120 "GramaticaCorreciones.y"
+//#line 123 "GramaticaCorreciones.y"
 {this.addError("Falta ')'.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 51:
-//#line 121 "GramaticaCorreciones.y"
+//#line 124 "GramaticaCorreciones.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 52:
-//#line 126 "GramaticaCorreciones.y"
-{if (!sonCompatibles(tablaSimbolos.getClave(((Token)val_peek(2).obj).getLexema()).getTipo()))	
-																this.addError("Error tipos incompatibles en comparacion.",((Token)val_peek(0).obj).getNroLinea());
-															listaCompatibilidad.clear();}
+//#line 129 "GramaticaCorreciones.y"
+{/*if (!esCompatible(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()))	
+																this.addError("Error tipos incompatibles en comparacion.",((Token)$3.obj).getNroLinea());
+															listaCompatibilidad.clear();*/
+															if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
+																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)val_peek(1).obj)), new TercetoIndividual(((Token)val_peek(2).obj)), new TercetoIndividual(((Token)val_peek(0).obj)),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+															}
+															else
+																System.out.println("no son compatibles as");									
+															}
 break;
 case 53:
-//#line 129 "GramaticaCorreciones.y"
+//#line 139 "GramaticaCorreciones.y"
 {this.addError("Falta expresion del lado izquierdo.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 54:
-//#line 130 "GramaticaCorreciones.y"
+//#line 140 "GramaticaCorreciones.y"
 {this.addError("Falta expresion del lado derecho.",((Token)val_peek(1).obj).getNroLinea());}
 break;
+case 55:
+//#line 143 "GramaticaCorreciones.y"
+{ if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
+																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)val_peek(1).obj)), new TercetoIndividual(((Token)val_peek(2).obj)), new TercetoIndividual(((Token)val_peek(0).obj)),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)val_peek(2).obj).getLexema()).getTipo()));
+																yyval = new ParserVal(nuevo);
+																}
+																else
+																	System.out.println("error tipos incompatibles");
+															
+															}
+break;
+case 56:
+//#line 154 "GramaticaCorreciones.y"
+{
+															if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
+																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)val_peek(1).obj)), new TercetoIndividual(((Token)val_peek(2).obj)), new TercetoIndividual(((Token)val_peek(0).obj)),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+					
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)val_peek(2).obj).getLexema()).getTipo()));
+																yyval = new ParserVal(nuevo);
+															}
+															else
+																System.out.println("error tipos incompatibles");
+															
+															}
+break;
+case 58:
+//#line 170 "GramaticaCorreciones.y"
+{	if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
+															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)val_peek(1).obj)), new TercetoIndividual(((Token)val_peek(2).obj)), new TercetoIndividual(((Token)val_peek(0).obj)),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoAsignacion);
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)val_peek(2).obj).getLexema()).getTipo()));
+																yyval = new ParserVal(nuevo);
+															}
+															else
+																System.out.println("error tipos incompatibles");
+															
+															
+															}
+break;
+case 59:
+//#line 182 "GramaticaCorreciones.y"
+{ if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
+															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)val_peek(1).obj)), new TercetoIndividual(((Token)val_peek(2).obj)), new TercetoIndividual(((Token)val_peek(0).obj)),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoAsignacion);
+															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)val_peek(2).obj).getLexema()).getTipo()));
+																yyval = new ParserVal(nuevo);
+															}
+															else
+																System.out.println("error tipos incompatibles");
+															
+															}
+break;
 case 60:
-//#line 140 "GramaticaCorreciones.y"
+//#line 193 "GramaticaCorreciones.y"
 {listaCompatibilidad.add(tablaSimbolos.getClave(((Token)val_peek(0).obj).getLexema()).getTipo());}
 break;
 case 61:
-//#line 143 "GramaticaCorreciones.y"
+//#line 196 "GramaticaCorreciones.y"
 {}
 break;
 case 62:
-//#line 144 "GramaticaCorreciones.y"
+//#line 197 "GramaticaCorreciones.y"
 {actualizarTablaPositivo(((Token)val_peek(0).obj).getLexema());}
 break;
 case 64:
-//#line 146 "GramaticaCorreciones.y"
+//#line 199 "GramaticaCorreciones.y"
 {actualizarTablaNegativo(((Token)val_peek(0).obj).getLexema());}
 break;
 case 65:
-//#line 147 "GramaticaCorreciones.y"
+//#line 200 "GramaticaCorreciones.y"
 {actualizarTablaNegativoFloat(((Token)val_peek(0).obj).getLexema());}
 break;
 case 67:
-//#line 151 "GramaticaCorreciones.y"
+//#line 204 "GramaticaCorreciones.y"
 {	if (!estaDeclarada(((Token)val_peek(3).obj))){
 									this.addError("Error coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",((Token)val_peek(3).obj).getNroLinea());
 									tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
@@ -1126,7 +1201,7 @@ case 67:
 										this.addError("Error '"+((Token)val_peek(1).obj).getLexema() + "' es una coleccion.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 68:
-//#line 170 "GramaticaCorreciones.y"
+//#line 223 "GramaticaCorreciones.y"
 {	if (!estaDeclarada(((Token)val_peek(3).obj))){
 										this.addError("Error coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",((Token)val_peek(3).obj).getNroLinea());
 										tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
@@ -1136,91 +1211,97 @@ case 68:
 											this.addError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 69:
-//#line 177 "GramaticaCorreciones.y"
+//#line 230 "GramaticaCorreciones.y"
 {	if (!estaDeclarada(((Token)val_peek(0).obj))){
 						this.addError("Error variable '"+((Token)val_peek(0).obj).getLexema() + "' no declarada.",((Token)val_peek(0).obj).getNroLinea());
 						tablaSimbolos.eliminarClave(((Token)val_peek(0).obj).getLexema());}
 				}
 break;
 case 79:
-//#line 199 "GramaticaCorreciones.y"
+//#line 252 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia until");}
 break;
 case 80:
-//#line 200 "GramaticaCorreciones.y"
+//#line 253 "GramaticaCorreciones.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 81:
-//#line 201 "GramaticaCorreciones.y"
+//#line 254 "GramaticaCorreciones.y"
 {this.addError("Falta 'until'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 82:
-//#line 202 "GramaticaCorreciones.y"
+//#line 255 "GramaticaCorreciones.y"
 {this.addError("Falta '('.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 83:
-//#line 203 "GramaticaCorreciones.y"
+//#line 256 "GramaticaCorreciones.y"
 {this.addError("Falta condicion.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 84:
-//#line 204 "GramaticaCorreciones.y"
+//#line 257 "GramaticaCorreciones.y"
 {this.addError("Falta ')'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 87:
-//#line 212 "GramaticaCorreciones.y"
+//#line 265 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(3).obj).getNroLinea() + ": Sentencia PRINT");}
 break;
 case 88:
-//#line 213 "GramaticaCorreciones.y"
+//#line 266 "GramaticaCorreciones.y"
 {this.addError("Falta 'PRINT'.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 89:
-//#line 214 "GramaticaCorreciones.y"
+//#line 267 "GramaticaCorreciones.y"
 {this.addError("Falta '('.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 90:
-//#line 215 "GramaticaCorreciones.y"
+//#line 268 "GramaticaCorreciones.y"
 {this.addError("Falta cadena .",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 91:
-//#line 216 "GramaticaCorreciones.y"
+//#line 269 "GramaticaCorreciones.y"
 {this.addError("Falta ')'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 92:
-//#line 220 "GramaticaCorreciones.y"
+//#line 273 "GramaticaCorreciones.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(3).obj).getNroLinea() + ": Asignacion");
-															
-															if (!sonCompatibles(tablaSimbolos.getClave(((Token)val_peek(3).obj) .getLexema()).getTipo()))	
-																this.addError("Error tipos incompatibles.",((Token)val_peek(1).obj).getNroLinea());
+														/*	
+															if (!sonCompatibles(tablaSimbolos.getClave(((Token)$1.obj) .getLexema()).getTipo()))	
+																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
 																
-															listaCompatibilidad.clear();	
+															listaCompatibilidad.clear();	*/
+														if( esCompatible(((Token)val_peek(3).obj),((Token)val_peek(1).obj))){
+															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)val_peek(2).obj)), new TercetoIndividual(((Token)val_peek(3).obj)), new TercetoIndividual(((Token)val_peek(1).obj)),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoAsignacion);
+														}
+														else
+															System.out.println("no son compatibles as");
 														}
 break;
 case 93:
-//#line 227 "GramaticaCorreciones.y"
+//#line 286 "GramaticaCorreciones.y"
 {this.addError("Falta variable.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 94:
-//#line 228 "GramaticaCorreciones.y"
+//#line 287 "GramaticaCorreciones.y"
 {this.addError("Falta ':='.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 95:
-//#line 229 "GramaticaCorreciones.y"
+//#line 288 "GramaticaCorreciones.y"
 {this.addError("Falta expresion.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 96:
-//#line 230 "GramaticaCorreciones.y"
+//#line 289 "GramaticaCorreciones.y"
 {this.addError("Falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 101:
-//#line 239 "GramaticaCorreciones.y"
+//#line 298 "GramaticaCorreciones.y"
 {this.addError("Falta '(.'",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 102:
-//#line 240 "GramaticaCorreciones.y"
+//#line 299 "GramaticaCorreciones.y"
 {this.addError("Falta metodo.",((Token)val_peek(2).obj).getNroLinea());}
 break;
-//#line 1147 "Parser.java"
+//#line 1228 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

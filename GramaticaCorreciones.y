@@ -7,6 +7,9 @@
 	import java.util.ArrayList;
 	import Lexico.Error;
 	import Lexico.Registro;
+	import CodigoIntermedio.AnalizadorTercetos;
+	import CodigoIntermedio.TercetoIndividual;
+	import CodigoIntermedio.TercetoS;
 %}
 
 %token
@@ -123,20 +126,70 @@
 					//	| IF '(' condicion ')' bloque_sentencias {this.addError("Falta 'end_if.",((Token)$5.obj).getNroLinea());}
 						;
 						
-	condicion : expresion_aritmetica operador expresion_aritmetica {if (!sonCompatibles(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()))	
+	condicion : expresion_aritmetica operador expresion_aritmetica {/*if (!esCompatible(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()))	
 																this.addError("Error tipos incompatibles en comparacion.",((Token)$3.obj).getNroLinea());
-															listaCompatibilidad.clear();}
+															listaCompatibilidad.clear();*/
+															if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+															}
+															else
+																System.out.println("no son compatibles as");									
+															}
 			  | operador expresion_aritmetica {this.addError("Falta expresion del lado izquierdo.",((Token)$1.obj).getNroLinea());}
 			  | expresion_aritmetica operador error{this.addError("Falta expresion del lado derecho.",((Token)$2.obj).getNroLinea());}
 			  ;
 			 
-	expresion_aritmetica : expresion_aritmetica '+' termino 
-						 | expresion_aritmetica '-' termino 
+	expresion_aritmetica : expresion_aritmetica '+' termino { if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()));
+																$$ = new ParserVal(nuevo);
+																}
+																else
+																	System.out.println("error tipos incompatibles");
+															
+															}
+						 | expresion_aritmetica '-' termino {
+															if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+					
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()));
+																$$ = new ParserVal(nuevo);
+															}
+															else
+																System.out.println("error tipos incompatibles");
+															
+															}
 						 | termino 
 						 ;
 						 
-	termino : termino '*' factor 
-			| termino '/' factor 
+			termino : termino '*' factor {	if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoAsignacion);
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()));
+																$$ = new ParserVal(nuevo);
+															}
+															else
+																System.out.println("error tipos incompatibles");
+															
+															
+															}
+			| termino '/' factor { if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoAsignacion);
+															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																tablaSimbolos.agregar(nuevo.getLexema(),new Registro(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo()));
+																$$ = new ParserVal(nuevo);
+															}
+															else
+																System.out.println("error tipos incompatibles");
+															
+															}
 			| factor {listaCompatibilidad.add(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());}
 			;
 			
@@ -218,11 +271,17 @@
 					  ;
 
 	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Asignacion");
-															
+														/*	
 															if (!sonCompatibles(tablaSimbolos.getClave(((Token)$1.obj) .getLexema()).getTipo()))	
 																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
 																
-															listaCompatibilidad.clear();	
+															listaCompatibilidad.clear();	*/
+														if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoAsignacion);
+														}
+														else
+															System.out.println("no son compatibles as");
 														}
 		  | ASIGNACION expresion_aritmetica ';' {this.addError("Falta variable.",((Token)$1.obj).getNroLinea());}
 		  | variable expresion_aritmetica ';' {this.addError("Falta ':='.",((Token)$1.obj).getNroLinea());}
@@ -254,10 +313,13 @@ private ArrayList<String> listaCorrectas = new ArrayList<String>();
 private ArrayList<Token> listaVariables = new ArrayList<Token>();
 private ArrayList<String> listaCompatibilidad = new ArrayList<String>();
 
+private AnalizadorTercetos analizadorTerceto;
 
-public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos) {
+
+public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos, AnalizadorTercetos terceto) {
 	this.lexico = lexico;
 	this.tablaSimbolos = tablaSimbolos;
+	this.analizadorTerceto= terceto;
 }
 
 public int yylex() {
@@ -380,10 +442,13 @@ public boolean esCompatible(Token t1, Token t2){
 	return false;
 }
 
+
+
+/*
 public boolean sonCompatibles(String tipoAComparar){
 	for (String tipo : listaCompatibilidad){
 		if (!tipo.equals(tipoAComparar))
 			return false;
 	}
 	return true;
-}
+}*/

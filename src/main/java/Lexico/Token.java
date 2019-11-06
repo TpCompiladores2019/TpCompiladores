@@ -13,6 +13,10 @@ public class Token {
 		this.idToken = idToken;
 	}
 
+	
+	public Token(String lexema) {
+		this.lexema = lexema;
+	}
 	public String getLexema() {
 		return lexema;
 	}
