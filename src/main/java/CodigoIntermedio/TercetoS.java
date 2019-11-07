@@ -16,6 +16,14 @@ public class TercetoS {
 		this.numTerceto=numTerceto;
 	}
 
+	public TercetoIndividual getTerceto(int i) {
+		return listTerceto.get(i);
+	}
+	
+	public void setTerceto(TercetoIndividual t, int i) {
+		listTerceto.add(i, t);
+	}
+	
 //IDEA LARDA	
 	public TercetoS(String s1, String s2, String s3) {
 		

@@ -759,6 +759,7 @@ public boolean estaDeclarada(Token t){
 }
 
 public boolean esCompatible(Token t1, Token t2){
+	System.out.println(t2.getLexema());
 	if (tablaSimbolos.getClave(t1.getLexema()).getTipo().equals(tablaSimbolos.getClave(t2.getLexema()).getTipo()))
 		return true;
 	return false;
