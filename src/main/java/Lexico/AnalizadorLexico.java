@@ -221,7 +221,7 @@ public class AnalizadorLexico {
 				AnalizadorLexico.listaCorrectas.add("Linea " +nroLinea + " Cadena: " + cadena.toString());
 				Error nuevoWarning = new Error("La cadena no fue cerrada correctamente",nroLinea,"","WARNING");//Chequear
 				listaWarning.add(nuevoWarning);
-				tablaSimbolos.agregar(cadena.toString(), new Registro("Cadena"));
+				tablaSimbolos.agregar(cadena.toString(), new Token("Cadena",1));
 			}
 				
 			else

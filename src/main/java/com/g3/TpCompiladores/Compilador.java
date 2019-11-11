@@ -146,7 +146,8 @@ public class Compilador {
 			fw.write(informacion);
 			fw.close();
 			
-
+			analizadorTerceto.imprimirTerceto();
+			analizadorTerceto.imprimirErroresSemanticos();
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

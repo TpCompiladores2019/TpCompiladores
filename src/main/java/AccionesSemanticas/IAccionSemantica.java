@@ -2,9 +2,9 @@ package AccionesSemanticas;
 
 import Lexico.AnalizadorLexico;
 import Lexico.Error;
-import Lexico.Registro;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
+import Lexico.Token;
 
 public abstract class IAccionSemantica {
 	public static final int OTROS = -1;
@@ -107,7 +107,7 @@ public abstract class IAccionSemantica {
 		}
 
 		public int ejecutar(char caracter, StringBuilder cadena) {
-			tablaSimbolos.agregar(cadena.toString(),new Registro("Cadena"));
+			tablaSimbolos.agregar(cadena.toString(),new Token("Cadena",1));
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Cadena: " + cadena.toString());
 			Error nuevoError = new Error("La cadena no fue cerrada correctamente",AnalizadorLexico.nroLinea,"","WARNING");//Chequear
 			AnalizadorLexico.listaWarning.add(nuevoError);	
@@ -155,7 +155,7 @@ public abstract class IAccionSemantica {
 		public int ejecutar(char caracter, StringBuilder cadena) {
 		
 
-			tablaSimbolos.agregar(cadena.toString(),new Registro("Cadena"));
+			tablaSimbolos.agregar(cadena.toString(),new Token("Cadena",1));
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Cadena: " + cadena.toString());
 			AnalizadorLexico.porcentajeAbierto=false;
 			return tablaTokens.getToken(CADENA);
@@ -181,7 +181,7 @@ public abstract class IAccionSemantica {
 				cadena.delete(0, cadena.length());
 				cadena.append("32768");
 			}	
-			tablaSimbolos.agregar(cadena.toString(),new Registro("int"));
+			tablaSimbolos.agregar(cadena.toString(),new Token("int",1));
 			return tablaTokens.getToken(CTE);
 		}
 		
@@ -210,7 +210,7 @@ public abstract class IAccionSemantica {
 					cadena.append(String.valueOf(Float.MIN_NORMAL));
 				}
 			
-			tablaSimbolos.agregar(cadena.toString(),new Registro("float"));
+			tablaSimbolos.agregar(cadena.toString(),new Token("float",1));
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Constante Float: " + cadena.toString());
 			return tablaTokens.getToken(CTF);
 		}
@@ -241,7 +241,7 @@ public abstract class IAccionSemantica {
 			}
 
 			
-			tablaSimbolos.agregar(salida,new Registro("")); 
+			tablaSimbolos.agregar(salida,new Token("",1)); 
 			
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Identificador: " + salida);
 

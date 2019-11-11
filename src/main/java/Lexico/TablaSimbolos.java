@@ -2,15 +2,15 @@ package Lexico;
 
 import java.util.HashMap;
 import java.util.Set;
-import Lexico.Registro;
+import Lexico.Token;
 
 public class TablaSimbolos {
 
-	private HashMap<String, Registro> tablaSimbolos = new HashMap<String, Registro>();
+	private HashMap<String, Token> tablaSimbolos = new HashMap<String, Token>();
 	
-	public void agregar(String variable,Registro registro) {
+	public void agregar(String variable,Token token) {
 		if (!tablaSimbolos.containsKey(variable)) 
-			tablaSimbolos.put(variable,registro);
+			tablaSimbolos.put(variable,token);
 		else
 			tablaSimbolos.get(variable).incrementarRef();
 		
@@ -21,7 +21,7 @@ public class TablaSimbolos {
 		return tablaSimbolos.containsKey(clave);
 	}
 	
-	public Registro getClave(String clave) {
+	public Token getClave(String clave) {
 		return tablaSimbolos.get(clave);
 	}
 	
