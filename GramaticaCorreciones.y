@@ -8,7 +8,7 @@
 	import Lexico.Error;
 	import CodigoIntermedio.AnalizadorTercetos;
 	import CodigoIntermedio.TercetoIndividual;
-	import CodigoIntermedio.TercetoS;
+	import CodigoIntermedio.Terceto;
 %}
 
 %token
@@ -108,14 +108,14 @@
 						  ;
 	
 	
-	condicion_if : condicion { TercetoS terceto = new TercetoS ( new TercetoIndividual( (new Token( "BF") ) ), new TercetoIndividual(new Token("@" + 			analizadorTerceto.getNumeroTerceto()) ), null, analizadorTerceto.getProximoTerceto());
-							analizadorTerceto.addTerceto(terceto);
+	condicion_if : condicion { TercetoAbstracto tercetoIF = new TercetoIF ( new TercetoIndividual( (new Token( "BF") ) ), new Token("@" + 			analizadorTerceto.getNumeroTerceto()), null, analizadorTerceto.getProximoTerceto());
+							analizadorTerceto.addTerceto(tercetoIF);
 							analizadorTerceto.apilar();
 											}
 					;
 	
-	seleccion_ejecutable : IF '(' condicion_if ')' bloque_sentencias ELSE {TercetoS terceto = new TercetoS ( new TercetoIndividual( new Token("BI")  ), null, null, analizadorTerceto.getProximoTerceto() );
-                                                             	analizadorTerceto.addTerceto (terceto);
+	seleccion_ejecutable : IF '(' condicion_if ')' bloque_sentencias ELSE {TercetoAbstracto tercetoIF = new TercetoIF (new Token("BI"), null, null, analizadorTerceto.getProximoTerceto() );
+                                                             	analizadorTerceto.addTerceto (tercetoIF);
                                                              	analizadorTerceto.desapilar();
                                                              	analizadorTerceto.apilar();}
 
@@ -142,8 +142,8 @@
 						
 	condicion : expresion_aritmetica operador expresion_aritmetica {
 															if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
-																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
-																analizadorTerceto.addTerceto(tercetoAsignacion);
+																TercetoAbstracto tercetoCondicion = new TercetoCondicion((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoCondicion);
 															}
 															else
 																analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);									
@@ -153,10 +153,11 @@
 			  ;
 			 
 	expresion_aritmetica : expresion_aritmetica '+' termino { if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
-																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
-																analizadorTerceto.addTerceto(tercetoAsignacion);
+																TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)$2.obj), ((Token)$1.obj)),((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoExpresion);
 																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 																nuevo.setTipo(((Token)$1.obj).getTipo());
+																tablaSimbolos.addVarAux(nuevo);
 																$$ = new ParserVal(nuevo);
 																}
 																else
@@ -165,11 +166,12 @@
 															}
 						 | expresion_aritmetica '-' termino {
 															if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
-																TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
-																analizadorTerceto.addTerceto(tercetoAsignacion);
+																TercetoAbstracto tercetoExpresion = new TercetoExpresion((Token)$2.obj), ((Token)$1.obj), (Token)$3.obj),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoExpresion);
 					
 																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 																nuevo.setTipo(((Token)$1.obj).getTipo());
+																tablaSimbolos.addVarAux(nuevo);
 																$$ = new ParserVal(nuevo);
 															}
 															else
@@ -180,10 +182,11 @@
 						 ;
 						 
 			termino : termino '*' factor {	if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
-															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
-															analizadorTerceto.addTerceto(tercetoAsignacion);
+															TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)$2.obj),((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoExpresion);
 															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 															nuevo.setTipo(((Token)$1.obj).getTipo());
+															tablaSimbolos.addVarAux(nuevo);
 															$$ = new ParserVal(nuevo);
 															}
 															else
@@ -192,10 +195,11 @@
 															
 															}
 			| termino '/' factor { if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
-															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
-															analizadorTerceto.addTerceto(tercetoAsignacion);
+															TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)$2.obj), (Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+															analizadorTerceto.addTerceto(tercetoExpresion);
 															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 															nuevo.setTipo(((Token)$1.obj).getTipo());
+															tablaSimbolos.addVarAux(nuevo);
 															$$ = new ParserVal(nuevo);
 															}
 															else
@@ -211,6 +215,7 @@
 	factor : variable {}
 	       | CTE_E {actualizarTablaPositivo(((Token)$1.obj).getLexema());
 					((Token)$1.obj).setTipo("int");
+	
 					$$ = $1;
 					}
 		   | CTE_F {((Token)$1.obj).setTipo("float");
@@ -254,8 +259,8 @@
 										analizadorTerceto.agregarError("Error '"+((Token)$3.obj).getLexema() + "' es una coleccion.",lexico.nroLinea);
 										
 									else{
-										TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(new Token("OFFSET")), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
-										analizadorTerceto.addTerceto(tercetoAsignacion);
+										TercetoAbstracto terceto = new TercetoIF((new Token("OFFSET")), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+										analizadorTerceto.addTerceto(terceto);
 										Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 										nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
 										$$ = new ParserVal(nuevo);
@@ -270,8 +275,8 @@
 										if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
 											analizadorTerceto.agregarError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",lexico.nroLinea);
 										else{
-											TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(new Token("OFFSET")), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
-											analizadorTerceto.addTerceto(tercetoAsignacion);
+											TercetoAbstracto terceto = new TercetoIF(new Token("OFFSET"), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+											analizadorTerceto.addTerceto(terceto);
 											Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 											nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
 											$$ = new ParserVal(nuevo);
@@ -311,7 +316,7 @@
 	inicio_do : DO {analizadorTerceto.apilar();}
 	
 	control_ejecutable : inicio_do bloque_sentencias UNTIL '(' condicion ')'  {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia until");
-	TercetoS tercetoDO = new TercetoS(new TercetoIndividual( new Token("BF")  ), null,null,analizadorTerceto.getProximoTerceto());
+	TercetoAbstracto tercetoDO = new TercetoDO(new Token("BF"), null,null,analizadorTerceto.getProximoTerceto());
 															analizadorTerceto.addTerceto(tercetoDO);
 															analizadorTerceto.desapilarControl();
 	}
@@ -328,8 +333,8 @@
 			| CADENA
 	
 	salida_ejecutable : PRINT '(' imprimir ')'  {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");
-												TercetoS terceto = new TercetoS ( new TercetoIndividual( (Token)$1.obj ),new TercetoIndividual( (Token)$3.obj ), null, analizadorTerceto.getProximoTerceto() );
-												analizadorTerceto.addTerceto(terceto);
+												TercetoAbstracto tercetoPrint = new TercetoPrint ( ((Token)$1.obj), ((Token)$3.obj ), null, analizadorTerceto.getProximoTerceto() );
+												analizadorTerceto.addTerceto(tercetoPrint);
 	
 	}
 					  | '(' imprimir ')'  {this.addError("Falta 'PRINT'.",((Token)$1.obj).getNroLinea());}
@@ -342,7 +347,7 @@
 	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Asignacion");
 														
 														if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
-															TercetoS tercetoAsignacion = new TercetoS(new TercetoIndividual(((Token)$2.obj)), new TercetoIndividual(((Token)$1.obj)), new TercetoIndividual(((Token)$3.obj)),analizadorTerceto.getProximoTerceto());
+															TercetoAbstracto tercetoAsignacion = new TercetoAsignacion(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
 															analizadorTerceto.addTerceto(tercetoAsignacion);
 														}
 														else
@@ -436,11 +441,15 @@ public void actualizarTablaPositivo(String lexema) {
 			else
 				tablaSimbolos.getClave(lexema).decrementarRef();
 		
-		if(tablaSimbolos.existeClave("32767")) 
-			tablaSimbolos.getClave("32767").incrementarRef();
+			if(tablaSimbolos.existeClave("32767")) 
+				tablaSimbolos.getClave("32767").incrementarRef();
+			else{
+				tablaSimbolos.agregar("32767", new Token("int",1));
+				tablaSimbolos.getClave("32767").setUso("CTE");
+			}
+		}
 		else
-			tablaSimbolos.agregar("32767", new Token("int",1));
-	}
+			tablaSimbolos.getClave(lexema).setUso("CTE");
 }
 
 public void actualizarTablaNegativo(String lexema) {
@@ -448,13 +457,17 @@ public void actualizarTablaNegativo(String lexema) {
 	if(tablaSimbolos.existeClave(lexema)) {
 		if (tablaSimbolos.getClave(lexema).getCantRef()==1)
 			tablaSimbolos.eliminarClave(lexema);
-		else
+		else{
 			tablaSimbolos.getClave(lexema).decrementarRef();
+			tablaSimbolos.getClave(lexema).setUso("CTE");
+		}
 	}
 	if(tablaSimbolos.existeClave(lexemaNuevo)) 
 		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
-	else
+	else{
 		tablaSimbolos.agregar(lexemaNuevo, new Token("int",1));
+		tablaSimbolos.getClave(lexemaNuevo).setUso("CTE");
+	}
 }
 
 
@@ -467,8 +480,10 @@ public void actualizarTablaNegativoFloat(String lexema) {
 			tablaSimbolos.getClave(lexema).decrementarRef();
 	if(tablaSimbolos.existeClave(lexemaNuevo)) 
 		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
-	else
+	else{
 		tablaSimbolos.agregar(lexemaNuevo, new Token("float",1));
+		tablaSimbolos.getClave(lexemaNuevo).setUso("CTF");
+	}
 
 }
 

@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import CodigoIntermedio.AnalizadorTercetos;
+import CodigoIntermedio.GeneradorAssembler;
 import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
@@ -146,15 +147,35 @@ public class Compilador {
 			fw.write(informacion);
 			fw.close();
 			
-			analizadorTerceto.imprimirTerceto();
+		//	analizadorTerceto.imprimirTerceto();
 			analizadorTerceto.imprimirErroresSemanticos();
+			if (sintactico == 0) {
+				System.out.println("entro");
+				System.out.println(analizadorTerceto.estaVacia());
+				if ((analizarLexico.listaErrores.isEmpty()) && (analizadorTerceto.estaVacia())){
+					analizadorTerceto.imprimirTerceto();
+					GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos);
+					assembler.generarAssembler();
+					
+				}
+			}
 			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+	
 			e1.printStackTrace();
 		}
 
 		
+	}
+	
+	public void ejecutar() {
+		Parser parser = new Parser(analizarLexico,tablaSimbolos,analizadorTerceto);
+		int sintactico =parser.yyparser(); 
+		if (sintactico == 0) {
+			if ((!analizarLexico.listaErrores.isEmpty()) && (!analizadorTerceto.estaVacia())){
+				analizadorTerceto.imprimirTerceto();
+			}
+		}
 	}
 	
 }
