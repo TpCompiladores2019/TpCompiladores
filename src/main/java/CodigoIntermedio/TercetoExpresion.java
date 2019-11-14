@@ -13,28 +13,45 @@ public class TercetoExpresion extends  TercetoAbstracto {
 
         Token tercetoIzq =  listTerceto.get(1);
         Token tercetoDer =  listTerceto.get(2);
-        String lexemaIzq = "_"+ tercetoIzq.getLexema();
-        String lexemaDer = "_"+ tercetoDer.getLexema();
+        String lexemaIzq =  tercetoIzq.getLexema();
+        String lexemaDer =  tercetoDer.getLexema();
 
-        if (!lexemaIzq.contains("@")){
-            if (!lexemaDer.contains("@")){
-                return  "MOV AX," + lexemaIzq + '\n' // (operador,id,id)
-                      + operador + " AX," + lexemaDer + '\n'
-                      +  "MOV "  + ",AX";
-            }
-            return "MOV AX," + lexemaIzq + '\n' // (operador,id,@)
-                 + operador +" AX,"  +'\n'
-                 + "MOV " + ",AX";
-        }
-        if (!lexemaDer.contains("@")) // (operador,@,id)
-            return "MOV AX," +'\n'
-                 + operador +" AX," + lexemaDer + '\n'
-                 + "MOV " +",AX";
-
-        return "MOV AX," // (OP,@,@)
-             + operador +" AX," 
-             + "MOV " +",AX" ;
-
+        if (!lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) //(operador,id,id)
+            if (tercetoIzq.getTipo().equals("int"))
+            	return  "MOV AX, " + "_" +lexemaIzq + '\n'  
+            			+ operador + " AX, " + "_"+  lexemaDer + '\n'
+            			+ "MOV "  + "auxiliar@" + getNumTerceto() + " ,AX" + '\n'
+            			+ "JO LabelOverflowSuma" + '\n';
+            else
+            	{System.out.println("entra");}
+        else
+        	if (!lexemaIzq.contains("@") && (lexemaDer.contains("@"))) // (operador,id,@)
+        		if (tercetoIzq.getTipo().equals("int"))
+		            return "MOV AX," + "_"+ lexemaIzq + '\n' 
+		                 + operador +" AX," + "auxiliar" + lexemaDer  +'\n'
+		                 + "MOV " + "auxiliar@" + getNumTerceto() + ", AX" + '\n'
+		                 + "JO LabelOverflowSuma" + '\n';
+    			 else
+    			 	{System.out.println("entra");}
+        	else
+    			if (lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) // (operador,@,id)
+    				if (tercetoIzq.getTipo().equals("int"))
+			            return "MOV AX," + "auxiliar" + lexemaIzq +'\n'
+			                + operador +" AX, " + "_"+lexemaDer + '\n'
+			                + "MOV " + "auxiliar@" + getNumTerceto() +", AX" + '\n'
+    						+ "JO LabelOverflowSuma" + '\n';
+    				else
+    					{System.out.println("entra");}
+        		else
+    				if (lexemaIzq.contains("@") && (lexemaDer.contains("@")))// (OP,@,@)
+    					if (tercetoIzq.getTipo().equals("int"))
+					        return "MOV AX," + "auxiliar" + lexemaIzq + '\n' 
+					             + operador +" AX, " + "auxiliar" + lexemaDer + '\n' 
+					             + "MOV " + "auxiliar@" + getNumTerceto() + ",AX" + '\n'
+					             + "JO LabelOverflowSuma" + '\n';
+    					else
+    						{System.out.println("entra");}
+        return "";
     }
 
     private String obtenerOperador(String lexema) {

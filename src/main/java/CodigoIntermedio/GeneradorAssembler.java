@@ -11,7 +11,7 @@ public class GeneradorAssembler {
 	private FileWriter fw;	
 	
 	public static final String labelDivCero = "_DividirCero";
-	public static final String labelOverflowSuma = "_DividirCero";
+	public static final String labelOverflowSuma = "_LabelOverflowSuma";
 	
 	public GeneradorAssembler(AnalizadorTercetos analizadorTercetos, TablaSimbolos tablaSimbolos) {
 		this.analizadorTercetos=analizadorTercetos;
@@ -45,8 +45,9 @@ public class GeneradorAssembler {
         codigo = codigo + '\n' + ".code"+ "\n";
         
         codigo = codigo + "start:" + '\n' ;
-
+        codigo = codigo + analizadorTercetos.getCodeString() + '\n';
         codigo = codigo + "invoke ExitProcess, 0" + '\n';
+        
 		fw.write(codigo);
 		fw.close();
 			   

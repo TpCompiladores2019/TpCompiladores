@@ -13,22 +13,36 @@ includelib \masm32\lib\masm32.inc
 .data
 _a DW ?
 _b DW ?
+_2 DW 2
 _c DW ?
 _d DW ?
 _e DW ?
+_5 DW 5
 _f DW ?
+_6 DW 6
 _x DD ?
 _z DW ?
-_20 DW 20
-auxiliar@1 DD ?
-auxiliar@2 DD ?
-auxiliar@3 DD ?
-auxiliar@4 DD ?
-auxiliar@5 DD ?
-auxiliar@6 DD ?
 _DividirCero db "Error al dividir por cero!", 0
-_DividirCero db "La suma ha generado un Overflow!", 0
+_LabelOverflowSuma db "La suma ha generado un Overflow!", 0
 
 .code
 start:
+MOV AX, _a
+CMP AX , _b
+
+JBE Label5
+
+MOV AX, _2
+MOV _a, AX
+
+JMP Label6
+Label5
+MOV AX, _5
+MOV _b, AX
+
+Label6:
+MOV AX, _6
+MOV _e, AX
+
+
 invoke ExitProcess, 0

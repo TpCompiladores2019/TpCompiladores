@@ -10,6 +10,7 @@ public class Token {
 	private String uso;
 	private boolean declarada;
 	private int tamanioColeccion;
+	private String operador;
 	
 	public Token(int idToken, String lexema, int nroLinea) {
 		super();
@@ -112,6 +113,14 @@ public class Token {
 
 	public void decrementarRef() {
 		cantRef--;
+	}
+
+	public String getOperador() {
+		return operador;
+	}
+
+	public void setOperador(String operador) {
+		this.operador = operador;
 	}
 
 	

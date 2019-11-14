@@ -12,11 +12,13 @@ public class AnalizadorTercetos {
 	private Stack<Integer> pila;
 	
 	private ArrayList<Error> listErroresSemanticos;	
-
+	static ArrayList<Integer> listLabel;
+	
 	public AnalizadorTercetos() {
 		this.listTercetos = new ArrayList<TercetoAbstracto>();
 		pila = new Stack<Integer>();
 		listErroresSemanticos = new ArrayList<Error>();
+		listLabel = new ArrayList<Integer>();
 	}
 	
 	
@@ -80,12 +82,36 @@ public class AnalizadorTercetos {
 		listErroresSemanticos.add(new Error(mensaje, nroLinea, "", "ERROR"));
 	}
 
-
+	public int borrarLabelPendientes() {
+		int label = listLabel.get(listLabel.size()-1);
+		listLabel.remove(listLabel.size()-1);
+		
+		return label;
+	}
+	
 	public void imprimirErroresSemanticos() {
 		for (Error error : listErroresSemanticos) {
 			System.out.println(error);
 		}
 		
+	}
+
+	
+	public String getCodeString() {
+		String code = "";
+		int num_terceto_actual =1;
+		for (TercetoAbstracto t : listTercetos) {
+			code = code + t.getCodigoAssembler() + '\n';
+			//System.out.println(code);
+			
+			 num_terceto_actual++;
+	            if ( (!listLabel.isEmpty()) && ( num_terceto_actual == listLabel.get(listLabel.size()-1) ) ){
+	                code = code + "Label" + String.valueOf(listLabel.get(listLabel.size()-1))+ ":" + '\n';
+	                borrarLabelPendientes();
+	            }
+		}
+		
+		return code;
 	}
 	
 	

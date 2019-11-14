@@ -64,13 +64,18 @@ public class TablaSimbolos {
 					}
 					else
 						if (t.getTipo().equals("Cadena")) {
-							data = data + "_" + clave + " " + DB + " '" + data + "'" + '\n'; 
+							data = data + "_" + clave + " " + DB + " '" + clave + "'" + '\n'; 
 						}
+						else
+							if (t.getUso().equals("Variable Auxiliar")) {
+								if (t.getTipo().equals("int"))
+									data = data + "auxiliar"+t.getLexema() + " " + DW + " ?" + '\n';
+								else
+									data = data + "+auxiliar"+t.getLexema() + " " + DD + " ?" + '\n';
+							}
 		}
 		
-		for (Token token : listVarAux) {
-			data = data + "auxiliar" + token.getLexema() + " " + DD + " ?" + '\n';
-		}
+
 		return data;
 	}
 	

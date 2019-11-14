@@ -26,23 +26,30 @@ Linea 8 Palabra Reservada: float
 Linea 8 Identificador: x
 Linea 8: ;
 Linea 9 Palabra Reservada: begin
-Linea 10 Identificador: z
-Linea 10: :=
-Linea 10 Identificador: a
-Linea 10: +
-Linea 10 Identificador: b
-Linea 10: *
-Linea 10 Identificador: c
-Linea 10: -
-Linea 10 Identificador: d
-Linea 10: /
-Linea 10 Identificador: e
-Linea 10: +
-Linea 10 Identificador: f
-Linea 10: +
-Linea 10 Constante Entera: 20
-Linea 10: ;
-Linea 11 Palabra Reservada: end
+Linea 12 Palabra Reservada: if
+Linea 12: (
+Linea 12 Identificador: a
+Linea 12: >
+Linea 12 Identificador: b
+Linea 12: )
+Linea 13 Palabra Reservada: begin
+Linea 14 Identificador: a
+Linea 14: :=
+Linea 14 Constante Entera: 2
+Linea 14: ;
+Linea 15 Palabra Reservada: end
+Linea 16 Palabra Reservada: else
+Linea 17 Identificador: b
+Linea 17: :=
+Linea 17 Constante Entera: 5
+Linea 17: ;
+Linea 18 Palabra Reservada: end_if
+Linea 18: ;
+Linea 19 Identificador: e
+Linea 19: :=
+Linea 19 Constante Entera: 6
+Linea 19: ;
+Linea 25 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
@@ -53,7 +60,10 @@ Linea 5: Sentencia declarativa
 Linea 6: Sentencia declarativa
 Linea 7: Sentencia declarativa
 Linea 8: Sentencia declarativa
-Linea 10: Asignacion
+Linea 14: Asignacion
+Linea 17: Asignacion
+Linea 12: Sentencia IF-ELSE
+Linea 19: Asignacion
 
 Sin errores lexicos 
 
@@ -61,20 +71,24 @@ Sin warning lexicos
 
 Tabla de Simbolos: 
 a--> int
-a--> 2
+a--> 3
 b--> int
-b--> 2
+b--> 3
+2--> int
+2--> 1
 c--> int
-c--> 2
+c--> 1
 d--> int
-d--> 2
+d--> 1
 e--> int
 e--> 2
+5--> int
+5--> 1
 f--> int
-f--> 2
+f--> 1
+6--> int
+6--> 1
 x--> float
 x--> 1
 z--> int
-z--> 2
-20--> int
-20--> 1
+z--> 1
