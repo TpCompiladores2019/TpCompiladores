@@ -43,7 +43,7 @@ public class AnalizadorTercetos {
         for (TercetoAbstracto t: listTercetos ){
             cadena= cadena + t.imprimirTercetoI() + '\n';
         }
-        System.out.println(cadena);
+
 
     }
 	
@@ -54,12 +54,10 @@ public class AnalizadorTercetos {
 	
 	public void apilar() {
 		pila.push(getSizeTerceto());
-		System.out.println(getSizeTerceto());
 	}
 	
 	public void desapilar() {
 		int numTerceto = pila.pop();
-		System.out.println(numTerceto);
 		numTerceto--;
 		TercetoAbstracto nuevo = listTercetos.get(numTerceto);
 		Token t = new Token("@"+String.valueOf(listTercetos.size()+1));
@@ -74,7 +72,6 @@ public class AnalizadorTercetos {
 		int numTerceto = pila.pop();
 		TercetoAbstracto nuevo = listTercetos.get(getSizeTerceto()-1);
 		Token t = new Token("@" + String.valueOf(numTerceto+1));
-		System.out.println(t.getLexema());
 		nuevo.setTerceto(t, 1);		
 	}
 	

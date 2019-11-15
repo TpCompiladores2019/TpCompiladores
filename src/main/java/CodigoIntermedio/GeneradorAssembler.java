@@ -39,8 +39,8 @@ public class GeneradorAssembler {
 			    + "includelib \\masm32\\lib\\masm32.inc" + '\n'
 			    + '\n' +".data" + '\n';
 		codigo = codigo + tablaSimbolos.getDataAssembler();
-        codigo = codigo + labelDivCero + " db \"Error al dividir por cero!\", 0" + '\n';
-        codigo = codigo + labelOverflowSuma + " db \"La suma ha generado un Overflow!\", 0" + '\n';
+        codigo = codigo + labelDivCero + " DB \"Error al dividir por cero!\", 0" + '\n';
+        codigo = codigo + labelOverflowSuma + " DB \"La suma ha generado un Overflow!\", 0" + '\n';
         
         codigo = codigo + '\n' + ".code"+ "\n";
         
@@ -48,6 +48,13 @@ public class GeneradorAssembler {
         codigo = codigo + analizadorTercetos.getCodeString() + '\n';
         codigo = codigo + "invoke ExitProcess, 0" + '\n';
         
+        codigo = codigo + "DividirCero" + ":" + '\n';
+        codigo = codigo + "invoke MessageBox, NULL, addr "+labelDivCero+", addr "+labelDivCero+", MB_OK" + '\n';
+        codigo = codigo + "invoke ExitProcess, 0" + '\n';
+        codigo = codigo + "LabelOverflowSuma" + ":" + '\n';
+        codigo = codigo + "invoke MessageBox, NULL, addr "+labelOverflowSuma+", addr "+labelOverflowSuma+", MB_OK" + '\n';
+        codigo = codigo + "invoke ExitProcess, 0" + '\n';
+        codigo = codigo + "end start";
 		fw.write(codigo);
 		fw.close();
 			   

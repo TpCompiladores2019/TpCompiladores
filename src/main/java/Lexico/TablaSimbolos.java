@@ -47,7 +47,10 @@ public class TablaSimbolos {
 	public String getDataAssembler() {
 		String data = "";
 		for (String clave : tablaSimbolos.keySet()) {
+			System.out.println(clave);
 			Token t = tablaSimbolos.get(clave);
+			if (t.getUso() ==null )
+        		t.setUso("Cadena");
 			if (t.getUso().equals("CTE")) {
 				data = data + "_"+clave + " " + DW + " " + clave + '\n';
 			}
@@ -64,7 +67,7 @@ public class TablaSimbolos {
 					}
 					else
 						if (t.getTipo().equals("Cadena")) {
-							data = data + "_" + clave + " " + DB + " '" + clave + "'" + '\n'; 
+							data = data + "print1" + " " + DB + " \""  + clave + "\", 0" + '\n'; 
 						}
 						else
 							if (t.getUso().equals("Variable Auxiliar")) {

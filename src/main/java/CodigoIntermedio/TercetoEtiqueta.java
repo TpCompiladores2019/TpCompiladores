@@ -12,7 +12,7 @@ public class TercetoEtiqueta extends TercetoAbstracto{
 	@Override
 	public String getCodigoAssembler() {
 		String label = listTerceto.get(0).getLexema();
-		return label + '\n';
+		return label +":" + '\n';
 	}
 
 }

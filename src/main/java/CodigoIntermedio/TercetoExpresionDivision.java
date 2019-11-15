@@ -22,7 +22,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     					"CWD" + '\n' +
     					"MOV BX, _" + lexemaDer + '\n' +
     					"CMP BX,0" + '\n' + 
-    					"JE LabelDividirCero" + '\n' +
+    					"JE DividirCero" + '\n' +
     					"IDIV BX" + '\n' +
     					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
     		else {
@@ -35,7 +35,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
         					"CWD" + '\n' +
         					"MOV BX, _" + lexemaDer + '\n' +
         					"CMP BX,0" + '\n' + 
-        					"JE LabelDividirCero" + '\n' +
+        					"JE DividirCero" + '\n' +
         					"IDIV BX" + '\n' +
         					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
     			else
@@ -47,7 +47,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
             					"CWD" + '\n' +
             					"MOV BX, auxiliar" + lexemaDer + '\n' +
             					"CMP BX,0" + '\n' + 
-            					"JE LabelDividirCero" + '\n' +
+            					"JE DividirCero" + '\n' +
             					"IDIV BX" + '\n' +
             					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
         			
@@ -61,7 +61,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     	        					"CWD" + '\n' +
     	        					"MOV BX, auxiliar" + lexemaDer + '\n' +
     	        					"CMP BX,0" + '\n' + 
-    	        					"JE LabelDividirCero" + '\n' +
+    	        					"JE DividirCero" + '\n' +
     	        					"IDIV BX" + '\n' +
     	        					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
     	    			

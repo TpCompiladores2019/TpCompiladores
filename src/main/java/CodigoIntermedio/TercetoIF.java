@@ -11,7 +11,7 @@ public class TercetoIF extends TercetoAbstracto{
 	}
 	
 	public void setTipoSalto(String operacion) {
-		System.out.println(operacion);
+
 		if(operacion.equals("<="))
             this.tipoSalto = "JA";
         else
@@ -35,18 +35,16 @@ public class TercetoIF extends TercetoAbstracto{
 	@Override
 	public String getCodigoAssembler() {
 		String operador = listTerceto.get(0).getLexema();
-		System.out.println();
-		System.out.println("tipoSalto"  + tipoSalto);
+
 		if (operador.equals("BF")) {
 			int numLabel = Integer.parseInt(listTerceto.get(2).getLexema().substring(1));
 			AnalizadorTercetos.listLabel.add(numLabel);
-			System.out.println("fjfj" + numLabel);
 			return(tipoSalto +" Label" + numLabel + '\n');
 		}
 		String assembler ="";
 		int numLabel = Integer.parseInt(listTerceto.get(1).getLexema().substring(1));
 		assembler = assembler + etiquetaSaltoIncondicional + "Label" + numLabel + '\n';
-		assembler =	assembler + "Label" + String.valueOf(AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1));
+		assembler =	assembler + "Label" + String.valueOf(AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1)) + ":" + '\n';
 		AnalizadorTercetos.listLabel.add(numLabel);
 		return assembler;
 			
