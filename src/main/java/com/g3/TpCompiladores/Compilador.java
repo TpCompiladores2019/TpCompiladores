@@ -151,9 +151,11 @@ public class Compilador {
 			analizadorTerceto.imprimirErroresSemanticos();
 			if (sintactico == 0) {
 				System.out.println("entro");
-				System.out.println(analizadorTerceto.estaVacia());
+				System.out.println(analizarLexico.listaErrores.isEmpty());
 				if ((analizarLexico.listaErrores.isEmpty()) && (analizadorTerceto.estaVacia())){
+					
 					analizadorTerceto.imprimirTerceto();
+					System.out.println("uepa");
 					GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos);
 					assembler.generarAssembler();
 					

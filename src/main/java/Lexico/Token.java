@@ -11,6 +11,7 @@ public class Token {
 	private boolean declarada;
 	private int tamanioColeccion;
 	private String operador;
+	private String idPrintCadena;
 	
 	public Token(int idToken, String lexema, int nroLinea) {
 		super();
@@ -121,6 +122,14 @@ public class Token {
 
 	public void setOperador(String operador) {
 		this.operador = operador;
+	}
+
+	public String getIdPrintCadena() {
+		return idPrintCadena;
+	}
+
+	public void setIdPrintCadena(String idPrintCadena) {
+		this.idPrintCadena = idPrintCadena;
 	}
 
 	

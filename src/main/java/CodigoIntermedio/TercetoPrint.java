@@ -9,10 +9,17 @@ public class TercetoPrint extends TercetoAbstracto{
 		super(t1, t2, t3, numTerceto);
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	
+	public void setPrint (String print) {
+		this.print = print;
+	}
 	@Override
 	public String getCodigoAssembler() {
-        String assembler = "invoke MessageBox, NULL, addr "+ print +", addr "+print+", MB_OK \n";
+		print = listTerceto.get(1).getLexema();
+		print = print.replace(' ', '@');
+		
+        String assembler = "invoke MessageBox, NULL, addr "+ "_" +print +", addr "+ "_" +print+", MB_OK \n";
         return assembler;
 	}
 

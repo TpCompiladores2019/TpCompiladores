@@ -43,6 +43,7 @@ public class AnalizadorTercetos {
         for (TercetoAbstracto t: listTercetos ){
             cadena= cadena + t.imprimirTercetoI() + '\n';
         }
+        System.out.println(cadena);
 
 
     }
@@ -96,18 +97,18 @@ public class AnalizadorTercetos {
 	
 	public String getCodeString() {
 		String code = "";
-		int num_terceto_actual =1;
-		for (TercetoAbstracto t : listTercetos) {
-			code = code + t.getCodigoAssembler() + '\n';
-			//System.out.println(code);
-			
-			 num_terceto_actual++;
-	            if ( (!listLabel.isEmpty()) && ( num_terceto_actual == listLabel.get(listLabel.size()-1) ) ){
-	                code = code + "Label" + String.valueOf(listLabel.get(listLabel.size()-1))+ ":" + '\n';
+		int tercetoActual =1;
+
+		for (int i = 0; i< listTercetos.size();i++) {
+			code = code + listTercetos.get(i).getCodigoAssembler() + '\n';
+			tercetoActual++;
+			if ( (!listLabel.isEmpty()) && ( tercetoActual == listLabel.get(listLabel.size()-1))){
+					code = code + "Label" + String.valueOf(listLabel.get(listLabel.size()-1))+ ":" + '\n';
 	                borrarLabelPendientes();
 	            }
-		}
-		
+			}
+            
+	
 		return code;
 	}
 	

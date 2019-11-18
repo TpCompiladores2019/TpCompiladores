@@ -46,17 +46,20 @@ public class TablaSimbolos {
 	
 	public String getDataAssembler() {
 		String data = "";
+		int i = 1;
 		for (String clave : tablaSimbolos.keySet()) {
-			System.out.println(clave);
+			
 			Token t = tablaSimbolos.get(clave);
 			if (t.getUso() ==null )
         		t.setUso("Cadena");
+
 			if (t.getUso().equals("CTE")) {
-				data = data + "_"+clave + " " + DW + " " + clave + '\n';
+				data = data + "_"+clave.replace('-', '@') + " " + DW + " " + clave + '\n';
 			}
 			else
 				if (t.getUso().equals("CTF")) {
-					data = data + "_" + clave+ " " + DD + " " + clave + '\n';
+					
+					data = data + "_" + clave.replace('.', '@').replace('-', '@').replace('+', '@')+ " " + DD + " " + clave + '\n';
 				}
 				else
 					if (t.getUso().equals("Variable")) {
@@ -67,15 +70,32 @@ public class TablaSimbolos {
 					}
 					else
 						if (t.getTipo().equals("Cadena")) {
-							data = data + "print1" + " " + DB + " \""  + clave + "\", 0" + '\n'; 
+							data = data + "_" + clave.replace(' ', '@') + " " + DB + " \""  + clave + "\", 0" + '\n';
+							t.setIdPrintCadena("_@print" + i);
+							i++;
 						}
 						else
 							if (t.getUso().equals("Variable Auxiliar")) {
 								if (t.getTipo().equals("int"))
 									data = data + "auxiliar"+t.getLexema() + " " + DW + " ?" + '\n';
 								else
-									data = data + "+auxiliar"+t.getLexema() + " " + DD + " ?" + '\n';
+									data = data + "auxiliar"+t.getLexema() + " " + DD + " ?" + '\n';
 							}
+							else
+								if (t.getUso().equals("Nombre de Coleccion")) {
+									if (t.getTipo().equals("int")){
+										data = data + "_" + clave + " " + DW ;
+										for(int j = 0; j < t.getTamanioColeccion()-1; j++)
+											 data = data + " ?," ; 
+										data = data + " ?" + '\n';
+									}
+									else {
+										data = data + "_" + clave + " " + DD ;
+										for(int j = 0; j < t.getTamanioColeccion()-1; j++)
+											 data = data + " ?," ; 
+										data = data + " ?" + '\n';
+									}
+								}
 		}
 		
 

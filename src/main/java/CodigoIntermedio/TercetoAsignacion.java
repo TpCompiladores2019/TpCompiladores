@@ -18,8 +18,9 @@ public class TercetoAsignacion extends TercetoAbstracto{
             //(ASIG, variable, variable)
             if (!lexemaIzq.contains("@") && !lexemaDer.contains("@")){
                 if (listTerceto.get(2).getTipo() == "float"){
-                    assembler = assembler + "FLD _" + lexemaDer.replace('.', '_') + '\n';
-                    assembler = assembler + "FSTP _"+ lexemaIzq +'\n';
+                	System.out.println("entraste a la asignacion");
+                    assembler = assembler + "FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
+                    assembler = assembler + "FST _"+ lexemaIzq +'\n';
                 }
                 else{
                     assembler = assembler + "MOV " + "AX" + ", _" + lexemaDer + '\n';
@@ -28,13 +29,11 @@ public class TercetoAsignacion extends TercetoAbstracto{
             }
             else
                 //(ASIG, variable, terceto)
-                if (listTerceto.get(2).getTipo() == "float") 
-                {
+                if (listTerceto.get(2).getTipo() == "float"){
                     assembler = assembler + "FLD auxiliar" + lexemaDer + '\n';
-                    assembler = assembler + "FSTP " + lexemaIzq + '\n';
+                    assembler = assembler + "FST _" + lexemaIzq + '\n';
                 }
-                else 
-                {
+                else {
                     assembler = assembler + "MOV " + "AX" + ", auxiliar" + lexemaDer + '\n';
                     assembler = assembler + "MOV _" + lexemaIzq + ", " + "AX" + '\n';
                 }

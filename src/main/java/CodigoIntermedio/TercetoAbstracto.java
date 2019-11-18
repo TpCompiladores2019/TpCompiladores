@@ -7,7 +7,7 @@ import Lexico.Token;
 public abstract class TercetoAbstracto  {
 	protected ArrayList<Token> listTerceto;
 	private int numTerceto;
-	
+	private String nombreTerceto;
 	
 	public TercetoAbstracto(Token t1, Token t2, Token t3,int numTerceto) {
 		listTerceto = new ArrayList<Token>();
@@ -17,6 +17,13 @@ public abstract class TercetoAbstracto  {
 		this.numTerceto=numTerceto;
 	}
 
+	public void setNombre(String nombre) {
+		this.nombreTerceto=nombre;
+	}
+	
+	public String getNombre() {
+		return nombreTerceto;
+	}
 	public Token getTerceto(int i) {
 		return listTerceto.get(i);
 	}

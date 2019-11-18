@@ -26,50 +26,69 @@ Linea 8 Palabra Reservada: float
 Linea 8 Identificador: x
 Linea 8: ;
 Linea 9 Palabra Reservada: begin
-Linea 10 Identificador: a
-Linea 10: :=
-Linea 10 Identificador: b
-Linea 10: ;
-Linea 11 Identificador: c
-Linea 11: :=
 Linea 11 Identificador: a
+Linea 11: :=
+Linea 11 Constante Entera: 0
 Linea 11: ;
+Linea 12 Palabra Reservada: if
+Linea 12: (
 Linea 12 Identificador: a
-Linea 12: :=
-Linea 12 Constante Entera: 10
-Linea 13 Palabra Reservada: do
-Linea 14 Identificador: a
-Linea 14: :=
-Linea 14 Identificador: a
-Linea 14: +
-Linea 14 Constante Entera: 1
-Linea 14: ;
-Linea 15 Palabra Reservada: until
+Linea 12: <>
+Linea 12 Constante Entera: 0
+Linea 12: )
+Linea 13 Palabra Reservada: print
+Linea 13: (
+Linea 13 Cadena: hola
+Linea 13: )
+Linea 13: ;
+Linea 14 Palabra Reservada: else
+Linea 15 Palabra Reservada: print
 Linea 15: (
-Linea 15 Identificador: a
-Linea 15: ==
-Linea 15 Constante Entera: 11
+Linea 15 Cadena: hola2
 Linea 15: )
 Linea 15: ;
-Linea 16 Palabra Reservada: if
-Linea 16: (
-Linea 16 Identificador: a
-Linea 16: ==
-Linea 16 Constante Entera: 12
-Linea 16: )
-Linea 17 Palabra Reservada: print
-Linea 17: (
-Linea 17 Cadena: larda come travesti
-Linea 17: )
-Linea 17: ;
-Linea 19 Palabra Reservada: else
-Linea 20 Identificador: b
-Linea 20: :=
-Linea 20 Constante Entera: 5
+Linea 16 Palabra Reservada: end_if
+Linea 16: ;
+Linea 17 Palabra Reservada: do
+Linea 18 Palabra Reservada: begin
+Linea 19 Identificador: a
+Linea 19: :=
+Linea 19 Identificador: a
+Linea 19: +
+Linea 19 Constante Entera: 1
+Linea 19: ;
+Linea 20 Palabra Reservada: print
+Linea 20: (
+Linea 20 Cadena: lardapide boton
+Linea 20: )
 Linea 20: ;
-Linea 21 Palabra Reservada: end_if
-Linea 21: ;
-Linea 22 Palabra Reservada: end
+Linea 21 Palabra Reservada: end
+Linea 22 Palabra Reservada: until
+Linea 22: (
+Linea 22 Identificador: a
+Linea 22: >
+Linea 22 Constante Entera: 4
+Linea 22: )
+Linea 22: ;
+Linea 23 Palabra Reservada: if
+Linea 23: (
+Linea 23 Identificador: a
+Linea 23: ==
+Linea 23 Constante Entera: 4
+Linea 23: )
+Linea 24 Palabra Reservada: print
+Linea 24: (
+Linea 24 Cadena: larda come travesti
+Linea 24: )
+Linea 24: ;
+Linea 26 Palabra Reservada: else
+Linea 27 Identificador: b
+Linea 27: :=
+Linea 27 Constante Entera: 5
+Linea 27: ;
+Linea 28 Palabra Reservada: end_if
+Linea 28: ;
+Linea 29 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
@@ -80,49 +99,53 @@ Linea 5: Sentencia declarativa
 Linea 6: Sentencia declarativa
 Linea 7: Sentencia declarativa
 Linea 8: Sentencia declarativa
-Linea 10: Asignacion
 Linea 11: Asignacion
-Linea 14: Asignacion
-Linea 13: Sentencia until
-Linea 17: Sentencia PRINT
-Linea 20: Asignacion
-Linea 16: Sentencia IF-ELSE
-
-Errores Sintacticos: 
-Error--> Linea 12: Falta ';'.
+Linea 13: Sentencia PRINT
+Linea 15: Sentencia PRINT
+Linea 12: Sentencia IF-ELSE
+Linea 19: Asignacion
+Linea 20: Sentencia PRINT
+Linea 17: Sentencia until
+Linea 24: Sentencia PRINT
+Linea 27: Asignacion
+Linea 23: Sentencia IF-ELSE
 
 Sin errores lexicos 
 
 Sin warning lexicos 
 
 Tabla de Simbolos: 
-11--> int
-11--> 1
 a--> int
-a--> 8
-12--> int
-12--> 1
+a--> 7
 b--> int
-b--> 3
+b--> 2
 c--> int
-c--> 2
+c--> 1
 d--> int
 d--> 1
 e--> int
 e--> 1
 f--> int
 f--> 1
+lardapide boton--> Cadena
+lardapide boton--> 1
+hola--> Cadena
+hola--> 1
 larda come travesti--> Cadena
 larda come travesti--> 1
+0--> int
+0--> 2
 1--> int
 1--> 1
-auxiliar@4--> int
-auxiliar@4--> 0
+4--> int
+4--> 2
 5--> int
 5--> 1
 x--> float
 x--> 1
 z--> int
 z--> 1
-10--> int
-10--> 1
+hola2--> Cadena
+hola2--> 1
+auxiliar@8--> int
+auxiliar@8--> 0
