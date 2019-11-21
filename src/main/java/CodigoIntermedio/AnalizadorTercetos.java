@@ -38,12 +38,12 @@ public class AnalizadorTercetos {
 		return this.listTercetos.size()+1;
 	}
 	
-    public void imprimirTerceto() {
-        String cadena="Tercetos: \n";
+    public String imprimirTerceto() {
+        String cadena="\nTercetos: \n";
         for (TercetoAbstracto t: listTercetos ){
             cadena= cadena + t.imprimirTercetoI() + '\n';
         }
-        System.out.println(cadena);
+        return cadena;
 
 
     }
@@ -87,11 +87,12 @@ public class AnalizadorTercetos {
 		return label;
 	}
 	
-	public void imprimirErroresSemanticos() {
+	public String imprimirErroresSemanticos() {
+		String errores = '\n' + "Errores Semanticos Detectados" + '\n';
 		for (Error error : listErroresSemanticos) {
-			System.out.println(error);
+			errores = errores + error.toString() + '\n';
 		}
-		
+		return errores;
 	}
 
 	

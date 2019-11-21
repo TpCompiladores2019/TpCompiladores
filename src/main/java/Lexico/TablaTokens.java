@@ -28,7 +28,7 @@ public class TablaTokens {
 	public final static int FLOAT=275;
 	public final static int FIRST=276;
 	public final static int LAST = 277;
-	public final static int LENGHT = 278;
+	public final static int LENGTH = 278;
 	
 	//keys;
 	
@@ -44,7 +44,7 @@ public class TablaTokens {
 	public final static String FLOAT_KEY = "float";
 	public final static String FIRST_KEY = "first";
 	public final static String LAST_KEY = "last";
-	public final static String LENGHT_KEY = "lenght";
+	public final static String LENGTH_KEY = "length";
 	public final static String ID_KEY = "IDENTIFICADOR";
 	public final static String CTE_KEY = "CONSTANTE E";
 	public final static String CTF_KEY = "CONSTANTE F";
@@ -83,9 +83,9 @@ public class TablaTokens {
 		tokens.put(DO_KEY, DO);
 		tokens.put(UNTIL_KEY, UNTIL);
 		tokens.put(FLOAT_KEY, FLOAT);
-		tokens.put(FIRST_KEY,LENGHT);
+		tokens.put(FIRST_KEY,FIRST);
 		tokens.put(LAST_KEY,LAST);
-		tokens.put(LENGHT_KEY, LENGHT);
+		tokens.put(LENGTH_KEY, LENGTH);
 		//Identificador
 		tokens.put(ID_KEY,ID);
 		//Constantes

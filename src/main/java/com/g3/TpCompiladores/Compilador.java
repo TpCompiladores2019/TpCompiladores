@@ -1,7 +1,6 @@
 package com.g3.TpCompiladores;
 
 
-import java.io.File;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +10,7 @@ import CodigoIntermedio.GeneradorAssembler;
 import Lexico.AnalizadorLexico;
 import Lexico.TablaSimbolos;
 import Lexico.TablaTokens;
+import Lexico.Token;
 import Sintactico.Parser;
 import Lexico.Error;
 
@@ -85,12 +85,11 @@ public class Compilador {
 		}	
 	}
 	
-	public void mostrarInfoSintactico() {
+	public void mostrarInfoSintactico(int sintactico,Parser parser) {
 		
 		try {
-			fw = new FileWriter("InformacionSintactico.txt");
-			Parser parser = new Parser(analizarLexico,tablaSimbolos,analizadorTerceto);
-			int sintactico =parser.yyparser(); 
+			
+
 			
 			
 			String informacion ="";
@@ -136,31 +135,29 @@ public class Compilador {
 				informacion += "\nSin warning lexicos \n";
 			}
 			
-			
+			if (analizadorTerceto.estaVacia()) 
+				informacion += "\nSin errores semanticos \n";
+			else
+				informacion += analizadorTerceto.imprimirErroresSemanticos();
 			informacion += "\nTabla de Simbolos: \n" ;
 			for (String key : tablaSimbolos.getKeySet()) {
-				informacion += key + "--> " + tablaSimbolos.getClave(key).getTipo() + "\n";
-				informacion += key + "--> " + tablaSimbolos.getClave(key).getCantRef() + "\n";
+				Token clave = tablaSimbolos.getClave(key);
+				informacion += key + ": Tipo: " + clave.getTipo() + ", Uso:" + clave.getUso(); 
+				if (clave.getTamanioColeccion()!=0)
+					informacion += ", Tamaño de Coleccion: " + clave.getTamanioColeccion() + "\n";
+				else
+					informacion += "\n";
+						
 			}
 			
 			
 			fw.write(informacion);
-			fw.close();
+			
 			
 		//	analizadorTerceto.imprimirTerceto();
 			analizadorTerceto.imprimirErroresSemanticos();
-			if (sintactico == 0) {
-				System.out.println("entro");
-				System.out.println(analizarLexico.listaErrores.isEmpty());
-				if ((analizarLexico.listaErrores.isEmpty()) && (analizadorTerceto.estaVacia())){
+
 					
-					analizadorTerceto.imprimirTerceto();
-					System.out.println("uepa");
-					GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos);
-					assembler.generarAssembler();
-					
-				}
-			}
 			
 		} catch (IOException e1) {
 	
@@ -170,14 +167,24 @@ public class Compilador {
 		
 	}
 	
-	public void ejecutar() {
+	public void ejecutar() throws IOException {
 		Parser parser = new Parser(analizarLexico,tablaSimbolos,analizadorTerceto);
 		int sintactico =parser.yyparser(); 
+		fw = new FileWriter("Informacion.txt");
+		String tercetos =""; 
+		mostrarInfoSintactico(sintactico, parser);
 		if (sintactico == 0) {
-			if ((!analizarLexico.listaErrores.isEmpty()) && (!analizadorTerceto.estaVacia())){
-				analizadorTerceto.imprimirTerceto();
+			if ((analizarLexico.estaVacia()) && (analizadorTerceto.estaVacia() && parser.estaVacia())){
+				System.out.println(analizadorTerceto.imprimirTerceto());
+				tercetos +=analizadorTerceto.imprimirTerceto();
+				fw.write(tercetos);
+				GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos);
+				assembler.generarAssembler();
 			}
+			else
+				fw.write("\nNo se genera codigo intermedio por errores en el codigo\n"); 
 		}
+		fw.close();
 	}
 	
 }

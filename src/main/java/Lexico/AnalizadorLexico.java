@@ -192,7 +192,9 @@ public class AnalizadorLexico {
 	}
 
 
-
+	public boolean estaVacia() {
+		return listaErrores.isEmpty();
+	}
 	
 	public int yylex() {
 		
@@ -219,7 +221,7 @@ public class AnalizadorLexico {
 		if(indiceLectura==ascii.size()) {
 			if (porcentajeAbierto) {
 				AnalizadorLexico.listaCorrectas.add("Linea " +nroLinea + " Cadena: " + cadena.toString());
-				Error nuevoWarning = new Error("La cadena no fue cerrada correctamente",nroLinea,"","WARNING");//Chequear
+				Error nuevoWarning = new Error("La cadena no fue cerrada correctamente",nroLinea,"","WARNING");
 				listaWarning.add(nuevoWarning);
 				tablaSimbolos.agregar(cadena.toString(), new Token("Cadena",1));
 			}
@@ -230,6 +232,12 @@ public class AnalizadorLexico {
 			return 0;
 			}
 		return nroToken;	
+	}
+
+
+
+	public int getNroLinea() {
+		return nroLinea;
 	}
 
 }

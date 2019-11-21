@@ -17,6 +17,10 @@
 	import CodigoIntermedio.TercetoExpresionDivision;
 	import CodigoIntermedio.TercetoExpresion;
 	import CodigoIntermedio.TercetoEtiqueta;
+	import CodigoIntermedio.TercetoAsignacionRowing;
+	import CodigoIntermedio.TercetoColeccion;
+	import CodigoIntermedio.TercetoMetodos;
+
 %}
 
 %token
@@ -46,7 +50,7 @@
 	FLOAT
 	FIRST
 	LAST
-	LENGHT
+	LENGTH
 	
 %start programa
 %left '+' '-' 
@@ -100,10 +104,6 @@
 		 
 	lista_variables : lista_variables ',' ID {listaVariables.add(((Token)$3.obj));}
 					| ID {listaVariables.add(((Token)$1.obj));}
-			//		| CTE_E {this.addError("Error, no se puede declarar constante enteras",((Token)$1.obj).getNroLinea());}
-			//		| CTE_F {this.addError("Error, no se puede declarar constante flotantes",((Token)$1.obj).getNroLinea());}
-			//		| lista_variables ',' ID {listaVariables.add(((Token)$3.obj));}
-			//		| lista_variables ID {this.addError("Error, falta ','",((Token)$2.obj).getNroLinea());} MIRARRRRRRRRRRRRRRRRR
 					;
 					
 	sentencia_ejecutable : seleccion_ejecutable ';'
@@ -149,8 +149,6 @@
 						| IF '(' ')' bloque_sentencias END_IF {this.addError("Falta condicion.",((Token)$2.obj).getNroLinea());}
 						| IF '(' condicion_if bloque_sentencias END_IF {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
 						| IF '(' condicion_if ')' END_IF {this.addError("Falta bloque de sentencias.",((Token)$4.obj).getNroLinea());}
-					//	| IF '(' condicion_if ')' bloque_sentencias ELSE bloque_sentencias {this.addError("Falta 'end_if.",((Token)$7.obj).getNroLinea());}
-					//	| IF '(' condicion_if ')' bloque_sentencias {this.addError("Falta 'end_if.",((Token)$5.obj).getNroLinea());}
 						;
 						
 	condicion : expresion_aritmetica operador expresion_aritmetica {
@@ -287,10 +285,18 @@
 										analizadorTerceto.agregarError("Error '"+((Token)$3.obj).getLexema() + "' es una coleccion.",lexico.nroLinea);
 										
 									else{
-										TercetoAbstracto terceto = new TercetoColeccion((new Token("OFFSET")), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+										
+										((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										((Token)$3.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										TercetoColeccion terceto = new TercetoColeccion((new Token("OFFSET")), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+										
+										
+										terceto.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
 										analizadorTerceto.addTerceto(terceto);
 										Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 										nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										nuevo.setUso("Variable Auxiliar");
+										tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 										$$ = new ParserVal(nuevo);
 									}
 								}
@@ -303,10 +309,17 @@
 										if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
 											analizadorTerceto.agregarError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",lexico.nroLinea);
 										else{
-											TercetoAbstracto terceto = new TercetoIF(new Token("OFFSET"), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+											((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											((Token)$3.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											tablaSimbolos.getClave(((Token)$3.obj).getLexema()).setUso("CTE");
+											TercetoColeccion terceto = new TercetoColeccion(new Token("OFFSET"), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+											terceto.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
 											analizadorTerceto.addTerceto(terceto);
 											Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 											nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											nuevo.setUso("Variable Auxiliar");
+											tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+											
 											$$ = new ParserVal(nuevo);
 										}
 									}
@@ -334,9 +347,7 @@
 	bloque_sentencias : sentencia_ejecutable 
 			| BEGIN sentencias_ejecutables END
 			| BEGIN END
-		//	| sentencias_ejecutables END {this.addError("Error, falta BEGIN dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());}  //GENERA SHIFT REDUCE
-		//	| BEGIN sentencias_ejecutables {this.addError("Error, falta END dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());}  //GENERA SHIFT REDUCE
-		//	| sentencias_ejecutables {this.addError("Error, falta BEGIN y END dentro del bloque de sentencias.",((Token)$1.obj).getNroLinea());} GENERA SHIFT REDUCE Y REDUCE REDUCE
+	
 			;
 			
 	
@@ -359,8 +370,6 @@
 					   | inicio_do bloque_sentencias UNTIL condicion ')' {this.addError("Falta '('.",((Token)$3.obj).getNroLinea());}
 					   | inicio_do bloque_sentencias UNTIL '(' ')'  {this.addError("Falta condicion.",((Token)$4.obj).getNroLinea());}
 					   | inicio_do bloque_sentencias UNTIL '(' condicion {this.addError("Falta ')'.",((Token)$5.obj).getNroLinea());}
-				//	   | inicio_do bloque_sentencias UNTIL '(' condicion ')' {this.addError("Falta ';'.",((Token)$6.obj).getNroLinea());}
-				//     | bloque_sentencias UNTIL '(' condicion ')' {this.addError("Falta 'do'.",((Token)$1.obj).getNroLinea());} // TIRA REDUCE/REDUCE FALTA DO
 					   ;
 	
 	imprimir: factor
@@ -375,36 +384,57 @@
 	}
 					  | '(' imprimir ')'  {this.addError("Falta 'PRINT'.",((Token)$1.obj).getNroLinea());}
 					  | PRINT imprimir ')'  {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
-					  | PRINT '(' ')'  {this.addError("Falta cadena .",((Token)$2.obj).getNroLinea());}
+					  | PRINT '(' ')'  {this.addError("Falta variable o cadena .",((Token)$2.obj).getNroLinea());}
 					  | PRINT '(' imprimir  {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
-				//	  | PRINT '(' imprimir ')' {this.addError("Falta ';'.",((Token)$4.obj).getNroLinea());}
 					  ;
 
-	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Asignacion");
+	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + lexico.getNroLinea() + ": Asignacion");
 														
 														if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
-															TercetoAbstracto tercetoAsignacion = new TercetoAsignacion(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
-															tercetoAsignacion.setNombre("Asignacion");
-															analizadorTerceto.addTerceto(tercetoAsignacion);
+															if (esColeccion(((Token)$1.obj).getLexema())){
+																TercetoAsignacionRowing tercetoAsignacionRowing = new TercetoAsignacionRowing(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+																tercetoAsignacionRowing.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+																analizadorTerceto.addTerceto(tercetoAsignacionRowing);
+															}
+															else{
+																TercetoAbstracto tercetoAsignacion = new TercetoAsignacion(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());			
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+															}
 														}
 														else
 															analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 														}
-		  | ASIGNACION expresion_aritmetica ';' {this.addError("Falta variable.",((Token)$1.obj).getNroLinea());}
-		  | variable expresion_aritmetica ';' {this.addError("Falta ':='.",((Token)$1.obj).getNroLinea());}
-		  | variable ASIGNACION ';' {this.addError("Falta expresion.",((Token)$2.obj).getNroLinea());}
-		  | variable ASIGNACION expresion_aritmetica {this.addError("Falta ';'.",((Token)$3.obj).getNroLinea());}
+
+		  | ASIGNACION expresion_aritmetica ';' {this.addError("Falta variable.",lexico.getNroLinea());}
+		  | variable expresion_aritmetica ';' {this.addError("Falta ':='.",lexico.getNroLinea());}
+		  | variable ASIGNACION ';' {this.addError("Falta expresion.",lexico.getNroLinea());}
+		  | variable ASIGNACION expresion_aritmetica {this.addError("Falta ';'.",lexico.getNroLinea());}
 		  ;
 		  
-	metodo : FIRST
+	metodo : FIRST 
 			| LAST
-			| LENGHT
+			| LENGTH
 			;
 			
-	invocacion_metodo : ID '.' metodo '(' ')' 
+	invocacion_metodo : ID '.' metodo '(' ')' { 
+											if (esColeccion(((Token)$1.obj).getLexema())){
+												((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+												TercetoMetodos tercetoMetodo = new TercetoMetodos(new Token("METODO"), ((Token)$1.obj) , 					((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+												tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+												analizadorTerceto.addTerceto(tercetoMetodo);
+												
+												Token nuevo = new Token("@" + analizadorTerceto.getNumeroTerceto());
+												nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+												nuevo.setUso("Variable Auxiliar");
+												tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+												$$ = new ParserVal(nuevo);
+											}
+											else
+												analizadorTerceto.agregarError("La variable '" + ((Token)$1.obj).getLexema() +"' no puede invocar metodos, debe ser una coleccion." ,lexico.nroLinea);
+											
+										}
 					  | ID '.' metodo ')' {this.addError("Falta '(.'",((Token)$3.obj).getNroLinea());}
 					  | ID '.' '(' ')' {this.addError("Falta metodo.",((Token)$2.obj).getNroLinea());}
-				//	  | ID '.' metodo '('  {this.addError("Falta ')'.",((Token)$4.obj).getNroLinea());} GENERA SHIFT/REDUCE
 					  ;
 
 %%
@@ -561,5 +591,16 @@ public boolean esCompatible(Token t1, Token t2){
 	return false;
 }
 
+public boolean esColeccion(String lexema){
+	Token t = tablaSimbolos.getClave(lexema);
+	if (t!=null)
+		if(t.getUso().equals("Nombre de Coleccion"))
+			return true;
+	return false;
+}
 
+public boolean estaVacia() {
+	return listaErrores.isEmpty();
+
+}
 

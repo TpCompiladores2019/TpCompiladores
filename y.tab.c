@@ -1,22 +1,8 @@
-//### This file created by BYACC 1.8(/Java extension  1.15)
-//### Java capabilities added 7 Jan 97, Bob Jamison
-//### Updated : 27 Nov 97  -- Bob Jamison, Joe Nieten
-//###           01 Jan 98  -- Bob Jamison -- fixed generic semantic constructor
-//###           01 Jun 99  -- Bob Jamison -- added Runnable support
-//###           06 Aug 00  -- Bob Jamison -- made state variables class-global
-//###           03 Jan 01  -- Bob Jamison -- improved flags, tracing
-//###           16 May 01  -- Bob Jamison -- added custom stack sizing
-//###           04 Mar 02  -- Yuval Oren  -- improved java performance, added options
-//###           14 Mar 02  -- Tomas Hurka -- -d support, static initializer workaround
-//### Please send bug reports to tom@hukatronic.cz
-//### static char yysccsid[] = "@(#)yaccpar	1.8 (Berkeley) 01/20/90";
-
-
-
-
-
-
-//#line 2 "GramaticaCorreciones.y"
+#ifndef lint
+static char yysccsid[] = "@(#)yaccpar	1.8 (Berkeley) 01/20/90";
+#endif
+#define YYBYACC 1
+#line 2 "GramaticaCorreciones.y"
 	package Sintactico;
 
 	import Lexico.AnalizadorLexico;
@@ -35,172 +21,31 @@
 	import CodigoIntermedio.TercetoExpresionDivision;
 	import CodigoIntermedio.TercetoExpresion;
 	import CodigoIntermedio.TercetoEtiqueta;
-	import CodigoIntermedio.TercetoAsignacionRowing;
-	import CodigoIntermedio.TercetoColeccion;
-	import CodigoIntermedio.TercetoMetodos;
-
-//#line 40 "Parser.java"
-
-
-
-
-public class Parser
-{
-
-boolean yydebug;        //do I want debug output?
-int yynerrs;            //number of errors so far
-int yyerrflag;          //was there an error?
-int yychar;             //the current working character
-
-//########## MESSAGES ##########
-//###############################################################
-// method: debug
-//###############################################################
-void debug(String msg)
-{
-  if (yydebug)
-    System.out.println(msg);
-}
-
-//########## STATE STACK ##########
-final static int YYSTACKSIZE = 500;  //maximum stack size
-int statestk[] = new int[YYSTACKSIZE]; //state stack
-int stateptr;
-int stateptrmax;                     //highest index of stackptr
-int statemax;                        //state when highest index reached
-//###############################################################
-// methods: state stack push,pop,drop,peek
-//###############################################################
-final void state_push(int state)
-{
-  try {
-		stateptr++;
-		statestk[stateptr]=state;
-	 }
-	 catch (ArrayIndexOutOfBoundsException e) {
-     int oldsize = statestk.length;
-     int newsize = oldsize * 2;
-     int[] newstack = new int[newsize];
-     System.arraycopy(statestk,0,newstack,0,oldsize);
-     statestk = newstack;
-     statestk[stateptr]=state;
-  }
-}
-final int state_pop()
-{
-  return statestk[stateptr--];
-}
-final void state_drop(int cnt)
-{
-  stateptr -= cnt; 
-}
-final int state_peek(int relative)
-{
-  return statestk[stateptr-relative];
-}
-//###############################################################
-// method: init_stacks : allocate and prepare stacks
-//###############################################################
-final boolean init_stacks()
-{
-  stateptr = -1;
-  val_init();
-  return true;
-}
-//###############################################################
-// method: dump_stacks : show n levels of the stacks
-//###############################################################
-void dump_stacks(int count)
-{
-int i;
-  System.out.println("=index==state====value=     s:"+stateptr+"  v:"+valptr);
-  for (i=0;i<count;i++)
-    System.out.println(" "+i+"    "+statestk[i]+"      "+valstk[i]);
-  System.out.println("======================");
-}
-
-
-//########## SEMANTIC VALUES ##########
-//public class ParserVal is defined in ParserVal.java
-
-
-String   yytext;//user variable to return contextual strings
-ParserVal yyval; //used to return semantic vals from action routines
-ParserVal yylval;//the 'lval' (result) I got from yylex()
-ParserVal valstk[];
-int valptr;
-//###############################################################
-// methods: value stack push,pop,drop,peek.
-//###############################################################
-void val_init()
-{
-  valstk=new ParserVal[YYSTACKSIZE];
-  yyval=new ParserVal();
-  yylval=new ParserVal();
-  valptr=-1;
-}
-void val_push(ParserVal val)
-{
-  if (valptr>=YYSTACKSIZE)
-    return;
-  valstk[++valptr]=val;
-}
-ParserVal val_pop()
-{
-  if (valptr<0)
-    return new ParserVal();
-  return valstk[valptr--];
-}
-void val_drop(int cnt)
-{
-int ptr;
-  ptr=valptr-cnt;
-  if (ptr<0)
-    return;
-  valptr = ptr;
-}
-ParserVal val_peek(int relative)
-{
-int ptr;
-  ptr=valptr-relative;
-  if (ptr<0)
-    return new ParserVal();
-  return valstk[ptr];
-}
-final ParserVal dup_yyval(ParserVal val)
-{
-  ParserVal dup = new ParserVal();
-  dup.ival = val.ival;
-  dup.dval = val.dval;
-  dup.sval = val.sval;
-  dup.obj = val.obj;
-  return dup;
-}
-//#### end semantic value section ####
-public final static short ID=257;
-public final static short CTE_E=258;
-public final static short CTE_F=259;
-public final static short CADENA=260;
-public final static short ASIGNACION=261;
-public final static short MAYORIGUAL=262;
-public final static short MENORIGUAL=263;
-public final static short DESTINTO=264;
-public final static short IGUAL=265;
-public final static short IF=266;
-public final static short ELSE=267;
-public final static short END_IF=268;
-public final static short PRINT=269;
-public final static short INT=270;
-public final static short BEGIN=271;
-public final static short END=272;
-public final static short DO=273;
-public final static short UNTIL=274;
-public final static short FLOAT=275;
-public final static short FIRST=276;
-public final static short LAST=277;
-public final static short LENGTH=278;
-public final static short YYERRCODE=256;
-final static short yylhs[] = {                           -1,
+#line 25 "y.tab.c"
+#define ID 257
+#define CTE_E 258
+#define CTE_F 259
+#define CADENA 260
+#define ASIGNACION 261
+#define MAYORIGUAL 262
+#define MENORIGUAL 263
+#define DESTINTO 264
+#define IGUAL 265
+#define IF 266
+#define ELSE 267
+#define END_IF 268
+#define PRINT 269
+#define INT 270
+#define BEGIN 271
+#define END 272
+#define DO 273
+#define UNTIL 274
+#define FLOAT 275
+#define FIRST 276
+#define LAST 277
+#define LENGTH 278
+#define YYERRCODE 256
+short yylhs[] = {                                        -1,
     0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
     1,    2,    2,    3,    3,    4,    4,    4,    4,    4,
     4,    4,    4,    4,    4,    4,    6,    6,    7,    7,
@@ -213,7 +58,7 @@ final static short yylhs[] = {                           -1,
    23,   10,   10,   10,   10,   10,   11,   11,   11,   11,
    11,   24,   24,   24,   21,   21,   21,
 };
-final static short yylen[] = {                            2,
+short yylen[] = {                                         2,
     1,    1,    4,    3,    2,    2,    1,    3,    3,    2,
     2,    2,    1,    2,    1,    3,    6,    5,    2,    5,
     2,    5,    5,    2,    5,    6,    1,    1,    3,    1,
@@ -226,7 +71,7 @@ final static short yylen[] = {                            2,
     1,    4,    3,    3,    3,    3,    4,    3,    3,    3,
     3,    1,    1,    1,    5,    4,    4,
 };
-final static short yydefred[] = {                         0,
+short yydefred[] = {                                      0,
     0,    0,    0,    0,   27,    0,   83,   28,    0,    0,
     1,    0,    0,   13,   15,    0,    0,    0,    0,    0,
    34,    0,    0,    0,    0,   64,   65,    0,    0,    0,
@@ -248,12 +93,12 @@ final static short yydefred[] = {                         0,
    17,   84,   46,   44,   43,    0,   42,   45,   47,   48,
     0,   40,
 };
-final static short yydgoto[] = {                         10,
+short yydgoto[] = {                                      10,
    11,   12,   13,   14,   73,   16,   17,   18,   19,   20,
    21,   41,   42,   74,  186,   43,   44,   30,   31,   22,
    33,   23,   48,  121,
 };
-final static short yysindex[] = {                       -16,
+short yysindex[] = {                                    -16,
   -45,  131,  -30,  156,    0,  365,    0,    0,  555,    0,
     0,  291,  367,    0,    0,  -52,  -22,  -10,   -2,   11,
     0,  -42,  302, -223,  -37,    0,    0, -191,  -17,  -11,
@@ -275,7 +120,7 @@ final static short yysindex[] = {                       -16,
     0,    0,    0,    0,    0,  426,    0,    0,    0,    0,
  -106,    0,
 };
-final static short yyrindex[] = {                         0,
+short yyrindex[] = {                                      0,
   597,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,  163,  164,    0,    0,    0,    0,  208,  226,  246,
     0,    0,    0,    0,   38,    0,    0,    0,    0,   61,
@@ -297,16 +142,13 @@ final static short yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,
 };
-final static short yygindex[] = {                         0,
+short yygindex[] = {                                      0,
     0,    0,   21,  166,  797,    0,  159,    0,    0,    0,
     0,    5,  -95,  784,    0,   18,  134,   33,    4,  819,
   152,    0,    2,    0,
 };
-final static int YYTABLESIZE=976;
-static short yytable[];
-static { yytable();}
-static void yytable(){
-yytable = new short[]{                        120,
+#define YYTABLESIZE 976
+short yytable[] = {                                     120,
    30,   83,   28,   84,  113,  102,   61,   47,   78,   38,
    54,   21,   53,   52,   28,  141,  143,  144,   39,   29,
    40,   65,   20,    9,  163,   83,   51,   84,   65,   39,
@@ -406,11 +248,7 @@ yytable = new short[]{                        120,
    32,    0,    0,    0,    0,    0,    0,    0,    0,  191,
     0,    0,   62,   62,   62,   62,
 };
-}
-static short yycheck[];
-static { yycheck(); }
-static void yycheck() {
-yycheck = new short[] {                         40,
+short yycheck[] = {                                      40,
     0,   43,   45,   45,   40,   91,   59,    4,   46,   40,
     9,    0,    9,    9,   45,  111,  112,  113,   60,    2,
    62,   44,    0,   40,   59,   43,    6,   45,   44,   60,
@@ -510,31 +348,25 @@ yycheck = new short[] {                         40,
   142,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  186,
    -1,   -1,  262,  263,  264,  265,
 };
-}
-final static short YYFINAL=10;
-final static short YYMAXTOKEN=278;
-final static String yyname[] = {
-"end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,"'('","')'","'*'","'+'","','",
-"'-'","'.'","'/'",null,null,null,null,null,null,null,null,null,null,null,"';'",
-"'<'",null,"'>'",null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-"'['",null,"']'",null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,"ID","CTE_E","CTE_F","CADENA","ASIGNACION",
-"MAYORIGUAL","MENORIGUAL","DESTINTO","IGUAL","IF","ELSE","END_IF","PRINT","INT",
-"BEGIN","END","DO","UNTIL","FLOAT","FIRST","LAST","LENGTH",
+#define YYFINAL 10
+#ifndef YYDEBUG
+#define YYDEBUG 0
+#endif
+#define YYMAXTOKEN 278
+#if YYDEBUG
+char *yyname[] = {
+"end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,"'('","')'","'*'","'+'","','","'-'","'.'","'/'",0,0,0,0,0,0,0,0,0,0,
+0,"';'","'<'",0,"'>'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+"'['",0,"']'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,"ID","CTE_E","CTE_F","CADENA","ASIGNACION","MAYORIGUAL",
+"MENORIGUAL","DESTINTO","IGUAL","IF","ELSE","END_IF","PRINT","INT","BEGIN",
+"END","DO","UNTIL","FLOAT","FIRST","LAST","LENGTH",
 };
-final static String yyrule[] = {
+char *yyrule[] = {
 "$accept : programa",
 "programa : conjunto_sentencias",
 "conjunto_sentencias : sentencias_declarativas",
@@ -644,8 +476,36 @@ final static String yyrule[] = {
 "invocacion_metodo : ID '.' metodo ')'",
 "invocacion_metodo : ID '.' '(' ')'",
 };
-
-//#line 440 "GramaticaCorreciones.y"
+#endif
+#ifndef YYSTYPE
+typedef int YYSTYPE;
+#endif
+#define yyclearin (yychar=(-1))
+#define yyerrok (yyerrflag=0)
+#ifdef YYSTACKSIZE
+#ifndef YYMAXDEPTH
+#define YYMAXDEPTH YYSTACKSIZE
+#endif
+#else
+#ifdef YYMAXDEPTH
+#define YYSTACKSIZE YYMAXDEPTH
+#else
+#define YYSTACKSIZE 500
+#define YYMAXDEPTH 500
+#endif
+#endif
+int yydebug;
+int yynerrs;
+int yyerrflag;
+int yychar;
+short *yyssp;
+YYSTYPE *yyvsp;
+YYSTYPE yyval;
+YYSTYPE yylval;
+short yyss[YYSTACKSIZE];
+YYSTYPE yyvs[YYSTACKSIZE];
+#define yystacksize YYSTACKSIZE
+#line 418 "GramaticaCorreciones.y"
 
 
 
@@ -800,272 +660,253 @@ public boolean esCompatible(Token t1, Token t2){
 }
 
 public boolean esColeccion(String lexema){
-	Token t = tablaSimbolos.getClave(lexema);
-	if (t!=null)
-		if(t.getUso().equals("Nombre de Coleccion"))
-			return true;
+	if(tablaSimbolos.getClave(lexema).getUso("Nombre de Coleccion"){
+		return true;
 	return false;
 }
 
-public boolean estaVacia() {
-	return listaErrores.isEmpty();
 
-}
 
-//#line 744 "Parser.java"
-//###############################################################
-// method: yylexdebug : check lexer state
-//###############################################################
-void yylexdebug(int state,int ch)
+#line 671 "y.tab.c"
+#define YYABORT goto yyabort
+#define YYACCEPT goto yyaccept
+#define YYERROR goto yyerrlab
+int
+yyparse()
 {
-String s=null;
-  if (ch < 0) ch=0;
-  if (ch <= YYMAXTOKEN) //check index bounds
-     s = yyname[ch];    //now get it
-  if (s==null)
-    s = "illegal-symbol";
-  debug("state "+state+", reading "+ch+" ("+s+")");
-}
+    register int yym, yyn, yystate;
+#if YYDEBUG
+    register char *yys;
+    extern char *getenv();
 
-
-
-
-
-//The following are now global, to aid in error reporting
-int yyn;       //next next thing to do
-int yym;       //
-int yystate;   //current parsing state from state table
-String yys;    //current token string
-
-
-//###############################################################
-// method: yyparse : parse input and execute indicated items
-//###############################################################
-int yyparse()
-{
-boolean doaction;
-  init_stacks();
-  yynerrs = 0;
-  yyerrflag = 0;
-  yychar = -1;          //impossible char forces a read
-  yystate=0;            //initial state
-  state_push(yystate);  //save it
-  val_push(yylval);     //save empty value
-  while (true) //until parsing is done, either correctly, or w/error
+    if (yys = getenv("YYDEBUG"))
     {
-    doaction=true;
-    if (yydebug) debug("loop"); 
-    //#### NEXT ACTION (from reduction table)
-    for (yyn=yydefred[yystate];yyn==0;yyn=yydefred[yystate])
-      {
-      if (yydebug) debug("yyn:"+yyn+"  state:"+yystate+"  yychar:"+yychar);
-      if (yychar < 0)      //we want a char?
-        {
-        yychar = yylex();  //get next token
-        if (yydebug) debug(" next yychar:"+yychar);
-        //#### ERROR CHECK ####
-        if (yychar < 0)    //it it didn't work/error
-          {
-          yychar = 0;      //change it to default string (no -1!)
-          if (yydebug)
-            yylexdebug(yystate,yychar);
-          }
-        }//yychar<0
-      yyn = yysindex[yystate];  //get amount to shift by (shift index)
-      if ((yyn != 0) && (yyn += yychar) >= 0 &&
-          yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
-        {
-        if (yydebug)
-          debug("state "+yystate+", shifting to state "+yytable[yyn]);
-        //#### NEXT STATE ####
-        yystate = yytable[yyn];//we are in a new state
-        state_push(yystate);   //save it
-        val_push(yylval);      //push our lval as the input for next rule
-        yychar = -1;           //since we have 'eaten' a token, say we need another
-        if (yyerrflag > 0)     //have we recovered an error?
-           --yyerrflag;        //give ourselves credit
-        doaction=false;        //but don't process yet
-        break;   //quit the yyn=0 loop
-        }
+        yyn = *yys;
+        if (yyn >= '0' && yyn <= '9')
+            yydebug = yyn - '0';
+    }
+#endif
 
-    yyn = yyrindex[yystate];  //reduce
-    if ((yyn !=0 ) && (yyn += yychar) >= 0 &&
-            yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
-      {   //we reduced!
-      if (yydebug) debug("reduce");
-      yyn = yytable[yyn];
-      doaction=true; //get ready to execute
-      break;         //drop down to actions
-      }
-    else //ERROR RECOVERY
-      {
-      if (yyerrflag==0)
+    yynerrs = 0;
+    yyerrflag = 0;
+    yychar = (-1);
+
+    yyssp = yyss;
+    yyvsp = yyvs;
+    *yyssp = yystate = 0;
+
+yyloop:
+    if (yyn = yydefred[yystate]) goto yyreduce;
+    if (yychar < 0)
+    {
+        if ((yychar = yylex()) < 0) yychar = 0;
+#if YYDEBUG
+        if (yydebug)
         {
-        yyerror("syntax error");
-        yynerrs++;
+            yys = 0;
+            if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+            if (!yys) yys = "illegal-symbol";
+            printf("yydebug: state %d, reading %d (%s)\n", yystate,
+                    yychar, yys);
         }
-      if (yyerrflag < 3) //low error count?
+#endif
+    }
+    if ((yyn = yysindex[yystate]) && (yyn += yychar) >= 0 &&
+            yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
+    {
+#if YYDEBUG
+        if (yydebug)
+            printf("yydebug: state %d, shifting to state %d (%s)\n",
+                    yystate, yytable[yyn],yyrule[yyn]);
+#endif
+        if (yyssp >= yyss + yystacksize - 1)
         {
+            goto yyoverflow;
+        }
+        *++yyssp = yystate = yytable[yyn];
+        *++yyvsp = yylval;
+        yychar = (-1);
+        if (yyerrflag > 0)  --yyerrflag;
+        goto yyloop;
+    }
+    if ((yyn = yyrindex[yystate]) && (yyn += yychar) >= 0 &&
+            yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
+    {
+        yyn = yytable[yyn];
+        goto yyreduce;
+    }
+    if (yyerrflag) goto yyinrecovery;
+#ifdef lint
+    goto yynewerror;
+#endif
+yynewerror:
+    yyerror("syntax error");
+#ifdef lint
+    goto yyerrlab;
+#endif
+yyerrlab:
+    ++yynerrs;
+yyinrecovery:
+    if (yyerrflag < 3)
+    {
         yyerrflag = 3;
-        while (true)   //do until break
-          {
-          if (stateptr<0)   //check for under & overflow here
-            {
-            yyerror("stack underflow. aborting...");  //note lower case 's'
-            return 1;
-            }
-          yyn = yysindex[state_peek(0)];
-          if ((yyn != 0) && (yyn += YYERRCODE) >= 0 &&
+        for (;;)
+        {
+            if ((yyn = yysindex[*yyssp]) && (yyn += YYERRCODE) >= 0 &&
                     yyn <= YYTABLESIZE && yycheck[yyn] == YYERRCODE)
             {
-            if (yydebug)
-              debug("state "+state_peek(0)+", error recovery shifting to state "+yytable[yyn]+" ");
-            yystate = yytable[yyn];
-            state_push(yystate);
-            val_push(yylval);
-            doaction=false;
-            break;
+#if YYDEBUG
+                if (yydebug)
+                    printf("yydebug: state %d, error recovery shifting\
+ to state %d\n", *yyssp, yytable[yyn]);
+#endif
+                if (yyssp >= yyss + yystacksize - 1)
+                {
+                    goto yyoverflow;
+                }
+                *++yyssp = yystate = yytable[yyn];
+                *++yyvsp = yylval;
+                goto yyloop;
             }
-          else
+            else
             {
-            if (yydebug)
-              debug("error recovery discarding state "+state_peek(0)+" ");
-            if (stateptr<0)   //check for under & overflow here
-              {
-              yyerror("Stack underflow. aborting...");  //capital 'S'
-              return 1;
-              }
-            state_pop();
-            val_pop();
+#if YYDEBUG
+                if (yydebug)
+                    printf("yydebug: error recovery discarding state %d\n",
+                            *yyssp);
+#endif
+                if (yyssp <= yyss) goto yyabort;
+                --yyssp;
+                --yyvsp;
             }
-          }
         }
-      else            //discard this token
-        {
-        if (yychar == 0)
-          return 1; //yyabort
+    }
+    else
+    {
+        if (yychar == 0) goto yyabort;
+#if YYDEBUG
         if (yydebug)
-          {
-          yys = null;
-          if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
-          if (yys == null) yys = "illegal-symbol";
-          debug("state "+yystate+", error recovery discards token "+yychar+" ("+yys+")");
-          }
-        yychar = -1;  //read another
+        {
+            yys = 0;
+            if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+            if (!yys) yys = "illegal-symbol";
+            printf("yydebug: state %d, error recovery discards token %d (%s)\n",
+                    yystate, yychar, yys);
         }
-      }//end error recovery
-    }//yyn=0 loop
-    if (!doaction)   //any reason not to proceed?
-      continue;      //skip action
-    yym = yylen[yyn];          //get count of terminals on rhs
+#endif
+        yychar = (-1);
+        goto yyloop;
+    }
+yyreduce:
+#if YYDEBUG
     if (yydebug)
-      debug("state "+yystate+", reducing "+yym+" by rule "+yyn+" ("+yyrule[yyn]+")");
-    if (yym>0)                 //if count of rhs not 'nil'
-      yyval = val_peek(yym-1); //get current semantic value
-    yyval = dup_yyval(yyval); //duplicate yyval if ParserVal is used as semantic value
-    switch(yyn)
-      {
-//########## USER-SUPPLIED ACTIONS ##########
+        printf("yydebug: state %d, reducing by rule %d (%s)\n",
+                yystate, yyn, yyrule[yyn]);
+#endif
+    yym = yylen[yyn];
+    yyval = yyvsp[1-yym];
+    switch (yyn)
+    {
 case 5:
-//#line 67 "GramaticaCorreciones.y"
-{this.addError("Error, falta BEGIN.",((Token)val_peek(1).obj).getNroLinea());}
+#line 63 "GramaticaCorreciones.y"
+{this.addError("Error, falta BEGIN.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 6:
-//#line 68 "GramaticaCorreciones.y"
-{this.addError("Error, falta END.",((Token)val_peek(0).obj).getNroLinea());}
+#line 64 "GramaticaCorreciones.y"
+{this.addError("Error, falta END.",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 7:
-//#line 69 "GramaticaCorreciones.y"
-{this.addError("Error, falta los delimitadores BEGIN y END.",((Token)val_peek(0).obj).getNroLinea());}
+#line 65 "GramaticaCorreciones.y"
+{this.addError("Error, falta los delimitadores BEGIN y END.",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 8:
-//#line 70 "GramaticaCorreciones.y"
-{this.addError("Error, falta BEGIN.",((Token)val_peek(2).obj).getNroLinea());}
+#line 66 "GramaticaCorreciones.y"
+{this.addError("Error, falta BEGIN.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 9:
-//#line 71 "GramaticaCorreciones.y"
-{this.addError("Error, falta END.",((Token)val_peek(2).obj).getNroLinea());}
+#line 67 "GramaticaCorreciones.y"
+{this.addError("Error, falta END.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 10:
-//#line 72 "GramaticaCorreciones.y"
-{this.addError("Error, falta los delimitadores BEGIN  y END.",((Token)val_peek(1).obj).getNroLinea());}
+#line 68 "GramaticaCorreciones.y"
+{this.addError("Error, falta los delimitadores BEGIN  y END.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 11:
-//#line 73 "GramaticaCorreciones.y"
-{this.addError("Error, falta sentencias ejecutables.",((Token)val_peek(1).obj).getNroLinea());}
+#line 69 "GramaticaCorreciones.y"
+{this.addError("Error, falta sentencias ejecutables.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 16:
-//#line 85 "GramaticaCorreciones.y"
-{listaCorrectas.add("Linea " + ((Token)val_peek(2).obj).getNroLinea() + ": Sentencia declarativa");
-														actualizarTablaVariables(((Token)val_peek(2).obj),"Variable",((Token)val_peek(2).obj));}
+#line 81 "GramaticaCorreciones.y"
+{listaCorrectas.add("Linea " + ((Token)yyvsp[-2].obj).getNroLinea() + ": Sentencia declarativa");
+														actualizarTablaVariables(((Token)yyvsp[-2].obj),"Variable",((Token)yyvsp[-2].obj));}
 break;
 case 17:
-//#line 87 "GramaticaCorreciones.y"
-{listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia declarativa");
-														listaVariables.add(((Token)val_peek(4).obj));
-														actualizarTablaVariables(((Token)val_peek(5).obj),"Nombre de Coleccion",((Token)val_peek(2).obj));}
+#line 83 "GramaticaCorreciones.y"
+{listaCorrectas.add("Linea " + ((Token)yyvsp[-5].obj).getNroLinea() + ": Sentencia declarativa");
+														listaVariables.add(((Token)yyvsp[-4].obj));
+														actualizarTablaVariables(((Token)yyvsp[-5].obj),"Nombre de Coleccion",((Token)yyvsp[-2].obj));}
 break;
 case 18:
-//#line 90 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta definir el tipo.",((Token)val_peek(3).obj).getNroLinea());}
+#line 86 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta definir el tipo.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 19:
-//#line 91 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta definir el tipo.",((Token)val_peek(1).obj).getNroLinea());}
+#line 87 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta definir el tipo.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 20:
-//#line 92 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta ';'.",((Token)val_peek(3).obj).getNroLinea());}
+#line 88 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta ';'.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 21:
-//#line 93 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta ';'.",((Token)val_peek(0).obj).getNroLinea());}
+#line 89 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta ';'.",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 22:
-//#line 94 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta ']'.",((Token)val_peek(3).obj).getNroLinea());}
+#line 90 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta ']'.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 23:
-//#line 95 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta '['.",((Token)val_peek(3).obj).getNroLinea());}
+#line 91 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta '['.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 24:
-//#line 96 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta variables.",((Token)val_peek(0).obj).getNroLinea());}
+#line 92 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta variables.",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 25:
-//#line 97 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, falta identIFicador.",((Token)val_peek(3).obj).getNroLinea());}
+#line 93 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, falta identIFicador.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 26:
-//#line 98 "GramaticaCorreciones.y"
-{this.addError("Error en declaracion, la coleccion solo permite constantes enteras.",((Token)val_peek(4).obj).getNroLinea());}
+#line 94 "GramaticaCorreciones.y"
+{this.addError("Error en declaracion, la coleccion solo permite constantes enteras.",((Token)yyvsp[-4].obj).getNroLinea());}
 break;
 case 29:
-//#line 105 "GramaticaCorreciones.y"
-{listaVariables.add(((Token)val_peek(0).obj));}
+#line 101 "GramaticaCorreciones.y"
+{listaVariables.add(((Token)yyvsp[0].obj));}
 break;
 case 30:
-//#line 106 "GramaticaCorreciones.y"
-{listaVariables.add(((Token)val_peek(0).obj));}
+#line 102 "GramaticaCorreciones.y"
+{listaVariables.add(((Token)yyvsp[0].obj));}
 break;
 case 35:
-//#line 113 "GramaticaCorreciones.y"
-{this.addError("Error, falta ';'",((Token)val_peek(0).obj).getNroLinea());}
+#line 113 "GramaticaCorreciones.y"
+{this.addError("Error, falta ';'",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 36:
-//#line 114 "GramaticaCorreciones.y"
-{this.addError("Error, falta ';'",((Token)val_peek(0).obj).getNroLinea());}
+#line 114 "GramaticaCorreciones.y"
+{this.addError("Error, falta ';'",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 37:
-//#line 115 "GramaticaCorreciones.y"
-{this.addError("Error, falta ';'",((Token)val_peek(0).obj).getNroLinea());}
+#line 115 "GramaticaCorreciones.y"
+{this.addError("Error, falta ';'",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 38:
-//#line 119 "GramaticaCorreciones.y"
+#line 119 "GramaticaCorreciones.y"
 { 
 								TercetoIF tercetoIF = new TercetoIF ( new Token( "BF"), new Token("@"+analizadorTerceto.getNumeroTerceto()), null, analizadorTerceto.getProximoTerceto());
-								tercetoIF.setTipoSalto(((Token)val_peek(0).obj).getOperador());
+								tercetoIF.setTipoSalto(((Token)yyvsp[0].obj).getOperador());
 								tercetoIF.setNombre("IF");
 								analizadorTerceto.addTerceto(tercetoIF);
 								analizadorTerceto.apilar();
@@ -1073,7 +914,7 @@ case 38:
 											}
 break;
 case 39:
-//#line 129 "GramaticaCorreciones.y"
+#line 129 "GramaticaCorreciones.y"
 {TercetoAbstracto tercetoIF = new TercetoIF (new Token("BI"), null, null, analizadorTerceto.getProximoTerceto() );
 	tercetoIF.setNombre("IF");
                                                              	analizadorTerceto.addTerceto (tercetoIF);
@@ -1081,74 +922,74 @@ case 39:
                                                              	analizadorTerceto.apilar();}
 break;
 case 40:
-//#line 135 "GramaticaCorreciones.y"
-{listaCorrectas.add("Linea " + ((Token)val_peek(8).obj).getNroLinea() + ": Sentencia IF-ELSE");
+#line 135 "GramaticaCorreciones.y"
+{listaCorrectas.add("Linea " + ((Token)yyvsp[-8].obj).getNroLinea() + ": Sentencia IF-ELSE");
 												analizadorTerceto.desapilar();}
 break;
 case 41:
-//#line 138 "GramaticaCorreciones.y"
-{listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia IF");
+#line 138 "GramaticaCorreciones.y"
+{listaCorrectas.add("Linea " + ((Token)yyvsp[-5].obj).getNroLinea() + ": Sentencia IF");
 																			analizadorTerceto.desapilar();}
 break;
 case 42:
-//#line 140 "GramaticaCorreciones.y"
-{this.addError("Falta 'ELSE'.",((Token)val_peek(1).obj).getNroLinea());}
+#line 140 "GramaticaCorreciones.y"
+{this.addError("Falta 'ELSE'.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 43:
-//#line 141 "GramaticaCorreciones.y"
-{this.addError("Falta bloque de sentencias.",((Token)val_peek(1).obj).getNroLinea());}
+#line 141 "GramaticaCorreciones.y"
+{this.addError("Falta bloque de sentencias.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 44:
-//#line 142 "GramaticaCorreciones.y"
-{this.addError("Falta bloque de sentencias.",((Token)val_peek(3).obj).getNroLinea());}
+#line 142 "GramaticaCorreciones.y"
+{this.addError("Falta bloque de sentencias.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 45:
-//#line 143 "GramaticaCorreciones.y"
-{this.addError( "Falta ')'.",((Token)val_peek(4).obj).getNroLinea());}
+#line 143 "GramaticaCorreciones.y"
+{this.addError( "Falta ')'.",((Token)yyvsp[-4].obj).getNroLinea());}
 break;
 case 46:
-//#line 144 "GramaticaCorreciones.y"
-{this.addError("Falta condicion.",((Token)val_peek(5).obj).getNroLinea());}
+#line 144 "GramaticaCorreciones.y"
+{this.addError("Falta condicion.",((Token)yyvsp[-5].obj).getNroLinea());}
 break;
 case 47:
-//#line 145 "GramaticaCorreciones.y"
-{this.addError("Falta ')'.",((Token)val_peek(6).obj).getNroLinea());}
+#line 145 "GramaticaCorreciones.y"
+{this.addError("Falta ')'.",((Token)yyvsp[-6].obj).getNroLinea());}
 break;
 case 48:
-//#line 146 "GramaticaCorreciones.y"
-{this.addError("Falta 'IF'.",((Token)val_peek(6).obj).getNroLinea());}
+#line 146 "GramaticaCorreciones.y"
+{this.addError("Falta 'IF'.",((Token)yyvsp[-6].obj).getNroLinea());}
 break;
 case 49:
-//#line 147 "GramaticaCorreciones.y"
-{this.addError("Falta 'IF'.",((Token)val_peek(4).obj).getNroLinea());}
+#line 147 "GramaticaCorreciones.y"
+{this.addError("Falta 'IF'.",((Token)yyvsp[-4].obj).getNroLinea());}
 break;
 case 50:
-//#line 148 "GramaticaCorreciones.y"
-{this.addError("Falta '('.",((Token)val_peek(4).obj).getNroLinea());}
+#line 148 "GramaticaCorreciones.y"
+{this.addError("Falta '('.",((Token)yyvsp[-4].obj).getNroLinea());}
 break;
 case 51:
-//#line 149 "GramaticaCorreciones.y"
-{this.addError("Falta condicion.",((Token)val_peek(3).obj).getNroLinea());}
+#line 149 "GramaticaCorreciones.y"
+{this.addError("Falta condicion.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 52:
-//#line 150 "GramaticaCorreciones.y"
-{this.addError("Falta ')'.",((Token)val_peek(2).obj).getNroLinea());}
+#line 150 "GramaticaCorreciones.y"
+{this.addError("Falta ')'.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 53:
-//#line 151 "GramaticaCorreciones.y"
-{this.addError("Falta bloque de sentencias.",((Token)val_peek(1).obj).getNroLinea());}
+#line 151 "GramaticaCorreciones.y"
+{this.addError("Falta bloque de sentencias.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 54:
-//#line 154 "GramaticaCorreciones.y"
+#line 156 "GramaticaCorreciones.y"
 {
-															if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
-																TercetoAbstracto tercetoComparacion = new TercetoComparacion(((Token)val_peek(1).obj), ((Token)val_peek(2).obj), ((Token)val_peek(0).obj),analizadorTerceto.getProximoTerceto());
+															if( esCompatible(((Token)yyvsp[-2].obj),((Token)yyvsp[0].obj))){
+																TercetoAbstracto tercetoComparacion = new TercetoComparacion(((Token)yyvsp[-1].obj), ((Token)yyvsp[-2].obj), ((Token)yyvsp[0].obj),analizadorTerceto.getProximoTerceto());
 																tercetoComparacion.setNombre("Comparacion");
 																analizadorTerceto.addTerceto(tercetoComparacion);
 																
 																Token nuevo = new Token ( "@" + analizadorTerceto.getNumeroTerceto());
-																nuevo.setTipo(((Token)val_peek(2).obj).getTipo());
-																nuevo.setOperador(((Token)val_peek(1).obj).getLexema());
+																nuevo.setTipo(((Token)yyvsp[-2].obj).getTipo());
+																nuevo.setOperador(((Token)yyvsp[-1].obj).getLexema());
 																yyval = new ParserVal(nuevo);
 															}
 															else
@@ -1156,21 +997,21 @@ case 54:
 															}
 break;
 case 55:
-//#line 168 "GramaticaCorreciones.y"
-{this.addError("Falta expresion del lado izquierdo.",((Token)val_peek(1).obj).getNroLinea());}
+#line 170 "GramaticaCorreciones.y"
+{this.addError("Falta expresion del lado izquierdo.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 56:
-//#line 169 "GramaticaCorreciones.y"
-{this.addError("Falta expresion del lado derecho.",((Token)val_peek(1).obj).getNroLinea());}
+#line 171 "GramaticaCorreciones.y"
+{this.addError("Falta expresion del lado derecho.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 57:
-//#line 172 "GramaticaCorreciones.y"
-{ if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
-																TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)val_peek(1).obj), ((Token)val_peek(2).obj),((Token)val_peek(0).obj),analizadorTerceto.getProximoTerceto());
+#line 174 "GramaticaCorreciones.y"
+{ if( esCompatible(((Token)yyvsp[-2].obj),((Token)yyvsp[0].obj))){
+																TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)yyvsp[-1].obj), ((Token)yyvsp[-2].obj),((Token)yyvsp[0].obj),analizadorTerceto.getProximoTerceto());
 																tercetoExpresion.setNombre("Expresion");
 																analizadorTerceto.addTerceto(tercetoExpresion);
 																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
-																nuevo.setTipo(((Token)val_peek(2).obj).getTipo());
+																nuevo.setTipo(((Token)yyvsp[-2].obj).getTipo());
 																nuevo.setUso("Variable Auxiliar");
 																tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 																yyval = new ParserVal(nuevo);
@@ -1181,15 +1022,15 @@ case 57:
 															}
 break;
 case 58:
-//#line 186 "GramaticaCorreciones.y"
+#line 188 "GramaticaCorreciones.y"
 {
-															if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
-																TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)val_peek(1).obj), ((Token)val_peek(2).obj), ((Token)val_peek(0).obj),analizadorTerceto.getProximoTerceto());
+															if( esCompatible(((Token)yyvsp[-2].obj),((Token)yyvsp[0].obj))){
+																TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)yyvsp[-1].obj), ((Token)yyvsp[-2].obj), ((Token)yyvsp[0].obj),analizadorTerceto.getProximoTerceto());
 																tercetoExpresion.setNombre("Expresion");
 																analizadorTerceto.addTerceto(tercetoExpresion);
 					
 																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
-																nuevo.setTipo(((Token)val_peek(2).obj).getTipo());
+																nuevo.setTipo(((Token)yyvsp[-2].obj).getTipo());
 																nuevo.setUso("Variable Auxiliar");
 																tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 																yyval = new ParserVal(nuevo);
@@ -1200,13 +1041,13 @@ case 58:
 															}
 break;
 case 60:
-//#line 205 "GramaticaCorreciones.y"
-{	if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
-															TercetoAbstracto tercetoExpresion = new TercetoExpresionMult(((Token)val_peek(1).obj),((Token)val_peek(2).obj), ((Token)val_peek(0).obj),analizadorTerceto.getProximoTerceto());
+#line 207 "GramaticaCorreciones.y"
+{	if( esCompatible(((Token)yyvsp[-2].obj),((Token)yyvsp[0].obj))){
+															TercetoAbstracto tercetoExpresion = new TercetoExpresionMult(((Token)yyvsp[-1].obj),((Token)yyvsp[-2].obj), ((Token)yyvsp[0].obj),analizadorTerceto.getProximoTerceto());
 															tercetoExpresion.setNombre("Expresion");
 															analizadorTerceto.addTerceto(tercetoExpresion);
 															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
-															nuevo.setTipo(((Token)val_peek(2).obj).getTipo());
+															nuevo.setTipo(((Token)yyvsp[-2].obj).getTipo());
 															nuevo.setUso("Variable Auxiliar");
 															tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 															yyval = new ParserVal(nuevo);
@@ -1218,13 +1059,13 @@ case 60:
 															}
 break;
 case 61:
-//#line 220 "GramaticaCorreciones.y"
-{ if( esCompatible(((Token)val_peek(2).obj),((Token)val_peek(0).obj))){
-															TercetoAbstracto tercetoExpresion = new TercetoExpresionDivision(((Token)val_peek(1).obj), ((Token)val_peek(2).obj), ((Token)val_peek(0).obj),analizadorTerceto.getProximoTerceto());
+#line 222 "GramaticaCorreciones.y"
+{ if( esCompatible(((Token)yyvsp[-2].obj),((Token)yyvsp[0].obj))){
+															TercetoAbstracto tercetoExpresion = new TercetoExpresionDivision(((Token)yyvsp[-1].obj), ((Token)yyvsp[-2].obj), ((Token)yyvsp[0].obj),analizadorTerceto.getProximoTerceto());
 															tercetoExpresion.setNombre("Expresion");
 															analizadorTerceto.addTerceto(tercetoExpresion);
 															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
-															nuevo.setTipo(((Token)val_peek(2).obj).getTipo());
+															nuevo.setTipo(((Token)yyvsp[-2].obj).getTipo());
 															nuevo.setUso("Variable Auxiliar");
 															tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 															yyval = new ParserVal(nuevo);
@@ -1235,117 +1076,104 @@ case 61:
 															}
 break;
 case 62:
-//#line 236 "GramaticaCorreciones.y"
+#line 238 "GramaticaCorreciones.y"
 {}
 break;
 case 63:
-//#line 240 "GramaticaCorreciones.y"
+#line 242 "GramaticaCorreciones.y"
 {}
 break;
 case 64:
-//#line 241 "GramaticaCorreciones.y"
-{actualizarTablaPositivo(((Token)val_peek(0).obj).getLexema());
-					((Token)val_peek(0).obj).setTipo("int");
+#line 243 "GramaticaCorreciones.y"
+{actualizarTablaPositivo(((Token)yyvsp[0].obj).getLexema());
+					((Token)yyvsp[0].obj).setTipo("int");
 	
-					yyval = val_peek(0);
+					yyval = yyvsp[0];
 					}
 break;
 case 65:
-//#line 246 "GramaticaCorreciones.y"
-{((Token)val_peek(0).obj).setTipo("float");
-					tablaSimbolos.getClave(((Token)val_peek(0).obj).getLexema()).setUso("CTF");
-					yyval = val_peek(0);
+#line 248 "GramaticaCorreciones.y"
+{((Token)yyvsp[0].obj).setTipo("float");
+					tablaSimbolos.getClave(((Token)yyvsp[0].obj).getLexema()).setUso("CTF");
+					yyval = yyvsp[0];
 					}
 break;
 case 66:
-//#line 250 "GramaticaCorreciones.y"
-{actualizarTablaNegativo(((Token)val_peek(0).obj).getLexema());
-						Token tNegativo = new Token("-"+((Token)val_peek(0).obj).getLexema());
+#line 252 "GramaticaCorreciones.y"
+{actualizarTablaNegativo(((Token)yyvsp[0].obj).getLexema());
+						Token tNegativo = new Token("-"+((Token)yyvsp[0].obj).getLexema());
 						tNegativo.setTipo("int");
 						yyval = new ParserVal(tNegativo);}
 break;
 case 67:
-//#line 254 "GramaticaCorreciones.y"
-{actualizarTablaNegativoFloat(((Token)val_peek(0).obj).getLexema());
-						Token tNegativo = new Token("-"+((Token)val_peek(0).obj).getLexema());
+#line 256 "GramaticaCorreciones.y"
+{actualizarTablaNegativoFloat(((Token)yyvsp[0].obj).getLexema());
+						Token tNegativo = new Token("-"+((Token)yyvsp[0].obj).getLexema());
 						tNegativo.setTipo("float");
 						yyval = new ParserVal(tNegativo);}
 break;
 case 69:
-//#line 259 "GramaticaCorreciones.y"
-{Token tNegativo = new Token("-"+((Token)val_peek(0).obj).getLexema());
-							tNegativo.setTipo(((Token)val_peek(0).obj).getTipo());
+#line 261 "GramaticaCorreciones.y"
+{Token tNegativo = new Token("-"+((Token)yyvsp[0].obj).getLexema());
+							tNegativo.setTipo(((Token)yyvsp[0].obj).getTipo());
 							yyval = new ParserVal(tNegativo);}
 break;
 case 71:
-//#line 266 "GramaticaCorreciones.y"
-{	if (!estaDeclarada(((Token)val_peek(3).obj))){
-									analizadorTerceto.agregarError("Error coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",lexico.nroLinea);
-									tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
+#line 268 "GramaticaCorreciones.y"
+{	if (!estaDeclarada(((Token)yyvsp[-3].obj))){
+									analizadorTerceto.agregarError("Error coleccion '"+((Token)yyvsp[-3].obj).getLexema() + "' no declarada.",lexico.nroLinea);
+									tablaSimbolos.eliminarClave(((Token)yyvsp[-3].obj).getLexema());
 								}
 								else
-									if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
-										analizadorTerceto.agregarError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",lexico.nroLinea);
+									if (tablaSimbolos.getClave(((Token)yyvsp[-3].obj).getLexema()).getUso().equals("Variable"))
+										analizadorTerceto.agregarError("Error '"+((Token)yyvsp[-3].obj).getLexema() + "' es una variable.",lexico.nroLinea);
 									
-								if (!estaDeclarada(((Token)val_peek(1).obj))){
-									analizadorTerceto.agregarError("Error variable '"+((Token)val_peek(1).obj).getLexema() + "' no declarada.",lexico.nroLinea);
-									this.addError("Error variable '"+((Token)val_peek(1).obj).getLexema() + "' no declarada.",((Token)val_peek(1).obj).getNroLinea());
-									tablaSimbolos.eliminarClave(((Token)val_peek(1).obj).getLexema());
+								if (!estaDeclarada(((Token)yyvsp[-1].obj))){
+									analizadorTerceto.agregarError("Error variable '"+((Token)yyvsp[-1].obj).getLexema() + "' no declarada.",lexico.nroLinea);
+									this.addError("Error variable '"+((Token)yyvsp[-1].obj).getLexema() + "' no declarada.",((Token)yyvsp[-1].obj).getNroLinea());
+									tablaSimbolos.eliminarClave(((Token)yyvsp[-1].obj).getLexema());
 								}
 								else
-									if (!tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo().equals("int"))
+									if (!tablaSimbolos.getClave(((Token)yyvsp[-1].obj).getLexema()).getTipo().equals("int"))
 										analizadorTerceto.agregarError("El tipo del subindice no es entero",lexico.nroLinea);
 								else
-									if (tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getUso().equals("Nombre de Coleccion"))
+									if (tablaSimbolos.getClave(((Token)yyvsp[-1].obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 										
-										analizadorTerceto.agregarError("Error '"+((Token)val_peek(1).obj).getLexema() + "' es una coleccion.",lexico.nroLinea);
+										analizadorTerceto.agregarError("Error '"+((Token)yyvsp[-1].obj).getLexema() + "' es una coleccion.",lexico.nroLinea);
 										
 									else{
-										
-										((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
-										((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
-										TercetoColeccion terceto = new TercetoColeccion((new Token("OFFSET")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
-										
-										
-										terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
+										TercetoAbstracto terceto = new TercetoColeccion((new Token("OFFSET")), ((Token)yyvsp[-3].obj), ((Token)yyvsp[-1].obj),analizadorTerceto.getProximoTerceto());
 										analizadorTerceto.addTerceto(terceto);
 										Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
-										nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
-										nuevo.setUso("Variable Auxiliar");
-										tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+										nuevo.setTipo(tablaSimbolos.getClave(((Token)yyvsp[-3].obj).getLexema()).getTipo());
 										yyval = new ParserVal(nuevo);
 									}
 								}
 break;
 case 72:
-//#line 304 "GramaticaCorreciones.y"
-{	if (!estaDeclarada(((Token)val_peek(3).obj))){
-										analizadorTerceto.agregarError("Coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",lexico.nroLinea);
-										tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
+#line 298 "GramaticaCorreciones.y"
+{	if (!estaDeclarada(((Token)yyvsp[-3].obj))){
+										analizadorTerceto.agregarError("Coleccion '"+((Token)yyvsp[-3].obj).getLexema() + "' no declarada.",lexico.nroLinea);
+										tablaSimbolos.eliminarClave(((Token)yyvsp[-3].obj).getLexema());
 									}
 									else{
-										if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
-											analizadorTerceto.agregarError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",lexico.nroLinea);
+										if (tablaSimbolos.getClave(((Token)yyvsp[-3].obj).getLexema()).getUso().equals("Variable"))
+											analizadorTerceto.agregarError("Error '"+((Token)yyvsp[-3].obj).getLexema() + "' es una variable.",lexico.nroLinea);
 										else{
-											((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
-											((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
-											TercetoColeccion terceto = new TercetoColeccion(new Token("OFFSET"), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
-											terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
+											TercetoColeccion terceto = new TercetoColeccion(new Token("OFFSET"), ((Token)yyvsp[-3].obj), ((Token)yyvsp[-1].obj),analizadorTerceto.getProximoTerceto());
+											tecerto.setTamanio(tablaSimbolos.getClave(((Token)yyvsp[-3].obj).getLexema()).getTamanio());
 											analizadorTerceto.addTerceto(terceto);
 											Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
-											nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
-											nuevo.setUso("Variable Auxiliar");
-											tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
-											
+											nuevo.setTipo(tablaSimbolos.getClave(((Token)yyvsp[-3].obj).getLexema()).getTipo());
 											yyval = new ParserVal(nuevo);
 										}
 									}
 								}
 break;
 case 73:
-//#line 326 "GramaticaCorreciones.y"
+#line 315 "GramaticaCorreciones.y"
 {	
-					Token t = ((Token)val_peek(0).obj);
+					Token t = ((Token)yyvsp[0].obj);
 					if (!estaDeclarada(t)){
 						analizadorTerceto.agregarError("Error variable '"+t.getLexema() + "' no declarada.",lexico.nroLinea);
 						tablaSimbolos.eliminarClave(t.getLexema());}
@@ -1356,7 +1184,7 @@ case 73:
 				}
 break;
 case 83:
-//#line 354 "GramaticaCorreciones.y"
+#line 345 "GramaticaCorreciones.y"
 { 
 					analizadorTerceto.apilar();
 					TercetoAbstracto tercetoEtiqueta = new TercetoEtiqueta(new Token("Label" + analizadorTerceto.getProximoTerceto()),null,null,analizadorTerceto.getProximoTerceto());
@@ -1364,43 +1192,43 @@ case 83:
 					analizadorTerceto.addTerceto(tercetoEtiqueta);}
 break;
 case 84:
-//#line 360 "GramaticaCorreciones.y"
-{listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia until");
+#line 351 "GramaticaCorreciones.y"
+{listaCorrectas.add("Linea " + ((Token)yyvsp[-5].obj).getNroLinea() + ": Sentencia until");
 	TercetoDO tercetoDO = new TercetoDO(new Token("BF"), null,null,analizadorTerceto.getProximoTerceto());
-	tercetoDO.setTipoSalto(((Token)val_peek(1).obj).getOperador());
+	tercetoDO.setTipoSalto(((Token)yyvsp[-1].obj).getOperador());
 	tercetoDO.setNombre("DO");
 															analizadorTerceto.addTerceto(tercetoDO);
 															analizadorTerceto.desapilarControl();
 	}
 break;
 case 85:
-//#line 367 "GramaticaCorreciones.y"
-{this.addError("Falta bloque de sentencias.",((Token)val_peek(4).obj).getNroLinea());}
+#line 358 "GramaticaCorreciones.y"
+{this.addError("Falta bloque de sentencias.",((Token)yyvsp[-4].obj).getNroLinea());}
 break;
 case 86:
-//#line 368 "GramaticaCorreciones.y"
-{this.addError("Falta 'until'.",((Token)val_peek(3).obj).getNroLinea());}
+#line 359 "GramaticaCorreciones.y"
+{this.addError("Falta 'until'.",((Token)yyvsp[-3].obj).getNroLinea());}
 break;
 case 87:
-//#line 369 "GramaticaCorreciones.y"
-{this.addError("Falta '('.",((Token)val_peek(2).obj).getNroLinea());}
+#line 360 "GramaticaCorreciones.y"
+{this.addError("Falta '('.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 88:
-//#line 370 "GramaticaCorreciones.y"
-{this.addError("Falta condicion.",((Token)val_peek(1).obj).getNroLinea());}
+#line 361 "GramaticaCorreciones.y"
+{this.addError("Falta condicion.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 89:
-//#line 371 "GramaticaCorreciones.y"
-{this.addError("Falta ')'.",((Token)val_peek(0).obj).getNroLinea());}
+#line 362 "GramaticaCorreciones.y"
+{this.addError("Falta ')'.",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 91:
-//#line 375 "GramaticaCorreciones.y"
-{yyval = val_peek(0);}
+#line 368 "GramaticaCorreciones.y"
+{yyval = yyvsp[0];}
 break;
 case 92:
-//#line 377 "GramaticaCorreciones.y"
-{listaCorrectas.add("Linea " + ((Token)val_peek(3).obj).getNroLinea() + ": Sentencia PRINT");
-												TercetoPrint tercetoPrint = new TercetoPrint ( ((Token)val_peek(3).obj), ((Token)val_peek(1).obj ), null, analizadorTerceto.getProximoTerceto() );
+#line 370 "GramaticaCorreciones.y"
+{listaCorrectas.add("Linea " + ((Token)yyvsp[-3].obj).getNroLinea() + ": Sentencia PRINT");
+												TercetoPrint tercetoPrint = new TercetoPrint ( ((Token)yyvsp[-3].obj), ((Token)yyvsp[-1].obj ), null, analizadorTerceto.getProximoTerceto() );
 												tercetoPrint.setNombre("Print");
 												analizadorTerceto.addTerceto(tercetoPrint);
 
@@ -1408,33 +1236,32 @@ case 92:
 	}
 break;
 case 93:
-//#line 384 "GramaticaCorreciones.y"
-{this.addError("Falta 'PRINT'.",((Token)val_peek(2).obj).getNroLinea());}
+#line 377 "GramaticaCorreciones.y"
+{this.addError("Falta 'PRINT'.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 94:
-//#line 385 "GramaticaCorreciones.y"
-{this.addError("Falta '('.",((Token)val_peek(2).obj).getNroLinea());}
+#line 378 "GramaticaCorreciones.y"
+{this.addError("Falta '('.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 95:
-//#line 386 "GramaticaCorreciones.y"
-{this.addError("Falta variable o cadena .",((Token)val_peek(1).obj).getNroLinea());}
+#line 379 "GramaticaCorreciones.y"
+{this.addError("Falta cadena .",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 96:
-//#line 387 "GramaticaCorreciones.y"
-{this.addError("Falta ')'.",((Token)val_peek(0).obj).getNroLinea());}
+#line 380 "GramaticaCorreciones.y"
+{this.addError("Falta ')'.",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 97:
-//#line 390 "GramaticaCorreciones.y"
-{listaCorrectas.add("Linea " + lexico.getNroLinea() + ": Asignacion");
+#line 384 "GramaticaCorreciones.y"
+{listaCorrectas.add("Linea " + ((Token)yyvsp[-3].obj).getNroLinea() + ": Asignacion");
 														
-														if( esCompatible(((Token)val_peek(3).obj),((Token)val_peek(1).obj))){
-															if (esColeccion(((Token)val_peek(3).obj).getLexema())){
-																TercetoAsignacionRowing tercetoAsignacionRowing = new TercetoAsignacionRowing(((Token)val_peek(2).obj), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
-																tercetoAsignacionRowing.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
+														if( esCompatible(((Token)yyvsp[-3].obj),((Token)yyvsp[-1].obj))){
+															if (esColeccion(((Token)yyvsp[-3].obj).getLexema())){
+																TercetoAbstracto tercetoAsignacionRowing = new TercetoAsignacionRowing(((Token)yyvsp[-2].obj), ((Token)yyvsp[-3].obj), ((Token)yyvsp[-1].obj),analizadorTerceto.getProximoTerceto());
 																analizadorTerceto.addTerceto(tercetoAsignacionRowing);
 															}
 															else{
-																TercetoAbstracto tercetoAsignacion = new TercetoAsignacion(((Token)val_peek(2).obj), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());			
+																TercetoAbstracto tercetoAsignacion = new TercetoAsignacion(((Token)yyvsp[-2].obj), ((Token)yyvsp[-3].obj), ((Token)yyvsp[-1].obj),analizadorTerceto.getProximoTerceto());			
 																analizadorTerceto.addTerceto(tercetoAsignacion);
 															}
 														}
@@ -1443,129 +1270,83 @@ case 97:
 														}
 break;
 case 98:
-//#line 407 "GramaticaCorreciones.y"
-{this.addError("Falta variable.",lexico.getNroLinea());}
+#line 400 "GramaticaCorreciones.y"
+{this.addError("Falta variable.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 99:
-//#line 408 "GramaticaCorreciones.y"
-{this.addError("Falta ':='.",lexico.getNroLinea());}
+#line 401 "GramaticaCorreciones.y"
+{this.addError("Falta ':='.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
 case 100:
-//#line 409 "GramaticaCorreciones.y"
-{this.addError("Falta expresion.",lexico.getNroLinea());}
+#line 402 "GramaticaCorreciones.y"
+{this.addError("Falta expresion.",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 101:
-//#line 410 "GramaticaCorreciones.y"
-{this.addError("Falta ';'.",lexico.getNroLinea());}
-break;
-case 105:
-//#line 418 "GramaticaCorreciones.y"
-{ 
-											if (esColeccion(((Token)val_peek(4).obj).getLexema())){
-												((Token)val_peek(4).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTipo());
-												TercetoMetodos tercetoMetodo = new TercetoMetodos(new Token("METODO"), ((Token)val_peek(4).obj) , 					((Token)val_peek(2).obj),analizadorTerceto.getProximoTerceto());
-												tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTamanioColeccion());
-												analizadorTerceto.addTerceto(tercetoMetodo);
-												
-												Token nuevo = new Token("@" + analizadorTerceto.getNumeroTerceto());
-												nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTipo());
-												nuevo.setUso("Variable Auxiliar");
-												tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
-												yyval = new ParserVal(nuevo);
-											}
-											else
-												analizadorTerceto.agregarError("La variable '" + ((Token)val_peek(4).obj).getLexema() +"' no puede invocar metodos, debe ser una coleccion." ,lexico.nroLinea);
-											
-										}
+#line 403 "GramaticaCorreciones.y"
+{this.addError("Falta ';'.",((Token)yyvsp[0].obj).getNroLinea());}
 break;
 case 106:
-//#line 435 "GramaticaCorreciones.y"
-{this.addError("Falta '(.'",((Token)val_peek(1).obj).getNroLinea());}
+#line 412 "GramaticaCorreciones.y"
+{this.addError("Falta '(.'",((Token)yyvsp[-1].obj).getNroLinea());}
 break;
 case 107:
-//#line 436 "GramaticaCorreciones.y"
-{this.addError("Falta metodo.",((Token)val_peek(2).obj).getNroLinea());}
+#line 413 "GramaticaCorreciones.y"
+{this.addError("Falta metodo.",((Token)yyvsp[-2].obj).getNroLinea());}
 break;
-//#line 1413 "Parser.java"
-//########## END OF USER-SUPPLIED ACTIONS ##########
-    }//switch
-    //#### Now let's reduce... ####
-    if (yydebug) debug("reduce");
-    state_drop(yym);             //we just reduced yylen states
-    yystate = state_peek(0);     //get new state
-    val_drop(yym);               //corresponding value drop
-    yym = yylhs[yyn];            //select next TERMINAL(on lhs)
-    if (yystate == 0 && yym == 0)//done? 'rest' state and at first TERMINAL
-      {
-      if (yydebug) debug("After reduction, shifting from state 0 to state "+YYFINAL+"");
-      yystate = YYFINAL;         //explicitly say we're done
-      state_push(YYFINAL);       //and save it
-      val_push(yyval);           //also save the semantic value of parsing
-      if (yychar < 0)            //we want another character?
-        {
-        yychar = yylex();        //get next character
-        if (yychar<0) yychar=0;  //clean, if necessary
+#line 1297 "y.tab.c"
+    }
+    yyssp -= yym;
+    yystate = *yyssp;
+    yyvsp -= yym;
+    yym = yylhs[yyn];
+    if (yystate == 0 && yym == 0)
+    {
+#if YYDEBUG
         if (yydebug)
-          yylexdebug(yystate,yychar);
+            printf("yydebug: after reduction, shifting from state 0 to\
+ state %d\n", YYFINAL);
+#endif
+        yystate = YYFINAL;
+        *++yyssp = YYFINAL;
+        *++yyvsp = yyval;
+        if (yychar < 0)
+        {
+            if ((yychar = yylex()) < 0) yychar = 0;
+#if YYDEBUG
+            if (yydebug)
+            {
+                yys = 0;
+                if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+                if (!yys) yys = "illegal-symbol";
+                printf("yydebug: state %d, reading %d (%s)\n",
+                        YYFINAL, yychar, yys);
+            }
+#endif
         }
-      if (yychar == 0)          //Good exit (if lex returns 0 ;-)
-         break;                 //quit the loop--all DONE
-      }//if yystate
-    else                        //else not done yet
-      {                         //get next state and push, for next yydefred[]
-      yyn = yygindex[yym];      //find out where to go
-      if ((yyn != 0) && (yyn += yystate) >= 0 &&
+        if (yychar == 0) goto yyaccept;
+        goto yyloop;
+    }
+    if ((yyn = yygindex[yym]) && (yyn += yystate) >= 0 &&
             yyn <= YYTABLESIZE && yycheck[yyn] == yystate)
-        yystate = yytable[yyn]; //get new state
-      else
-        yystate = yydgoto[yym]; //else go to new defred
-      if (yydebug) debug("after reduction, shifting from state "+state_peek(0)+" to state "+yystate+"");
-      state_push(yystate);     //going again, so push state & val...
-      val_push(yyval);         //for next action
-      }
-    }//main loop
-  return 0;//yyaccept!!
+        yystate = yytable[yyn];
+    else
+        yystate = yydgoto[yym];
+#if YYDEBUG
+    if (yydebug)
+        printf("yydebug: after reduction, shifting from state %d \
+to state %d\n", *yyssp, yystate);
+#endif
+    if (yyssp >= yyss + yystacksize - 1)
+    {
+        goto yyoverflow;
+    }
+    *++yyssp = yystate;
+    *++yyvsp = yyval;
+    goto yyloop;
+yyoverflow:
+    yyerror("yacc stack overflow");
+yyabort:
+    return (1);
+yyaccept:
+    return (0);
 }
-//## end of method parse() ######################################
-
-
-
-//## run() --- for Thread #######################################
-/**
- * A default run method, used for operating this parser
- * object in the background.  It is intended for extending Thread
- * or implementing Runnable.  Turn off with -Jnorun .
- */
-public void run()
-{
-  yyparse();
-}
-//## end of method run() ########################################
-
-
-
-//## Constructors ###############################################
-/**
- * Default constructor.  Turn off with -Jnoconstruct .
-
- */
-public Parser()
-{
-  //nothing to do
-}
-
-
-/**
- * Create a parser, setting the debug to true or false.
- * @param debugMe true for debugging, false for no debug.
- */
-public Parser(boolean debugMe)
-{
-  yydebug=debugMe;
-}
-//###############################################################
-
-
-
-}
-//################### END OF CLASS ##############################

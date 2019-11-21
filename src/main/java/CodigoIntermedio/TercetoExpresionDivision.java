@@ -27,7 +27,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     					"JE DividirCero" + '\n' +
     					"IDIV BX" + '\n' +
     					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
-    		else {
+    		else {assembler = assembler + "FINIT" + '\n';
 	    		assembler = assembler + "FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
 	          	assembler = assembler + "FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
 	            assembler = assembler + "FLDZ"+'\n';
@@ -49,7 +49,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
         					"JE DividirCero" + '\n' +
         					"IDIV BX" + '\n' +
         					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
-    			else{
+    			else{assembler = assembler + "FINIT" + '\n';
     				assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
 				 	assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
 				 	assembler = assembler + "FLDZ"+'\n';
@@ -71,7 +71,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
             					"IDIV BX" + '\n' +
             					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
         			}
-        			else {
+        			else {assembler = assembler + "FINIT" + '\n';
         				assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
         				assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
         				assembler = assembler + "FCOM" + '\n';
@@ -92,7 +92,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     	        					"IDIV BX" + '\n' +
     	        					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
     	    			
-    					else {
+    					else {assembler = assembler + "FINIT" + '\n';
 	    					assembler = assembler + "FLD " + "auxiliar" + lexemaIzq + '\n';
 	   					 	assembler = assembler + "FLD " +  "auxiliar" + lexemaDer + '\n';
     						assembler = assembler + "FCOM" + '\n';

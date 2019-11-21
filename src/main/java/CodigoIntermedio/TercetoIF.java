@@ -29,7 +29,6 @@ public class TercetoIF extends TercetoAbstracto{
         else
         if(operacion.equals("<>"))
             this.tipoSalto = "JE";
-		System.out.println(tipoSalto);
 	}
 
 	@Override

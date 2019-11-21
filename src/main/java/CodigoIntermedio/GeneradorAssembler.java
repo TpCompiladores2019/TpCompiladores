@@ -10,8 +10,9 @@ public class GeneradorAssembler {
 	private TablaSimbolos tablaSimbolos;
 	private FileWriter fw;	
 	
-	public static final String labelDivCero = "_DividirCero";
+	public static final String labelDivCero = "_LabelDividirCero";
 	public static final String labelOverflowSuma = "_LabelOverflowSuma";
+	public static final String labelSubIndices = "_LabelSubIndices";
 	
 	public GeneradorAssembler(AnalizadorTercetos analizadorTercetos, TablaSimbolos tablaSimbolos) {
 		this.analizadorTercetos=analizadorTercetos;
@@ -41,6 +42,7 @@ public class GeneradorAssembler {
 		codigo = codigo + tablaSimbolos.getDataAssembler();
         codigo = codigo + labelDivCero + " DB \"Error al dividir por cero!\", 0" + '\n';
         codigo = codigo + labelOverflowSuma + " DB \"La suma ha generado un Overflow!\", 0" + '\n';
+        codigo = codigo + labelSubIndices + " DB \"Subindice fuera de rango!\", 0" + '\n';
         
         codigo = codigo + '\n' + ".code"+ "\n";
         
@@ -53,6 +55,9 @@ public class GeneradorAssembler {
         codigo = codigo + "invoke ExitProcess, 0" + '\n';
         codigo = codigo + "LabelOverflowSuma" + ":" + '\n';
         codigo = codigo + "invoke MessageBox, NULL, addr "+labelOverflowSuma+", addr "+labelOverflowSuma+", MB_OK" + '\n';
+        codigo = codigo + "invoke ExitProcess, 0" + '\n';
+        codigo = codigo + "LabelSubIndices" + ":" + '\n';
+        codigo = codigo + "invoke MessageBox, NULL, addr "+labelSubIndices+", addr "+labelSubIndices+", MB_OK" + '\n';
         codigo = codigo + "invoke ExitProcess, 0" + '\n';
         codigo = codigo + "end start";
 		fw.write(codigo);

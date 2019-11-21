@@ -25,7 +25,8 @@ public class TercetoExpresion extends  TercetoAbstracto {
             			+ "MOV "  + "auxiliar@" + getNumTerceto() + " ,AX" + '\n'
             			+ "JO LabelOverflowSuma" + '\n';
             else
-            	{ assembler = assembler + "FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
+            	{ assembler = assembler + "FINIT" + '\n';
+            	  assembler = assembler + "FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
             	  assembler = assembler + "FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
                   assembler = assembler + "F"+operador+ " " + '\n';
                   assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
@@ -39,7 +40,8 @@ public class TercetoExpresion extends  TercetoAbstracto {
 		                 + "MOV " + "auxiliar@" + getNumTerceto() + ", AX" + '\n'
 		                 + "JO LabelOverflowSuma" + '\n';
     			 else
-					{assembler = assembler + "FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
+					{assembler = assembler + "FINIT" + '\n';
+    				 assembler = assembler + "FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
 					 assembler = assembler + "FLD " +  "auxiliar" + lexemaDer + '\n';
 		             assembler = assembler + "F"+operador+ " " + '\n';
 		             assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
@@ -53,7 +55,8 @@ public class TercetoExpresion extends  TercetoAbstracto {
 			                + "MOV " + "auxiliar@" + getNumTerceto() +", AX" + '\n'
     						+ "JO LabelOverflowSuma" + '\n';
     				else
-    					{assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
+    					{assembler = assembler + "FINIT" + '\n';
+    					assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
     					 assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
     		             assembler = assembler + "F"+operador+ " " + '\n';
     		             assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
@@ -66,7 +69,7 @@ public class TercetoExpresion extends  TercetoAbstracto {
 					             + operador +" AX, " + "auxiliar" + lexemaDer + '\n' 
 					             + "MOV " + "auxiliar@" + getNumTerceto() + ",AX" + '\n'
 					             + "JO LabelOverflowSuma" + '\n';
-    					else {
+    					else {assembler = assembler + "FINIT" + '\n';
 	    					assembler = assembler + "FLD " + "auxiliar" + lexemaIzq + '\n';
 	   					 	assembler = assembler + "FLD " +  "auxiliar" + lexemaDer + '\n';
 	   					 	assembler = assembler + "F"+operador+ " " + '\n';

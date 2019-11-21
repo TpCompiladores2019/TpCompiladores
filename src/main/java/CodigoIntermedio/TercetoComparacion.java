@@ -19,6 +19,7 @@ public class TercetoComparacion extends TercetoAbstracto{
     	
     	if (!lexemaIzq.contains("@") && !lexemaDer.contains("@")) { // (operador, variable, variable )
     		if (listTerceto.get(1).getTipo().equals("float")){
+    			assembler = assembler + "FINIT" + '\n';
     			assembler = assembler + "FLD _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +  '\n';
     			assembler = assembler + "FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') +  '\n';
                 assembler = assembler + "FCOM" + '\n';
@@ -32,6 +33,7 @@ public class TercetoComparacion extends TercetoAbstracto{
     	else
     		if(lexemaIzq.contains("@") && !lexemaDer.contains("@")) { // (operador, terceto, variable)
     			if (listTerceto.get(1).getTipo().equals("float")){
+    				assembler = assembler + "FINIT" + '\n';
         			assembler = assembler + "FLD auxiliar" + lexemaIzq + '\n';
         			assembler = assembler + "FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') +  '\n';
                     assembler = assembler + "FCOM" + '\n';
@@ -45,6 +47,7 @@ public class TercetoComparacion extends TercetoAbstracto{
     		else
     			if(!lexemaIzq.contains("@") && lexemaDer.contains("@")) { // (operador, variable, terceto)
     				if (listTerceto.get(1).getTipo().equals("float")){
+    					assembler = assembler + "FINIT" + '\n';
             			assembler = assembler + "FLD _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +  '\n';
             			assembler = assembler + "FLD auxiliar" + lexemaDer + '\n';
                         assembler = assembler + "FCOM" + '\n';
@@ -58,6 +61,7 @@ public class TercetoComparacion extends TercetoAbstracto{
     			else
     				if(lexemaIzq.contains("@") && lexemaDer.contains("@")) { // (operador, terceto, terceto)
         				if (listTerceto.get(1).getTipo().equals("float")){
+        					assembler = assembler + "FINIT" + '\n';
                 			assembler = assembler + "FLD auxiliar" + lexemaIzq + '\n';
                 			assembler = assembler + "FLD auxiliar" + lexemaDer + '\n';
                             assembler = assembler + "FCOM" + '\n';
@@ -65,7 +69,7 @@ public class TercetoComparacion extends TercetoAbstracto{
                             assembler = assembler + "SAHF" + '\n';
                 		}
             			else
-	        				return  "MOV " + "AX" +", _"+lexemaIzq+'\n' +
+	        				return  "MOV " + "AX" +", auxiliar"+lexemaIzq+'\n' +
 	        						"CMP" + " " + "AX" +", "+ "auxiliar"+lexemaDer+ '\n';
     				}
     	return assembler;
