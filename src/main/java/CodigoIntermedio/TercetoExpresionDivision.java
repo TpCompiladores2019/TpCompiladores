@@ -20,13 +20,13 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     	
     	if (!lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) 
 			if (listTerceto.get(1).getTipo().equals("int"))// (operador,id,id)
-    			return "MOV AX, _" + lexemaIzq.replace('-', '@') + '\n' +
+    			return "MOV EAX, _" + lexemaIzq.replace('-', '@') + '\n' +
     					"CWD" + '\n' +
-    					"MOV BX, _" + lexemaDer.replace('-', '@') + '\n' +
-    					"CMP BX,0" + '\n' + 
+    					"MOV EBX, _" + lexemaDer.replace('-', '@') + '\n' +
+    					"CMP EBX,0" + '\n' + 
     					"JE DividirCero" + '\n' +
-    					"IDIV BX" + '\n' +
-    					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
+    					"IDIV EBX" + '\n' +
+    					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
     		else {assembler = assembler + "FINIT" + '\n';
 	    		assembler = assembler + "FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
 	          	assembler = assembler + "FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
@@ -42,13 +42,13 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     	else
     		if (lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) //(operador,terceto,id)
     			if (listTerceto.get(1).getTipo().equals("int"))
-    				return "MOV AX, auxiliar" + lexemaIzq + '\n' +
+    				return "MOV EAX, auxiliar" + lexemaIzq + '\n' +
         					"CWD" + '\n' +
-        					"MOV BX, _" + lexemaDer.replace('-', '@') + '\n' +
-        					"CMP BX,0" + '\n' + 
+        					"MOV EBX, _" + lexemaDer.replace('-', '@') + '\n' +
+        					"CMP EBX,0" + '\n' + 
         					"JE DividirCero" + '\n' +
-        					"IDIV BX" + '\n' +
-        					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
+        					"IDIV EBX" + '\n' +
+        					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
     			else{assembler = assembler + "FINIT" + '\n';
     				assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
 				 	assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
@@ -63,13 +63,13 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     		else
     			if (!lexemaIzq.contains("@") && (lexemaDer.contains("@"))) //(operador,id,terceto)
         			if (listTerceto.get(1).getTipo().equals("int")) {
-        				return "MOV AX, _" + lexemaIzq.replace('-', '@') + '\n' +
+        				return "MOV EAX, _" + lexemaIzq.replace('-', '@') + '\n' +
             					"CWD" + '\n' +
-            					"MOV BX, auxiliar" + lexemaDer + '\n' +
-            					"CMP BX,0" + '\n' + 
+            					"MOV EBX, auxiliar" + lexemaDer + '\n' +
+            					"CMP EBX,0" + '\n' + 
             					"JE DividirCero" + '\n' +
-            					"IDIV BX" + '\n' +
-            					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
+            					"IDIV EBX" + '\n' +
+            					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
         			}
         			else {assembler = assembler + "FINIT" + '\n';
         				assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
@@ -84,13 +84,13 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     			else //(operador,terceto,terceto)
     				if (lexemaIzq.contains("@") && (lexemaDer.contains("@")))
     					if (listTerceto.get(1).getTipo().equals("int"))
-    						return "MOV AX, auxiliar" + lexemaIzq + '\n' +
+    						return "MOV EAX, auxiliar" + lexemaIzq + '\n' +
     	        					"CWD" + '\n' +
-    	        					"MOV BX, auxiliar" + lexemaDer + '\n' +
-    	        					"CMP BX,0" + '\n' + 
+    	        					"MOV EBX, auxiliar" + lexemaDer + '\n' +
+    	        					"CMP EBX,0" + '\n' + 
     	        					"JE DividirCero" + '\n' +
-    	        					"IDIV BX" + '\n' +
-    	        					"MOV auxiliar@" + getNumTerceto() + " , AX" + '\n';
+    	        					"IDIV EBX" + '\n' +
+    	        					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
     	    			
     					else {assembler = assembler + "FINIT" + '\n';
 	    					assembler = assembler + "FLD " + "auxiliar" + lexemaIzq + '\n';

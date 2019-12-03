@@ -16,10 +16,25 @@ public class TercetoPrint extends TercetoAbstracto{
 	}
 	@Override
 	public String getCodigoAssembler() {
+		String lexemaPrint = listTerceto.get(1).getLexema();
+		Token tPrint = listTerceto.get(1);
 		print = listTerceto.get(1).getLexema();
 		print = print.replace(' ', '@');
-		
-        String assembler = "invoke MessageBox, NULL, addr "+ "_" +print +", addr "+ "_" +print+", MB_OK \n";
+		String assembler = ""; 
+		if (lexemaPrint.contains("@")){
+			if (tPrint.getTipo().equals("int"))
+				assembler = "invoke printf , cfm$(\"%d\\n\"), auxiliar" + lexemaPrint;
+			else
+				assembler = "invoke printf , cfm$(\"%.20f\\n\"), auxiliar" + lexemaPrint;
+		}
+		else
+			if (tPrint.getTipo()!= null)
+				if (tPrint.getTipo().equals("int")) 
+					assembler = "invoke printf , cfm$(\"%d\\n\"), _" + lexemaPrint.replace('-', '@');
+				else
+					assembler = "invoke printf , cfm$(\"%.20f\\n\"), _" + lexemaPrint.replace('-', '@').replace('.', '@');
+			else
+				assembler = "invoke MessageBox, NULL, addr "+ "_" +print +", addr "+ "_" +print+", MB_OK \n";
         return assembler;
 	}
 

@@ -36,7 +36,7 @@ public class TercetoDO extends TercetoAbstracto{
 		if (operador.equals("BF")) {
 			int numLabel = Integer.parseInt(listTerceto.get(1).getLexema().substring(1));
 			AnalizadorTercetos.listLabel.add(numLabel);
-			return(tipoSalto +" Label" + numLabel + '\n');
+			return(tipoSalto +" Lbl" + numLabel + '\n');
 		}
 		return null;
 	}

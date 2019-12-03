@@ -2,45 +2,51 @@
 .model flat, stdcall
 .stack 200h
 option casemap :none
-include \masm32\include\windows.inc
-include \masm32\include\kernel32.inc
-include \masm32\include\user32.inc
-include \masm32\include\masm32.inc
-includelib \masm32\lib\kernel32.lib
-includelib \masm32\lib\user32.lib
-includelib \masm32\lib\masm32.inc
+include \masm32\include\masm32rt.inc
+dll_dllcrt0 PROTO C
+printf PROTO C : VARARG
 
 .data
-_a DW ?
-_b DD ?
-auxiliar@1 DD ?
-_w DW 10, 20, 30, 40
-_x DD ?, ?, ?, ?
-_3 DW 3
+_aux1 DQ ?
+_3 DD 3
+_id DD ?
+_@10 DD -10
+_30 DD 30
+auxiliar DD ?
+MayorNumInt DD 32767
+MenorNumInt DD -32768
+MayorNumFloatPos DQ 3.4028235E38
+MenorNumFloatPos DQ 1.17549435E-38
+numFLoat0@0 DQ 0.0
+MayorNumFloatNeg DQ -1.17549435E-38
+MenorNumFloatNeg DQ -3.4028235E38
 _LabelDividirCero DB "Error al dividir por cero!", 0
 _LabelOverflowSuma DB "La suma ha generado un Overflow!", 0
 _LabelSubIndices DB "Subindice fuera de rango!", 0
 
 .code
+FUNCION_LENGTH:
+    MOV auxiliarArreglo, EAX 
+    MOV auxiliarReturn, LENGTHOF auxiliarArreglo 
+    RET
+FUNCION_FIRSTI: 
+    MOV ECX,[EAX] 
+    MOV auxiliar,ECX 
+    RET 
+FUNCION_LASTI: 
+    MOV ECX,[EAX + ECX*4]  
+    MOV auxiliar,ECX 
+    RET 
 start:
-MOV CX, _3
-CMP CX, 0
-JL LabelSubIndices
-CMP CX,4
-JGE LabelSubIndices
-MOV esi, OFFSET _w
-MOV AX, _3
-IMUL AX, 2
-MOVZX EAX,AX
-ADD esi,EAX
-MOV auxiliar@1, esi
+MOV EAX, _@10
+CMP EAX , _30
 
-MOV EAX,[auxiliar@1]
-CMP AX,40
-JE LabelOverflowSuma
+JL Label4
 
+MOV EAX, _3
+MOV _id, EAX
 
-
+Label4:
 
 invoke ExitProcess, 0
 DividirCero:

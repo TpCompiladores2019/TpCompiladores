@@ -7,8 +7,8 @@ import Lexico.Token;
 
 public class TablaSimbolos {
 
-	public static String DD = "DD";
-	public static String DW = "DW";
+	public static String DD = "DQ";
+	public static String DW = "DD";
     public static String DB = "DB";
 
 	private HashMap<String, Token> tablaSimbolos = new HashMap<String, Token>();

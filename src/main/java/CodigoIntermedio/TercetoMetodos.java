@@ -24,24 +24,33 @@ public class TercetoMetodos extends TercetoAbstracto {
 				assembler=assembler+ "MOV auxiliar@" +getNumTerceto() + ","+tamanio + '\n';
 		}
 		if (lexemaDer.contains("first")) {
-			System.out.println(tercetoIzq.getTipo());
 			if (tercetoIzq.getTipo().equals("int")) {
-				assembler = assembler + "MOV esi, OFFSET _" + lexemaIzq + '\n';
-				assembler = assembler + "MOV AX, [esi]" + '\n';
-				assembler = assembler + "MOV  auxiliar@" + getNumTerceto() + ", AX"  + '\n';
+				assembler = assembler + "MOV EAX, OFFSET _" + lexemaIzq + '\n';
+				assembler = assembler + "CALL FUNCION_FIRSTI" + '\n';
+				assembler = assembler + "MOV EAX,auxiliar" + '\n';
+				assembler = assembler + "MOV auxiliar@" + getNumTerceto() + ", EAX"  + '\n';
 				}
 			else {
 				 assembler = assembler + "MOV esi, OFFSET _"  + lexemaIzq + '\n';
-				 assembler = assembler + "FLD _" +lexemaIzq+ "[esi]" + '\n';
+				 assembler = assembler + "FLD DWORD PTR [esi] " + '\n'; 
                  assembler = assembler + "FST auxiliar@" + getNumTerceto() + '\n';
 			}
 				
 		}
-		if (lexemaDer.contains("last")) {
-			assembler = assembler + "MOV esi, OFFSET _" + lexemaIzq + '\n';
-			assembler = assembler + "ADD esi, "+ (tamanio-1)*2 + '\n';
-			assembler = assembler + "MOV AX, [esi]" + '\n';
-			assembler = assembler + "MOV  auxiliar@" + getNumTerceto() + ", AX"  + '\n';
+		if (lexemaDer.contains("last")) 
+			if (tercetoIzq.getTipo().equals("int")) {
+			assembler = assembler + "MOV EAX, OFFSET _" + lexemaIzq + '\n';
+			assembler = assembler + "MOV ECX, " + (tamanio-1) + '\n';
+			assembler = assembler + "CALL FUNCION_LASTI" + '\n';
+			assembler = assembler + "MOV EAX,auxiliar" + '\n';
+			assembler = assembler + "MOV auxiliar@" + getNumTerceto() + ", EAX"  + '\n';
+		}
+		else {
+			 assembler = assembler + "MOV esi, OFFSET _"  + lexemaIzq + '\n';
+			 assembler = assembler + "ADD esi, "+ (tamanio-1)*8 + '\n';
+			 assembler = assembler + "FLD DWORD PTR [esi] " + '\n'; 
+             assembler = assembler + "FST auxiliar@" + getNumTerceto() + '\n';
+			
 		}
 	return assembler;
 	}

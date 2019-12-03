@@ -435,6 +435,7 @@
 										}
 					  | ID '.' metodo ')' {this.addError("Falta '(.'",((Token)$3.obj).getNroLinea());}
 					  | ID '.' '(' ')' {this.addError("Falta metodo.",((Token)$2.obj).getNroLinea());}
+					  | ID '.' ID '(' ')' {this.addError("No es un metodo predefinido.",((Token)$2.obj).getNroLinea());}
 					  ;
 
 %%

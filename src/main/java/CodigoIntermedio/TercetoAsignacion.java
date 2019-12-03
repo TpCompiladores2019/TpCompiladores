@@ -17,34 +17,46 @@ public class TercetoAsignacion extends TercetoAbstracto{
         String lexemaDer=listTerceto.get(2).getLexema();
             //(ASIG, variable, variable)
             if (!lexemaIzq.contains("@") && !lexemaDer.contains("@")){
-                if (listTerceto.get(2).getTipo() == "float"){
+                if (listTerceto.get(2).getTipo().equals("float")){
                     assembler = assembler + "FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
-                    assembler = assembler + "FST _"+ lexemaIzq +'\n';
+                    assembler = assembler + "FST _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +'\n';
                 }
                 else{
-                    assembler = assembler + "MOV " + "AX" + ", _" + lexemaDer + '\n';
-                    assembler = assembler + "MOV _" + lexemaIzq + ", " + "AX" + '\n';
+                    assembler = assembler + "MOV " + "EAX" + ", _" + lexemaDer.replace('-', '@') + '\n';
+                    assembler = assembler + "MOV _" + lexemaIzq.replace('-', '@') + ", " + "EAX" + '\n';
                 }
             }
             else
                 if (!lexemaIzq.contains("@") && lexemaDer.contains("@"))//(ASIG, variable, terceto)
-	                if (listTerceto.get(2).getTipo() == "float"){
+	                if (listTerceto.get(2).getTipo().equals("float")){
 	                    assembler = assembler + "FLD auxiliar" + lexemaDer + '\n';
-	                    assembler = assembler + "FST _" + lexemaIzq + '\n';
+	                    assembler = assembler + "FST _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
 	                }
 	                else {
-	                    assembler = assembler + "MOV " + "AX" + ", auxiliar" + lexemaDer + '\n';
-	                    assembler = assembler + "MOV _" + lexemaIzq + ", " + "AX" + '\n';
+	                    assembler = assembler + "MOV " + "EAX" + ", auxiliar" + lexemaDer + '\n';
+	                    assembler = assembler + "MOV _" + lexemaIzq.replace('-', '@') + ", " + "EAX" + '\n';
 	                }
                 else//(ASIGN,TERCETO,TERCETO)
                 	if (lexemaIzq.contains("@") && lexemaDer.contains("@")) {
-                		assembler = assembler + "MOV EAX,[auxiliar"+lexemaDer + "]" + '\n';
-                		assembler = assembler + "MOV [auxiliar" + lexemaIzq + "], EAX" + '\n';
+                		if (listTerceto.get(1).getTipo().equals("int")){
+	                		assembler = assembler + "MOV EAX, auxiliar"+lexemaDer + '\n';
+	                		assembler = assembler + "MOV [esi],EAX" +'\n';
+                		}
+                		else {
+                			assembler = assembler + "FLD auxiliar" + lexemaDer + '\n';
+                			assembler = assembler + "FST DWORD PTR [esi]"+ '\n';
+                		}
                 	}
                 	else ////(ASIGN,TERCETO,variable)
                 		if(lexemaIzq.contains("@") && !lexemaDer.contains("@")) {
-                			assembler = assembler + "MOV EAX, _" + lexemaDer + '\n';
-                			assembler = assembler + "MOV [auxiliar" + lexemaIzq + "],EAX" + '\n';
+                			if (listTerceto.get(1).getTipo().equals("int")){
+	                			assembler = assembler + "MOV EAX, _"+lexemaDer.replace("-", "@") + '\n';
+	                    		assembler = assembler + "MOV [esi],EAX" +'\n';
+                			}
+                			else {
+                				assembler = assembler + "FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
+                                assembler = assembler + "FST DWORD PTR [esi]"+ '\n';
+                			}
                 		}
             
         return assembler;

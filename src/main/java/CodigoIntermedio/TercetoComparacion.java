@@ -27,8 +27,8 @@ public class TercetoComparacion extends TercetoAbstracto{
                 assembler = assembler + "SAHF" + '\n';
     		}
     		else 
-    			return  "MOV " + "AX" + ", _" + lexemaIzq + '\n'+
-    					"CMP " + "AX "+ ", _"  + lexemaDer + '\n';
+    			return  "MOV " + "EAX" + ", _" + lexemaIzq.replace('-', '@') + '\n'+
+    					"CMP " + "EAX "+ ", _"  + lexemaDer.replace('-', '@') + '\n';
     	}
     	else
     		if(lexemaIzq.contains("@") && !lexemaDer.contains("@")) { // (operador, terceto, variable)
@@ -41,8 +41,8 @@ public class TercetoComparacion extends TercetoAbstracto{
                     assembler = assembler + "SAHF" + '\n';
         		}
     			else
-    				return  "MOV " + "AX" +", _"+ lexemaDer+'\n' +
-    						"CMP" + " " + "auxiliar"+lexemaIzq+", "+ "AX"+ '\n';
+    				return  "MOV " + "EAX" +", _"+ lexemaDer.replace('-', '@')+'\n' +
+    						"CMP" + " " + "auxiliar"+lexemaIzq+", "+ "EAX"+ '\n';
     		}
     		else
     			if(!lexemaIzq.contains("@") && lexemaDer.contains("@")) { // (operador, variable, terceto)
@@ -55,8 +55,8 @@ public class TercetoComparacion extends TercetoAbstracto{
                         assembler = assembler + "SAHF" + '\n';
             		}
         			else
-	    				return  "MOV " + "AX" +", _"+lexemaIzq+'\n' +
-	    						"CMP" + " " + "AX" +", "+ "auxiliar"+lexemaDer+ '\n';
+	    				return  "MOV " + "EAX" +", _"+lexemaIzq.replace('-', '@')+'\n' +
+	    						"CMP" + " " + "EAX" +", "+ "auxiliar"+lexemaDer+ '\n';
                 }
     			else
     				if(lexemaIzq.contains("@") && lexemaDer.contains("@")) { // (operador, terceto, terceto)
@@ -69,8 +69,8 @@ public class TercetoComparacion extends TercetoAbstracto{
                             assembler = assembler + "SAHF" + '\n';
                 		}
             			else
-	        				return  "MOV " + "AX" +", auxiliar"+lexemaIzq+'\n' +
-	        						"CMP" + " " + "AX" +", "+ "auxiliar"+lexemaDer+ '\n';
+	        				return  "MOV " + "EAX" +", auxiliar"+lexemaIzq+'\n' +
+	        						"CMP" + " " + "EAX" +", "+ "auxiliar"+lexemaDer+ '\n';
     				}
     	return assembler;
     	}

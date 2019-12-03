@@ -6,7 +6,21 @@
 	import Lexico.Token;
 	import java.util.ArrayList;
 	import Lexico.Error;
-	import Lexico.Registro;
+	import CodigoIntermedio.AnalizadorTercetos;
+	import CodigoIntermedio.TercetoAbstracto;
+	import CodigoIntermedio.TercetoAsignacion;
+	import CodigoIntermedio.TercetoComparacion;
+	import CodigoIntermedio.TercetoDO;
+	import CodigoIntermedio.TercetoExpresionMult;
+	import CodigoIntermedio.TercetoIF;
+	import CodigoIntermedio.TercetoPrint;
+	import CodigoIntermedio.TercetoExpresionDivision;
+	import CodigoIntermedio.TercetoExpresion;
+	import CodigoIntermedio.TercetoEtiqueta;
+	import CodigoIntermedio.TercetoAsignacionRowing;
+	import CodigoIntermedio.TercetoMetodos;
+	import CodigoIntermedio.TercetoColeccionDer;
+	import CodigoIntermedio.TercetoColeccionIzq;
 %}
 
 %token
@@ -34,6 +48,9 @@
 	DO
 	UNTIL
 	FLOAT
+	FIRST
+	LAST
+	LENGTH
 	
 %start programa
 %left '+' '-' 
@@ -47,10 +64,18 @@
 	conjunto_sentencias : sentencias_declarativas
 						| sentencias_declarativas BEGIN sentencias_ejecutables END
 						| BEGIN sentencias_ejecutables END
+						| sentencias_ejecutables END {this.addError("Error, falta BEGIN.",((Token)$1.obj).getNroLinea());}
+						| BEGIN sentencias_ejecutables  {this.addError("Error, falta END.",((Token)$2.obj).getNroLinea());}
+						| sentencias_ejecutables {this.addError("Error, falta los delimitadores BEGIN y END.",((Token)$1.obj).getNroLinea());}
+						| sentencias_declarativas sentencias_ejecutables END {this.addError("Error, falta BEGIN.",((Token)$1.obj).getNroLinea());}
+						| sentencias_declarativas BEGIN sentencias_ejecutables {this.addError("Error, falta END.",((Token)$1.obj).getNroLinea());}
+						| sentencias_declarativas sentencias_ejecutables {this.addError("Error, falta los delimitadores BEGIN  y END.",((Token)$1.obj).getNroLinea());}
+						| BEGIN END {this.addError("Error, falta sentencias ejecutables.",((Token)$1.obj).getNroLinea());}
 						;
 	
 	sentencias_declarativas : sentencias_declarativas sentencia_declarativa
 							| sentencia_declarativa 
+							
 							;
 							
 	sentencias_ejecutables : sentencias_ejecutables sentencia_ejecutable
@@ -81,83 +106,232 @@
 					| ID {listaVariables.add(((Token)$1.obj));}
 					;
 					
-	sentencia_ejecutable : selecion_ejecutable
-						  | control_ejecutable
-						  | salida_ejecutable
-						  | asign
+	sentencia_ejecutable : seleccion_ejecutable ';'
+						  | control_ejecutable ';'
+						  | salida_ejecutable ';'
+						  | asign 
+						  | seleccion_ejecutable {this.addError("Error, falta ';'",((Token)$1.obj).getNroLinea());}
+						  | control_ejecutable {this.addError("Error, falta ';'",((Token)$1.obj).getNroLinea());}
+						  | salida_ejecutable {this.addError("Error, falta ';'",((Token)$1.obj).getNroLinea());}
 						  ;
 	
-	selecion_ejecutable : IF '(' condicion ')' bloque_sentencias ELSE bloque_sentencias END_IF {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia IF-ELSE");}
-						| IF '(' condicion ')' bloque_sentencias END_IF {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia IF");}
-						| IF '(' condicion ')' bloque_sentencias bloque_sentencias END_IF {this.addError("Falta 'ELSE'.",((Token)$6.obj).getNroLinea());}
-						| IF '(' condicion ')' bloque_sentencias ELSE END_IF {this.addError("Falta bloque de sentencias.",((Token)$6.obj).getNroLinea());}
-						| IF '(' condicion ')' ELSE bloque_sentencias END_IF {this.addError("Falta bloque de sentencias.",((Token)$4.obj).getNroLinea());}
-						| IF '(' condicion bloque_sentencias ELSE bloque_sentencias END_IF {this.addError( "Falta ')'.",((Token)$3.obj).getNroLinea());}
+	
+	condicion_if : condicion { if (((Token)$1.obj).getOperador()!=null){
+								TercetoIF tercetoIF = new TercetoIF ( new Token( "BF"), new Token("@"+analizadorTerceto.getNumeroTerceto()), null, analizadorTerceto.getProximoTerceto());
+								tercetoIF.setTipoSalto(((Token)$1.obj).getOperador());
+								analizadorTerceto.addTerceto(tercetoIF);
+								analizadorTerceto.apilar();
+								}
+											}
+					;
+	
+	seleccion_ejecutable : IF '(' condicion_if ')' bloque_sentencias ELSE {TercetoAbstracto tercetoIF = new TercetoIF (new Token("BI"), null, null, analizadorTerceto.getProximoTerceto() );
+
+                                                             	analizadorTerceto.addTerceto (tercetoIF);
+                                                             	analizadorTerceto.desapilar();
+                                                             	analizadorTerceto.apilar();}
+
+						bloque_sentencias END_IF {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia IF-ELSE");
+												analizadorTerceto.desapilar();}
+						
+						| IF '(' condicion_if ')' bloque_sentencias END_IF {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia IF");
+																			analizadorTerceto.desapilar();}
+						| IF '(' condicion_if ')' bloque_sentencias bloque_sentencias END_IF {this.addError("Falta 'ELSE'.",((Token)$6.obj).getNroLinea());}
+						| IF '(' condicion_if ')' bloque_sentencias ELSE END_IF {this.addError("Falta bloque de sentencias.",((Token)$6.obj).getNroLinea());}
+						| IF '(' condicion_if ')' ELSE bloque_sentencias END_IF {this.addError("Falta bloque de sentencias.",((Token)$4.obj).getNroLinea());}
+						| IF '(' condicion_if bloque_sentencias ELSE bloque_sentencias END_IF {this.addError( "Falta ')'.",((Token)$3.obj).getNroLinea());}
 						| IF '(' ')' bloque_sentencias ELSE bloque_sentencias END_IF {this.addError("Falta condicion.",((Token)$2.obj).getNroLinea());}
-						| IF condicion ')' bloque_sentencias ELSE bloque_sentencias END_IF {this.addError("Falta ')'.",((Token)$1.obj).getNroLinea());}
-						| '(' condicion ')' bloque_sentencias ELSE bloque_sentencias END_IF {this.addError("Falta 'IF'.",((Token)$1.obj).getNroLinea());}
-						| '(' condicion ')' bloque_sentencias END_IF {this.addError("Falta 'IF'.",((Token)$1.obj).getNroLinea());}
-						| IF condicion ')' bloque_sentencias END_IF {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
+						| IF condicion_if ')' bloque_sentencias ELSE bloque_sentencias END_IF {this.addError("Falta ')'.",((Token)$1.obj).getNroLinea());}
+						| '(' condicion_if ')' bloque_sentencias ELSE bloque_sentencias END_IF {this.addError("Falta 'IF'.",((Token)$1.obj).getNroLinea());}
+						| '(' condicion_if ')' bloque_sentencias END_IF {this.addError("Falta 'IF'.",((Token)$1.obj).getNroLinea());}
+						| IF condicion_if ')' bloque_sentencias END_IF {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
 						| IF '(' ')' bloque_sentencias END_IF {this.addError("Falta condicion.",((Token)$2.obj).getNroLinea());}
-						| IF '(' condicion bloque_sentencias END_IF {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
-						| IF '(' condicion ')' END_IF {this.addError("Falta bloque de sentencias.",((Token)$4.obj).getNroLinea());}
+						| IF '(' condicion_if bloque_sentencias END_IF {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
+						| IF '(' condicion_if ')' END_IF {this.addError("Falta bloque de sentencias.",((Token)$4.obj).getNroLinea());}
 						;
 						
-	condicion : expresion_aritmetica operador expresion_aritmetica 
+	condicion : expresion_aritmetica operador expresion_aritmetica {
+															if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+																TercetoAbstracto tercetoComparacion = new TercetoComparacion(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+																analizadorTerceto.addTerceto(tercetoComparacion);
+																
+																Token nuevo = new Token ( "@" + analizadorTerceto.getNumeroTerceto());
+																nuevo.setTipo(((Token)$1.obj).getTipo());
+																nuevo.setOperador(((Token)$2.obj).getLexema());
+																$$ = new ParserVal(nuevo);
+															}
+															else
+																analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);									
+															}
 			  | operador expresion_aritmetica {this.addError("Falta expresion del lado izquierdo.",((Token)$1.obj).getNroLinea());}
 			  | expresion_aritmetica operador error{this.addError("Falta expresion del lado derecho.",((Token)$2.obj).getNroLinea());}
 			  ;
 			 
-	expresion_aritmetica : expresion_aritmetica '+' termino {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
+	expresion_aritmetica : expresion_aritmetica '+' termino { if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+																TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)$2.obj), ((Token)$1.obj),((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+																tercetoExpresion.setNombre("Expresion");
+																analizadorTerceto.addTerceto(tercetoExpresion);
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																nuevo.setTipo(((Token)$1.obj).getTipo());
+																nuevo.setUso("Variable Auxiliar");
+																tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+																$$ = new ParserVal(nuevo);
+																}
+																else
+																	analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
+															
+															}
+						 | expresion_aritmetica '-' termino {
+															if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+																TercetoAbstracto tercetoExpresion = new TercetoExpresion(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+																tercetoExpresion.setNombre("Expresion");
+																analizadorTerceto.addTerceto(tercetoExpresion);
+					
+																Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+																nuevo.setTipo(((Token)$1.obj).getTipo());
+																nuevo.setUso("Variable Auxiliar");
+																tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+																$$ = new ParserVal(nuevo);
+															}
 															else
-																System.out.println("son compatibles ");}
-						 | expresion_aritmetica '-' termino {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
-															else
-																System.out.println("son compatibles ");}
-						 | termino
+																analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
+															
+															}
+						 | termino 
 						 ;
 						 
-	termino : termino '*' factor {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
+			termino : termino '*' factor {	if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+															TercetoAbstracto tercetoExpresion = new TercetoExpresionMult(((Token)$2.obj),((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+															tercetoExpresion.setNombre("Expresion");
+															analizadorTerceto.addTerceto(tercetoExpresion);
+															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+															nuevo.setTipo(((Token)$1.obj).getTipo());
+															nuevo.setUso("Variable Auxiliar");
+															tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+															$$ = new ParserVal(nuevo);
+															}
 															else
-																System.out.println("son compatibles ");}
-			| termino '/' factor {if (!esCompatible(((Token)$1.obj),((Token)$3.obj)))
-																this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
+																analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
+															
+															
+															}
+			| termino '/' factor { if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+															TercetoAbstracto tercetoExpresion = new TercetoExpresionDivision(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+															tercetoExpresion.setNombre("Expresion");
+															analizadorTerceto.addTerceto(tercetoExpresion);
+															Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+															nuevo.setTipo(((Token)$1.obj).getTipo());
+															nuevo.setUso("Variable Auxiliar");
+															tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+															$$ = new ParserVal(nuevo);
+															}
 															else
-																System.out.println("son compatibles ");}
-			| factor
+																analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
+															
+															}												
+															
+
+			| factor {}
+		 
 			;
 			
-	factor : variable
-	       | CTE_E {actualizarTablaPositivo(((Token)$1.obj).getLexema());}
-		   | CTE_F 
-		   | '-' CTE_E {actualizarTablaNegativo(((Token)$2.obj).getLexema());}
-		   | '-' CTE_F {actualizarTablaNegativoFloat(((Token)$2.obj).getLexema());}
+	factor : variable {}
+	       | CTE_E {actualizarTablaPositivo(((Token)$1.obj).getLexema());
+					((Token)$1.obj).setTipo("int");
+	
+					$$ = $1;
+					}
+		   | CTE_F {((Token)$1.obj).setTipo("float");
+					tablaSimbolos.getClave(((Token)$1.obj).getLexema()).setUso("CTF");
+					$$ = $1;
+					}
+		   | '-' CTE_E {actualizarTablaNegativo(((Token)$2.obj).getLexema());
+						Token tNegativo = new Token("-"+((Token)$2.obj).getLexema());
+						tNegativo.setTipo("int");
+						$$ = new ParserVal(tNegativo);}
+		   | '-' CTE_F {actualizarTablaNegativoFloat(((Token)$2.obj).getLexema());
+						Token tNegativo = new Token("-"+((Token)$2.obj).getLexema());
+						tNegativo.setTipo("float");
+						$$ = new ParserVal(tNegativo);}
 		   | invocacion_metodo
+		   | '-' variable{Token tNegativo = new Token("-"+((Token)$2.obj).getLexema());
+							tNegativo.setTipo(((Token)$2.obj).getTipo());
+							$$ = new ParserVal(tNegativo);}
+		   | '-' invocacion_metodo
+		   
 		   ;
 	
-	variable : ID '[' ID ']' {	if (!estaDeclarada(((Token)$1.obj)))
-									this.addError("Error coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());
+	variable : ID '[' ID ']' {	if (!estaDeclarada(((Token)$1.obj))){
+									analizadorTerceto.agregarError("Error coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",lexico.nroLinea);
+									tablaSimbolos.eliminarClave(((Token)$1.obj).getLexema());
+								}
 								else
-									if (tablaSimbolos.tablaSimbolos.get(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
-										this.addError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",((Token)$1.obj).getNroLinea());
-								if (!estaDeclarada(((Token)$3.obj)))
+									if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
+										analizadorTerceto.agregarError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",lexico.nroLinea);
+									
+								if (!estaDeclarada(((Token)$3.obj))){
+									analizadorTerceto.agregarError("Error variable '"+((Token)$3.obj).getLexema() + "' no declarada.",lexico.nroLinea);
 									this.addError("Error variable '"+((Token)$3.obj).getLexema() + "' no declarada.",((Token)$3.obj).getNroLinea());
+									tablaSimbolos.eliminarClave(((Token)$3.obj).getLexema());
+								}
 								else
-									if (tablaSimbolos.tablaSimbolos.get(((Token)$3.obj).getLexema()).getUso().equals("Nombre de Coleccion"))
-										this.addError("Error '"+((Token)$3.obj).getLexema() + "' es una coleccion.",((Token)$3.obj).getNroLinea());}
+									if (!tablaSimbolos.getClave(((Token)$3.obj).getLexema()).getTipo().equals("int"))
+										analizadorTerceto.agregarError("El tipo del subindice no es entero",lexico.nroLinea);
+								else
+									if (tablaSimbolos.getClave(((Token)$3.obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 										
-			 | ID '[' CTE_E ']' {	if (!estaDeclarada(((Token)$1.obj)))
-										this.addError("Error coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());
-									else
-										if (tablaSimbolos.tablaSimbolos.get(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
-											this.addError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",((Token)$1.obj).getNroLinea());}
-			 | ID {	if (!estaDeclarada(((Token)$1.obj)))
-						this.addError("Error variable '"+((Token)$1.obj).getLexema() + "' no declarada.",((Token)$1.obj).getNroLinea());
-					else
-						listaAsignacion.add((Token)$1.obj).getToken)}
+										analizadorTerceto.agregarError("Error '"+((Token)$3.obj).getLexema() + "' es una coleccion.",lexico.nroLinea);
+										
+									else{
+										
+										((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										((Token)$3.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										TercetoColeccionDer terceto = new TercetoColeccionDer((new Token("OFFSET")), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+										
+										
+										terceto.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+										analizadorTerceto.addTerceto(terceto);
+										Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+										nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										nuevo.setUso("Variable Auxiliar");
+										tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+										$$ = new ParserVal(nuevo);
+									}
+								}
+									
+			 | ID '[' CTE_E ']' {	if (!estaDeclarada(((Token)$1.obj))){
+										analizadorTerceto.agregarError("Coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",lexico.nroLinea);
+										tablaSimbolos.eliminarClave(((Token)$1.obj).getLexema());
+									}
+									else{
+										if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
+											analizadorTerceto.agregarError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",lexico.nroLinea);
+										else{
+											((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											((Token)$3.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											tablaSimbolos.getClave(((Token)$3.obj).getLexema()).setUso("CTE");
+											TercetoColeccionDer terceto = new TercetoColeccionDer(new Token("OFFSET"), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+											terceto.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+											analizadorTerceto.addTerceto(terceto);
+											Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+											nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											nuevo.setUso("Variable Auxiliar");
+											tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+											
+											$$ = new ParserVal(nuevo);
+										}
+									}
+								}
+			 | ID {	
+					Token t = ((Token)$1.obj);
+					if (!estaDeclarada(t)){
+						analizadorTerceto.agregarError("Error variable '"+t.getLexema() + "' no declarada.",lexico.nroLinea);
+						tablaSimbolos.eliminarClave(t.getLexema());}
+					else{
+						t.setTipo(tablaSimbolos.getClave(t.getLexema()).getTipo());
+						$$ = new ParserVal(t);
+					}
+				}
 			 ;
 	
 	operador : '<'
@@ -169,51 +343,173 @@
 			 ;
 			
 	bloque_sentencias : sentencia_ejecutable 
-			| BEGIN sentencias_ejecutables sentencia_ejecutable END
-			;
+			| BEGIN sentencias_ejecutables END
+			| BEGIN END
 	
-	control_ejecutable : DO bloque_sentencias UNTIL '(' condicion ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia until");}
-					   | DO UNTIL '(' condicion ')' ';' {this.addError("Falta bloque de sentencias.",((Token)$1.obj).getNroLinea());}
-					   | DO bloque_sentencias '(' condicion ')' ';' {this.addError("Falta 'until'.",((Token)$2.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL condicion ')' ';' {this.addError("Falta '('.",((Token)$3.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL '(' ')' ';' {this.addError("Falta condicion.",((Token)$4.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL '(' condicion ';' {this.addError("Falta ')'.",((Token)$5.obj).getNroLinea());}
-					   | DO bloque_sentencias UNTIL '(' condicion ')' {this.addError("Falta ';'.",((Token)$6.obj).getNroLinea());}
+			;
+			
+	
+	
+	inicio_do : DO { 
+					analizadorTerceto.apilar();
+					TercetoAbstracto tercetoEtiqueta = new TercetoEtiqueta(new Token("Lbl" + analizadorTerceto.getProximoTerceto()),null,null,analizadorTerceto.getProximoTerceto());
+					tercetoEtiqueta.setNombre("Etiqueta");
+					analizadorTerceto.addTerceto(tercetoEtiqueta);}
+	
+	control_ejecutable : inicio_do bloque_sentencias UNTIL '(' condicion ')'  {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia until");
+	TercetoDO tercetoDO = new TercetoDO(new Token("BF"), null,null,analizadorTerceto.getProximoTerceto());
+	tercetoDO.setTipoSalto(((Token)$5.obj).getOperador());
+	tercetoDO.setNombre("DO");
+															analizadorTerceto.addTerceto(tercetoDO);
+															analizadorTerceto.desapilarControl();
+	}
+					   | inicio_do UNTIL '(' condicion ')'  {this.addError("Falta bloque de sentencias.",((Token)$1.obj).getNroLinea());}
+					   | inicio_do bloque_sentencias '(' condicion ')'  {this.addError("Falta 'until'.",((Token)$2.obj).getNroLinea());}
+					   | inicio_do bloque_sentencias UNTIL condicion ')' {this.addError("Falta '('.",((Token)$3.obj).getNroLinea());}
+					   | inicio_do bloque_sentencias UNTIL '(' ')'  {this.addError("Falta condicion.",((Token)$4.obj).getNroLinea());}
+					   | inicio_do bloque_sentencias UNTIL '(' condicion {this.addError("Falta ')'.",((Token)$5.obj).getNroLinea());}
 					   ;
 	
-	salida_ejecutable : PRINT '(' CADENA ')' ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");}
-					  | '(' CADENA ')' ';' {this.addError("Falta 'PRINT'.",((Token)$1.obj).getNroLinea());}
-					  | PRINT CADENA ')' ';' {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
-					  | PRINT '(' error ')' ';' {this.addError("Solo se puede definir una cadena.",((Token)$2.obj).getNroLinea());}
-					  | PRINT '(' CADENA ';' {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
-					  | PRINT '(' CADENA ')' {this.addError("Falta ';'.",((Token)$4.obj).getNroLinea());}
+	imprimir: factor
+			| CADENA {$$ = $1;}
+	
+	salida_ejecutable : PRINT '(' imprimir ')'  {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Sentencia PRINT");
+												TercetoPrint tercetoPrint = new TercetoPrint ( ((Token)$1.obj), ((Token)$3.obj ), null, analizadorTerceto.getProximoTerceto() );
+												tercetoPrint.setNombre("Print");
+												analizadorTerceto.addTerceto(tercetoPrint);
+
+	
+	}
+					  | '(' imprimir ')'  {this.addError("Falta 'PRINT'.",((Token)$1.obj).getNroLinea());}
+					  | PRINT imprimir ')'  {this.addError("Falta '('.",((Token)$1.obj).getNroLinea());}
+					  | PRINT '(' ')'  {this.addError("Falta variable o cadena .",((Token)$2.obj).getNroLinea());}
+					  | PRINT '(' imprimir  {this.addError("Falta ')'.",((Token)$3.obj).getNroLinea());}
 					  ;
 
-	asign : variable ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + ((Token)$1.obj).getNroLinea() + ": Asignacion");
-														  														  
-														  if (!sonCompatibles(listaAsignacion))
-															this.addError("Error tipos incompatibles.",((Token)$3.obj).getNroLinea());
-														  else
-																System.out.println("son compatibles ");
-														  
+	asignacion_izq :  ID '[' ID ']' {	if (!estaDeclarada(((Token)$1.obj))){
+									analizadorTerceto.agregarError("Error coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",lexico.nroLinea);
+									tablaSimbolos.eliminarClave(((Token)$1.obj).getLexema());
+								}
+								else
+									if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
+										analizadorTerceto.agregarError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",lexico.nroLinea);
+									
+								if (!estaDeclarada(((Token)$3.obj))){
+									analizadorTerceto.agregarError("Error variable '"+((Token)$3.obj).getLexema() + "' no declarada.",lexico.nroLinea);
+									this.addError("Error variable '"+((Token)$3.obj).getLexema() + "' no declarada.",((Token)$3.obj).getNroLinea());
+									tablaSimbolos.eliminarClave(((Token)$3.obj).getLexema());
+								}
+								else
+									if (!tablaSimbolos.getClave(((Token)$3.obj).getLexema()).getTipo().equals("int"))
+										analizadorTerceto.agregarError("El tipo del subindice no es entero",lexico.nroLinea);
+								else
+									if (tablaSimbolos.getClave(((Token)$3.obj).getLexema()).getUso().equals("Nombre de Coleccion"))
+										analizadorTerceto.agregarError("Error '"+((Token)$3.obj).getLexema() + "' es una coleccion.",lexico.nroLinea);
+										
+									else{
+										
+										((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										((Token)$3.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										TercetoColeccionIzq terceto = new TercetoColeccionIzq((new Token("OFFSET")), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+										
+										
+										terceto.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+										analizadorTerceto.addTerceto(terceto);
+										Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+										nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+										nuevo.setUso("Variable Auxiliar");
+										tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+										$$ = new ParserVal(nuevo);
+									}
+								}
+									
+			 | ID '[' CTE_E ']' {	if (!estaDeclarada(((Token)$1.obj))){
+										analizadorTerceto.agregarError("Coleccion '"+((Token)$1.obj).getLexema() + "' no declarada.",lexico.nroLinea);
+										tablaSimbolos.eliminarClave(((Token)$1.obj).getLexema());
+									}
+									else{
+										if (tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getUso().equals("Variable"))
+											analizadorTerceto.agregarError("Error '"+((Token)$1.obj).getLexema() + "' es una variable.",lexico.nroLinea);
+										else{
+											((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											((Token)$3.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											tablaSimbolos.getClave(((Token)$3.obj).getLexema()).setUso("CTE");
+											TercetoColeccionIzq terceto = new TercetoColeccionIzq(new Token("OFFSET"), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+											terceto.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+											analizadorTerceto.addTerceto(terceto);
+											Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
+											nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+											nuevo.setUso("Variable Auxiliar");
+											tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+											
+											$$ = new ParserVal(nuevo);
+										}
+									}
+								}
+			 | ID {	
+					Token t = ((Token)$1.obj);
+					if (!estaDeclarada(t)){
+						analizadorTerceto.agregarError("Error variable '"+t.getLexema() + "' no declarada.",lexico.nroLinea);
+						tablaSimbolos.eliminarClave(t.getLexema());}
+					else{
+						t.setTipo(tablaSimbolos.getClave(t.getLexema()).getTipo());
+						$$ = new ParserVal(t);
+					}
+				}
+			 ;
+					
+	asign : asignacion_izq ASIGNACION expresion_aritmetica ';' {listaCorrectas.add("Linea " + lexico.getNroLinea() + ": Asignacion");
+														
+														if( esCompatible(((Token)$1.obj),((Token)$3.obj))){
+															if (esColeccion(((Token)$1.obj).getLexema())){
+																TercetoAsignacionRowing tercetoAsignacionRowing = new TercetoAsignacionRowing(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+															     tercetoAsignacionRowing.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+
+																analizadorTerceto.addTerceto(tercetoAsignacionRowing);
+															}
+															else{
+																TercetoAbstracto tercetoAsignacion = new TercetoAsignacion(((Token)$2.obj), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());			
+																analizadorTerceto.addTerceto(tercetoAsignacion);
+															}
 														}
-		  | ASIGNACION expresion_aritmetica ';' {this.addError("Falta variable.",((Token)$1.obj).getNroLinea());}
-		  | variable expresion_aritmetica ';' {this.addError("Falta ':='.",((Token)$1.obj).getNroLinea());}
-		  | variable ASIGNACION ';' {this.addError("Falta expresion.",((Token)$2.obj).getNroLinea());}
-		  | variable ASIGNACION expresion_aritmetica {this.addError("Falta ';'.",((Token)$3.obj).getNroLinea());}
+														else
+															analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
+														}
+
+		  | ASIGNACION expresion_aritmetica ';' {this.addError("Falta variable.",lexico.getNroLinea());}
+		  | asignacion_izq expresion_aritmetica ';' {this.addError("Falta ':='.",lexico.getNroLinea());}
+		  | asignacion_izq ASIGNACION ';' {this.addError("Falta expresion.",lexico.getNroLinea());}
+		  | asignacion_izq ASIGNACION expresion_aritmetica {this.addError("Falta ';'.",lexico.getNroLinea());}
 		  ;
-		 
-	invocacion_metodo : ID '.' ID '(' ')' 
-					  | ID '.' ID ')' {this.addError("Falta '(.'",((Token)$3.obj).getNroLinea());}
+		  
+	metodo : FIRST 
+			| LAST
+			| LENGTH
+			;
+			
+	invocacion_metodo : ID '.' metodo '(' ')' { 
+											if (esColeccion(((Token)$1.obj).getLexema())){
+												((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+												TercetoMetodos tercetoMetodo = new TercetoMetodos(new Token("METODO"), ((Token)$1.obj) , 					((Token)$3.obj),analizadorTerceto.getProximoTerceto());
+												tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+												analizadorTerceto.addTerceto(tercetoMetodo);
+												
+												Token nuevo = new Token("@" + analizadorTerceto.getNumeroTerceto());
+												nuevo.setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
+												nuevo.setUso("Variable Auxiliar");
+												tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
+												$$ = new ParserVal(nuevo);
+											}
+											else
+												analizadorTerceto.agregarError("La variable '" + ((Token)$1.obj).getLexema() +"' no puede invocar metodos, debe ser una coleccion." ,lexico.nroLinea);
+											
+										}
+					  | ID '.' metodo ')' {this.addError("Falta '(.'",((Token)$3.obj).getNroLinea());}
 					  | ID '.' '(' ')' {this.addError("Falta metodo.",((Token)$2.obj).getNroLinea());}
+					  | ID '.' ID '(' ')' {this.addError("No es un metodo predefinido.",((Token)$2.obj).getNroLinea());}
 					  ;
 
 %%
-public void inicCompatibilidad(){
-	compatibilidadIniciada = true;
-	listaAsignacion.clear();
-	listaAsignacion.add((Token)$1.obj).getTipo);
-}
 
 
 
@@ -222,14 +518,16 @@ private AnalizadorLexico lexico;
 private TablaSimbolos tablaSimbolos;
 private ArrayList<Error> listaErrores = new ArrayList<Error>();
 private ArrayList<String> listaCorrectas = new ArrayList<String>();
-private ArrayList<String> listaAsignacion = new ArrayList<String>();
+
 private ArrayList<Token> listaVariables = new ArrayList<Token>();
-private boolean compatibilidadIniciada = false;
+
+private AnalizadorTercetos analizadorTerceto;
 
 
-public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos) {
+public Parser(AnalizadorLexico lexico, TablaSimbolos tablaSimbolos, AnalizadorTercetos terceto) {
 	this.lexico = lexico;
 	this.tablaSimbolos = tablaSimbolos;
+	this.analizadorTerceto= terceto;
 }
 
 public int yylex() {
@@ -276,51 +574,59 @@ public String informacionError() {
 
 
 public void actualizarTablaPositivo(String lexema) {
-		if(lexema == "32768"){
-			if (tablaSimbolos.tablaSimbolos.get(lexema).getCantRef()==1){
-				tablaSimbolos.tablaSimbolos.remove(lexema);
-			}
+		if(lexema.equals("32768")){
+			if (tablaSimbolos.getClave(lexema).getCantRef()==1)
+				tablaSimbolos.eliminarClave(lexema);
 			else
-				tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
+				tablaSimbolos.getClave(lexema).decrementarRef();
 		
-		if(tablaSimbolos.tablaSimbolos.containsKey("32767")) {
-			tablaSimbolos.tablaSimbolos.get("32767").incrementarRef();
+			if(tablaSimbolos.existeClave("32767")) 
+				tablaSimbolos.getClave("32767").incrementarRef();
+			else{
+				tablaSimbolos.agregar("32767", new Token("int",1));
+				tablaSimbolos.getClave("32767").setUso("CTE");
+			}
 		}
 		else
-			tablaSimbolos.agregar("32767", new Registro("int"));
-	}
+			tablaSimbolos.getClave(lexema).setUso("CTE");
 }
 
 public void actualizarTablaNegativo(String lexema) {
 	String lexemaNuevo = "-" + lexema;
-	if(tablaSimbolos.tablaSimbolos.containsKey(lexema)) {
-		if (tablaSimbolos.tablaSimbolos.get(lexema).getCantRef()==1){
-			tablaSimbolos.tablaSimbolos.remove(lexema);
+	if(tablaSimbolos.existeClave(lexema)) {
+		if (tablaSimbolos.getClave(lexema).getCantRef()==1)
+			tablaSimbolos.eliminarClave(lexema);
+		else{
+			tablaSimbolos.getClave(lexema).decrementarRef();
+			tablaSimbolos.getClave(lexema).setUso("CTE");
 		}
-		else
-			tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
 	}
-	if(tablaSimbolos.tablaSimbolos.containsKey(lexemaNuevo)) {
-		tablaSimbolos.tablaSimbolos.get(lexemaNuevo).incrementarRef();
+	if(tablaSimbolos.existeClave(lexemaNuevo)) 
+		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
+	else{
+		tablaSimbolos.agregar(lexemaNuevo, new Token("int",1));
+		tablaSimbolos.getClave(lexemaNuevo).setUso("CTE");
 	}
-	else
-		tablaSimbolos.agregar(lexemaNuevo, new Registro("int"));
 }
+
 
 public void actualizarTablaNegativoFloat(String lexema) {
 	String lexemaNuevo = "-" + lexema;
-	if ((Float.parseFloat(lexemaNuevo)< -Float.MIN_NORMAL && Float.parseFloat(lexemaNuevo) > -Float.MAX_VALUE)) {
-		if (tablaSimbolos.existeClave(lexema))
-			if(tablaSimbolos.tablaSimbolos.get(lexema).getCantRef() == 1) 
-				tablaSimbolos.tablaSimbolos.remove(lexema);
-			else
-				tablaSimbolos.tablaSimbolos.get(lexema).decrementarRef();
-		if(tablaSimbolos.tablaSimbolos.containsKey(lexemaNuevo)) 
-			tablaSimbolos.tablaSimbolos.get(lexemaNuevo).incrementarRef();
-		else
-			tablaSimbolos.agregar(lexemaNuevo, new Registro("float"));
+	if (tablaSimbolos.existeClave(lexema))
+		if(tablaSimbolos.getClave(lexema).getCantRef() == 1) 
+			tablaSimbolos.eliminarClave(lexema);
+		else{
+			tablaSimbolos.getClave(lexema).decrementarRef();
+			tablaSimbolos.getClave(lexema).setUso("CTF");
+		}
+			
+	if(tablaSimbolos.existeClave(lexemaNuevo)) 
+		tablaSimbolos.getClave(lexemaNuevo).incrementarRef();
+	else{
+		tablaSimbolos.agregar(lexemaNuevo, new Token("float",1));
+		tablaSimbolos.getClave(lexemaNuevo).setUso("CTF");
 	}
-	
+
 }
 
 public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
@@ -331,12 +637,12 @@ public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
 		t = listaVariables.get(0);
 		listaVariables.remove(0);
 		lexema = t.getLexema();
-		if(!tablaSimbolos.tablaSimbolos.get(lexema).getDeclarada()) {
-			tablaSimbolos.tablaSimbolos.get(lexema).setTipo(tipo.getLexema());
-			tablaSimbolos.tablaSimbolos.get(lexema).setDeclarada(true);
-			tablaSimbolos.tablaSimbolos.get(lexema).setUso(uso);
-			if(tablaSimbolos.tablaSimbolos.get(lexema).getUso().equals("Nombre de Coleccion")) {
-				tablaSimbolos.tablaSimbolos.get(lexema).setTamanioColeccion(Integer.parseInt(cteE.getLexema()));
+		if(!tablaSimbolos.getClave(lexema).getDeclarada()) {
+			tablaSimbolos.getClave(lexema).setTipo(tipo.getLexema());
+			tablaSimbolos.getClave(lexema).setDeclarada(true);
+			tablaSimbolos.getClave(lexema).setUso(uso);
+			if(tablaSimbolos.getClave(lexema).getUso().equals("Nombre de Coleccion")) {
+				tablaSimbolos.getClave(lexema).setTamanioColeccion(Integer.parseInt(cteE.getLexema()));
 			}
 		}
 		else
@@ -345,14 +651,28 @@ public void actualizarTablaVariables(Token tipo,String uso,Token cteE) {
 }
 
 public boolean estaDeclarada(Token t){
-	if (tablaSimbolos.tablaSimbolos.get(t.getLexema()).getDeclarada())
+	if (tablaSimbolos.getClave(t.getLexema()).getDeclarada())
 		return true;
 	else
 		return false;
 }
 
 public boolean esCompatible(Token t1, Token t2){
-	if (tablaSimbolos.tablaSimbolos.get(t1.getLexema()).getTipo().equals(tablaSimbolos.tablaSimbolos.get(t2.getLexema()).getTipo()))
+	if (t1.getTipo().equals(t2.getTipo()))
 		return true;
 	return false;
 }
+
+public boolean esColeccion(String lexema){
+	Token t = tablaSimbolos.getClave(lexema);
+	if (t!=null)
+		if(t.getUso().equals("Nombre de Coleccion"))
+			return true;
+	return false;
+}
+
+public boolean estaVacia() {
+	return listaErrores.isEmpty();
+
+}
+
