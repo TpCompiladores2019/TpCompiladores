@@ -167,11 +167,17 @@
 																		analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 																else{
 																	analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-																	tablaSimbolos.eliminarClave(t3.getLexema());}
+																	if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 															else{
 																analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
 																
-																tablaSimbolos.eliminarClave(t1.getLexema());}	
+																if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 														}																		
 															
 			  | operador expresion_aritmetica {this.addError("Falta expresion del lado izquierdo.",((Token)$1.obj).getNroLinea());}
@@ -196,10 +202,19 @@
 																		analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 																else{
 															analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-															tablaSimbolos.eliminarClave(t3.getLexema());}
+															if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();
+															}
+															
 														else{
 															analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-															tablaSimbolos.eliminarClave(t1.getLexema());}	
+															if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();
+															}	
 										
 														}
 															
@@ -224,10 +239,16 @@
 																		analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 																else{
 																	analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-																	tablaSimbolos.eliminarClave(t3.getLexema());}
+																	if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 															else{
 																analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-																tablaSimbolos.eliminarClave(t1.getLexema());}	
+																if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 									
 														}
 															
@@ -251,10 +272,16 @@
 														analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 												else{
 											analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-											tablaSimbolos.eliminarClave(t3.getLexema());}
+											if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 									else{
 										analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-										tablaSimbolos.eliminarClave(t1.getLexema());}	
+										if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 									
 								}									
 												
@@ -276,10 +303,16 @@
 													analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 										else{
 											analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-											tablaSimbolos.eliminarClave(t3.getLexema());}
+											if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 									else{
 										analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-										tablaSimbolos.eliminarClave(t1.getLexema());}	
+										if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 									}
 																	
 															
@@ -460,8 +493,6 @@
 										((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
 										((Token)$3.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
 										TercetoColeccionIzq terceto = new TercetoColeccionIzq((new Token("OFFSET")), ((Token)$1.obj), ((Token)$3.obj),analizadorTerceto.getProximoTerceto());
-										
-										
 										terceto.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
 										analizadorTerceto.addTerceto(terceto);
 										Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
@@ -544,7 +575,7 @@
 											if (esColeccion(((Token)$1.obj).getLexema())){
 												((Token)$1.obj).setTipo(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTipo());
 												TercetoMetodos tercetoMetodo = new TercetoMetodos(new Token("METODO"), ((Token)$1.obj) , 					((Token)$3.obj),analizadorTerceto.getProximoTerceto());
-												tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion());
+												tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)$1.obj).getLexema()).getTamanioColeccion()); //SACAR LINEA
 												analizadorTerceto.addTerceto(tercetoMetodo);
 										
 												Token nuevo = new Token("@" + analizadorTerceto.getNumeroTerceto());

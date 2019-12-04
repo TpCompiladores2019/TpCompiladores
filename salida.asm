@@ -7,7 +7,7 @@ dll_dllcrt0 PROTO C
 printf PROTO C : VARARG
 
 .data
-_a DD 10, ?, ?, ?
+_a DD 10, 20, 30, 40
 _b DD ?
 auxiliar@1 DD ?
 auxiliar DD ?
@@ -21,16 +21,17 @@ MenorNumFloatNeg DQ -3.4028235E38
 _LabelDividirCero DB "Error al dividir por cero!", 0
 _LabelOverflowSuma DB "La suma ha generado un Overflow!", 0
 _LabelSubIndices DB "Subindice fuera de rango!", 0
-auxiliarParametro DD ?
-auxiliarReturn DD ?
+auxiliarParametro DD 2
+auxiliarReturn DD 3
+aux DW -2
 .code
 
 FUNCION_LENGTH:
-    invoke printf , cfm$("%d \n"), [auxiliarParametro]
+    MOV ECX,[EAX]
+    MOV auxiliarReturn,ECX
     RET
-FUNCION_FIRSTI: 
-    MOV ECX,[EAX] 
-    MOV auxiliar,ECX 
+FUNCION_FIRST: 
+    MOV auxiliarReturn,ECX 
     RET 
 FUNCION_LASTI: 
     MOV ECX,[EAX + ECX*4]  
@@ -38,13 +39,13 @@ FUNCION_LASTI:
     RET 
 start:
 
-MOV auxiliarParametro, [_a]
 
-CALL FUNCION_LENGTH
-
+MOV ECX, offset _a
+call FUNCION_FIRST
+mov ecx,auxiliar
 invoke printf , cfm$("%d \n"), auxiliarReturn
 
-
+mov auxiliarParametro, auxiliarReturn
 invoke ExitProcess, 0
 DividirCero:
 invoke MessageBox, NULL, addr _LabelDividirCero, addr _LabelDividirCero, MB_OK

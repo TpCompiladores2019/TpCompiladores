@@ -651,7 +651,7 @@ final static String yyrule[] = {
 "invocacion_metodo : ID '.' ID '(' ')'",
 };
 
-//#line 569 "GramaticaFinal.y"
+//#line 600 "GramaticaFinal.y"
 
 
 
@@ -802,9 +802,7 @@ public boolean estaDeclarada(Token t){
 }
 
 public boolean esCompatible(Token t1, Token t2){
-	if (t1.getTipo().equals(t2.getTipo()))
-		return true;
-	return false;
+	return (t1.getTipo().equals(t2.getTipo()))
 }
 
 public boolean esColeccion(String lexema){
@@ -820,7 +818,7 @@ public boolean estaVacia() {
 
 }
 
-//#line 752 "Parser.java"
+//#line 750 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1164,23 +1162,29 @@ case 54:
 																		analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 																else{
 																	analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-																	tablaSimbolos.eliminarClave(t3.getLexema());}
+																	if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 															else{
 																analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
 																
-																tablaSimbolos.eliminarClave(t1.getLexema());}	
+																if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 														}
 break;
 case 55:
-//#line 177 "GramaticaFinal.y"
+//#line 183 "GramaticaFinal.y"
 {this.addError("Falta expresion del lado izquierdo.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 56:
-//#line 178 "GramaticaFinal.y"
+//#line 184 "GramaticaFinal.y"
 {this.addError("Falta expresion del lado derecho.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 57:
-//#line 181 "GramaticaFinal.y"
+//#line 187 "GramaticaFinal.y"
 {
 															Token t1 = ((Token)val_peek(2).obj);
 															Token t3 = ((Token)val_peek(0).obj);
@@ -1199,15 +1203,24 @@ case 57:
 																		analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 																else{
 															analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-															tablaSimbolos.eliminarClave(t3.getLexema());}
+															if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();
+															}
+															
 														else{
 															analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-															tablaSimbolos.eliminarClave(t1.getLexema());}	
+															if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();
+															}	
 										
 														}
 break;
 case 58:
-//#line 207 "GramaticaFinal.y"
+//#line 222 "GramaticaFinal.y"
 {
 															Token t1 = ((Token)val_peek(2).obj);
 															Token t3 = ((Token)val_peek(0).obj);
@@ -1228,15 +1241,21 @@ case 58:
 																		analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 																else{
 																	analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-																	tablaSimbolos.eliminarClave(t3.getLexema());}
+																	if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 															else{
 																analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-																tablaSimbolos.eliminarClave(t1.getLexema());}	
+																if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 									
 														}
 break;
 case 60:
-//#line 237 "GramaticaFinal.y"
+//#line 258 "GramaticaFinal.y"
 {	Token t1 = ((Token)val_peek(2).obj);
 											Token t3 = ((Token)val_peek(0).obj);
 											if (estaDeclarada(t1))
@@ -1254,15 +1273,21 @@ case 60:
 														analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 												else{
 											analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-											tablaSimbolos.eliminarClave(t3.getLexema());}
+											if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 									else{
 										analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-										tablaSimbolos.eliminarClave(t1.getLexema());}	
+										if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 									
 								}
 break;
 case 61:
-//#line 262 "GramaticaFinal.y"
+//#line 289 "GramaticaFinal.y"
 {  Token t1 = ((Token)val_peek(2).obj);
 								    Token t3 = ((Token)val_peek(0).obj);
 									if (estaDeclarada(t1))
@@ -1280,22 +1305,28 @@ case 61:
 													analizadorTerceto.agregarError("Tipos incompatibles",lexico.nroLinea);
 										else{
 											analizadorTerceto.agregarError("Error variable '"+t3.getLexema() + "' no declarada.",lexico.nroLinea);
-											tablaSimbolos.eliminarClave(t3.getLexema());}
+											if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}
 									else{
 										analizadorTerceto.agregarError("Error variable '"+t1.getLexema() + "' no declarada.",lexico.nroLinea);
-										tablaSimbolos.eliminarClave(t1.getLexema());}	
+										if (tablaSimbolos.getClave(t1.getLexema()).getCantRef==1)
+																tablaSimbolos.eliminarClave(t1.getLexema());
+															else
+																tablaSimbolos.getClave(t1.getLexema()).decrementarRef();}	
 									}
 break;
 case 62:
-//#line 287 "GramaticaFinal.y"
+//#line 320 "GramaticaFinal.y"
 {}
 break;
 case 63:
-//#line 291 "GramaticaFinal.y"
+//#line 324 "GramaticaFinal.y"
 {}
 break;
 case 64:
-//#line 292 "GramaticaFinal.y"
+//#line 325 "GramaticaFinal.y"
 {actualizarTablaPositivo(((Token)val_peek(0).obj).getLexema());
 					((Token)val_peek(0).obj).setTipo("int");
 					if(((Token)val_peek(0).obj).getLexema().equals("32768"))
@@ -1304,34 +1335,34 @@ case 64:
 					}
 break;
 case 65:
-//#line 298 "GramaticaFinal.y"
+//#line 331 "GramaticaFinal.y"
 {((Token)val_peek(0).obj).setTipo("float");
 					tablaSimbolos.getClave(((Token)val_peek(0).obj).getLexema()).setUso("CTF");
 					yyval = val_peek(0);
 					}
 break;
 case 66:
-//#line 302 "GramaticaFinal.y"
+//#line 335 "GramaticaFinal.y"
 {actualizarTablaNegativo(((Token)val_peek(0).obj).getLexema());
 						Token tNegativo = new Token("-"+((Token)val_peek(0).obj).getLexema());
 						tNegativo.setTipo("int");
 						yyval = new ParserVal(tNegativo);}
 break;
 case 67:
-//#line 306 "GramaticaFinal.y"
+//#line 339 "GramaticaFinal.y"
 {actualizarTablaNegativoFloat(((Token)val_peek(0).obj).getLexema());
 						Token tNegativo = new Token("-"+((Token)val_peek(0).obj).getLexema());
 						tNegativo.setTipo("float");
 						yyval = new ParserVal(tNegativo);}
 break;
 case 69:
-//#line 311 "GramaticaFinal.y"
+//#line 344 "GramaticaFinal.y"
 {Token tNegativo = new Token("-"+((Token)val_peek(0).obj).getLexema());
 							tNegativo.setTipo(((Token)val_peek(0).obj).getTipo());
 							yyval = new ParserVal(tNegativo);}
 break;
 case 71:
-//#line 318 "GramaticaFinal.y"
+//#line 351 "GramaticaFinal.y"
 {	if (!estaDeclarada(((Token)val_peek(3).obj))){
 									analizadorTerceto.agregarError("Error coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",lexico.nroLinea);
 									tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
@@ -1371,7 +1402,7 @@ case 71:
 								}
 break;
 case 72:
-//#line 356 "GramaticaFinal.y"
+//#line 389 "GramaticaFinal.y"
 {	if (!estaDeclarada(((Token)val_peek(3).obj))){
 										analizadorTerceto.agregarError("Coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",lexico.nroLinea);
 										tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
@@ -1397,7 +1428,7 @@ case 72:
 								}
 break;
 case 73:
-//#line 379 "GramaticaFinal.y"
+//#line 412 "GramaticaFinal.y"
 {	
 					Token t = ((Token)val_peek(0).obj);
 					t.setTipo(tablaSimbolos.getClave(t.getLexema()).getTipo());
@@ -1405,7 +1436,7 @@ case 73:
 				}
 break;
 case 83:
-//#line 402 "GramaticaFinal.y"
+//#line 435 "GramaticaFinal.y"
 { 
 					analizadorTerceto.apilar();
 					TercetoAbstracto tercetoEtiqueta = new TercetoEtiqueta(new Token("Lbl" + analizadorTerceto.getProximoTerceto()),null,null,analizadorTerceto.getProximoTerceto());
@@ -1413,7 +1444,7 @@ case 83:
 					analizadorTerceto.addTerceto(tercetoEtiqueta);}
 break;
 case 84:
-//#line 408 "GramaticaFinal.y"
+//#line 441 "GramaticaFinal.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(5).obj).getNroLinea() + ": Sentencia until");
 	TercetoDO tercetoDO = new TercetoDO(new Token("BF"), null,null,analizadorTerceto.getProximoTerceto());
 	tercetoDO.setTipoSalto(((Token)val_peek(1).obj).getOperador());
@@ -1423,31 +1454,31 @@ case 84:
 	}
 break;
 case 85:
-//#line 415 "GramaticaFinal.y"
+//#line 448 "GramaticaFinal.y"
 {this.addError("Falta bloque de sentencias.",((Token)val_peek(4).obj).getNroLinea());}
 break;
 case 86:
-//#line 416 "GramaticaFinal.y"
+//#line 449 "GramaticaFinal.y"
 {this.addError("Falta 'until'.",((Token)val_peek(3).obj).getNroLinea());}
 break;
 case 87:
-//#line 417 "GramaticaFinal.y"
+//#line 450 "GramaticaFinal.y"
 {this.addError("Falta '('.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 88:
-//#line 418 "GramaticaFinal.y"
+//#line 451 "GramaticaFinal.y"
 {this.addError("Falta condicion.",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 89:
-//#line 419 "GramaticaFinal.y"
+//#line 452 "GramaticaFinal.y"
 {this.addError("Falta ')'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 91:
-//#line 423 "GramaticaFinal.y"
+//#line 456 "GramaticaFinal.y"
 {yyval = val_peek(0);}
 break;
 case 92:
-//#line 425 "GramaticaFinal.y"
+//#line 458 "GramaticaFinal.y"
 {listaCorrectas.add("Linea " + ((Token)val_peek(3).obj).getNroLinea() + ": Sentencia PRINT");
 												TercetoPrint tercetoPrint = new TercetoPrint ( ((Token)val_peek(3).obj), ((Token)val_peek(1).obj ), null, analizadorTerceto.getProximoTerceto() );
 												tercetoPrint.setNombre("Print");
@@ -1457,23 +1488,23 @@ case 92:
 	}
 break;
 case 93:
-//#line 432 "GramaticaFinal.y"
+//#line 465 "GramaticaFinal.y"
 {this.addError("Falta 'PRINT'.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 94:
-//#line 433 "GramaticaFinal.y"
+//#line 466 "GramaticaFinal.y"
 {this.addError("Falta '('.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 95:
-//#line 434 "GramaticaFinal.y"
+//#line 467 "GramaticaFinal.y"
 {this.addError("Falta variable o cadena .",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 96:
-//#line 435 "GramaticaFinal.y"
+//#line 468 "GramaticaFinal.y"
 {this.addError("Falta ')'.",((Token)val_peek(0).obj).getNroLinea());}
 break;
 case 97:
-//#line 438 "GramaticaFinal.y"
+//#line 471 "GramaticaFinal.y"
 {	if (!estaDeclarada(((Token)val_peek(3).obj))){
 									analizadorTerceto.agregarError("Error coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",lexico.nroLinea);
 									tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
@@ -1499,8 +1530,6 @@ case 97:
 										((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 										((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 										TercetoColeccionIzq terceto = new TercetoColeccionIzq((new Token("OFFSET")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
-										
-										
 										terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 										analizadorTerceto.addTerceto(terceto);
 										Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
@@ -1512,7 +1541,7 @@ case 97:
 								}
 break;
 case 98:
-//#line 475 "GramaticaFinal.y"
+//#line 506 "GramaticaFinal.y"
 {	if (!estaDeclarada(((Token)val_peek(3).obj))){
 										analizadorTerceto.agregarError("Coleccion '"+((Token)val_peek(3).obj).getLexema() + "' no declarada.",lexico.nroLinea);
 										tablaSimbolos.eliminarClave(((Token)val_peek(3).obj).getLexema());
@@ -1538,7 +1567,7 @@ case 98:
 								}
 break;
 case 99:
-//#line 498 "GramaticaFinal.y"
+//#line 529 "GramaticaFinal.y"
 {	
 					Token t = ((Token)val_peek(0).obj);
 					t.setTipo(tablaSimbolos.getClave(t.getLexema()).getTipo());
@@ -1546,7 +1575,7 @@ case 99:
 				}
 break;
 case 100:
-//#line 505 "GramaticaFinal.y"
+//#line 536 "GramaticaFinal.y"
 {listaCorrectas.add("Linea " + lexico.getNroLinea() + ": Asignacion");
 														Token t1 = ((Token)val_peek(3).obj);
 														Token t3 = ((Token)val_peek(1).obj);
@@ -1575,28 +1604,28 @@ case 100:
 														}
 break;
 case 101:
-//#line 532 "GramaticaFinal.y"
+//#line 563 "GramaticaFinal.y"
 {this.addError("Falta variable.",lexico.getNroLinea());}
 break;
 case 102:
-//#line 533 "GramaticaFinal.y"
+//#line 564 "GramaticaFinal.y"
 {this.addError("Falta ':='.",lexico.getNroLinea());}
 break;
 case 103:
-//#line 534 "GramaticaFinal.y"
+//#line 565 "GramaticaFinal.y"
 {this.addError("Falta expresion.",lexico.getNroLinea());}
 break;
 case 104:
-//#line 535 "GramaticaFinal.y"
+//#line 566 "GramaticaFinal.y"
 {this.addError("Falta ';'.",lexico.getNroLinea());}
 break;
 case 108:
-//#line 543 "GramaticaFinal.y"
+//#line 574 "GramaticaFinal.y"
 { 
 											if (esColeccion(((Token)val_peek(4).obj).getLexema())){
 												((Token)val_peek(4).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTipo());
 												TercetoMetodos tercetoMetodo = new TercetoMetodos(new Token("METODO"), ((Token)val_peek(4).obj) , 					((Token)val_peek(2).obj),analizadorTerceto.getProximoTerceto());
-												tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTamanioColeccion());
+												tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTamanioColeccion()); /*SACAR LINEA*/
 												analizadorTerceto.addTerceto(tercetoMetodo);
 										
 												Token nuevo = new Token("@" + analizadorTerceto.getNumeroTerceto());
@@ -1614,18 +1643,18 @@ case 108:
 										}
 break;
 case 109:
-//#line 563 "GramaticaFinal.y"
+//#line 594 "GramaticaFinal.y"
 {this.addError("Falta '(.'",((Token)val_peek(1).obj).getNroLinea());}
 break;
 case 110:
-//#line 564 "GramaticaFinal.y"
+//#line 595 "GramaticaFinal.y"
 {this.addError("Falta metodo.",((Token)val_peek(2).obj).getNroLinea());}
 break;
 case 111:
-//#line 565 "GramaticaFinal.y"
+//#line 596 "GramaticaFinal.y"
 {this.addError("No es un metodo predefinido.",((Token)val_peek(3).obj).getNroLinea());}
 break;
-//#line 1552 "Parser.java"
+//#line 1581 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
