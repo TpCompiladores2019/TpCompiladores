@@ -43,7 +43,7 @@ public class TercetoIF extends TercetoAbstracto{
 		String assembler ="";
 		int numLabel = Integer.parseInt(listTerceto.get(1).getLexema().substring(1));
 		assembler = assembler + etiquetaSaltoIncondicional + "Label" + numLabel + '\n';
-		assembler =	assembler + "Label" + String.valueOf(AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1)) + ":" + '\n';
+		assembler =	assembler + "Label" + AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1) + ":" + '\n';
 		AnalizadorTercetos.listLabel.add(numLabel);
 		return assembler;
 			

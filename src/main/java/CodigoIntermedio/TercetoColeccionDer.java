@@ -18,8 +18,8 @@ public class TercetoColeccionDer extends TercetoAbstracto{
 	public String getCodigoAssembler() {
 		Token tercetoIzq = listTerceto.get(1);
 		Token tercetoDer = listTerceto.get(2);
-		String lexemaIzq = listTerceto.get(1).getLexema();
-		String lexemaDer = listTerceto.get(2).getLexema();
+		String lexemaIzq = tercetoIzq.getLexema();
+		String lexemaDer = tercetoDer.getLexema();
 		String offset = listTerceto.get(0).getLexema();
 		String assembler = "";
 		if (tercetoIzq.getTipo().equals("int")) {

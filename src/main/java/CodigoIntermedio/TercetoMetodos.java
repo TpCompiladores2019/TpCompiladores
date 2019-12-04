@@ -18,8 +18,8 @@ public class TercetoMetodos extends TercetoAbstracto {
 		Token tercetoIzq = listTerceto.get(1);
 		Token tercetoDer = listTerceto.get(2);
 		
-		String lexemaIzq=listTerceto.get(1).getLexema();
-		String lexemaDer=listTerceto.get(2).getLexema();
+		String lexemaIzq=tercetoIzq.getLexema();
+		String lexemaDer=tercetoDer.getLexema();
 		if (lexemaDer.contains("length")) {
 				assembler=assembler+ "MOV auxiliar@" +getNumTerceto() + ","+tamanio + '\n';
 		}

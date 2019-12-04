@@ -1,35 +1,30 @@
 El programa llego al final. 
 
 Tokens Detectados: 
-Linea 1 Palabra Reservada: float
-Linea 1 Identificador: aux1
+Linea 1 Palabra Reservada: int
+Linea 1 Identificador: a
+Linea 1: [
+Linea 1 Constante Entera: 4
+Linea 1: ]
 Linea 1: ;
 Linea 2 Palabra Reservada: int
-Linea 2 Identificador: id
+Linea 2 Identificador: b
 Linea 2: ;
 Linea 3 Palabra Reservada: begin
-Linea 4 Palabra Reservada: if
+Linea 4 Identificador: b
+Linea 4: :=
+Linea 4 Identificador: a
+Linea 4: .
+Linea 4 Palabra Reservada: length
 Linea 4: (
-Linea 4: -
-Linea 4 Constante Entera: 10
-Linea 4: >=
-Linea 4 Constante Entera: 30
 Linea 4: )
-Linea 5 Palabra Reservada: begin
-Linea 6 Identificador: id
-Linea 6: :=
-Linea 6 Constante Entera: 3
-Linea 6: ;
+Linea 4: ;
 Linea 7 Palabra Reservada: end
-Linea 8 Palabra Reservada: end_if
-Linea 8: ;
-Linea 10 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
 Linea 2: Sentencia declarativa
-Linea 6: Asignacion
-Linea 4: Sentencia IF
+Linea 4: Asignacion
 
 Sin errores lexicos 
 
@@ -38,13 +33,11 @@ Sin warning lexicos
 Sin errores semanticos 
 
 Tabla de Simbolos: 
-aux1: Tipo: float, Uso:Variable
-3: Tipo: int, Uso:CTE
-id: Tipo: int, Uso:Variable
--10: Tipo: int, Uso:CTE
-30: Tipo: int, Uso:CTE
+a: Tipo: int, Uso:Nombre de Coleccion, Tamaño de Coleccion: 4
+b: Tipo: int, Uso:Variable
+auxiliar@1: Tipo: int, Uso:Variable Auxiliar
+4: Tipo: int, Uso:null
 
 Tercetos: 
-1  (>=, -10, 30)
-2  (BF, @1, @4)
-3  (:=, id, 3)
+1  (METODO, a, length)
+2  (:=, b, @1)
