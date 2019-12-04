@@ -20,22 +20,22 @@ public class TercetoPrint extends TercetoAbstracto{
 		Token tPrint = listTerceto.get(1);
 		print = listTerceto.get(1).getLexema();
 		print = print.replace(' ', '@');
-		String assembler = ""; 
+		StringBuilder assembler = new StringBuilder(); 
 		if (lexemaPrint.contains("@")){
 			if (tPrint.getTipo().equals("int"))
-				assembler = "invoke printf , cfm$(\"%d\\n\"), auxiliar" + lexemaPrint;
+				assembler.append("invoke printf , cfm$(\"%d\\n\"), auxiliar" + lexemaPrint);
 			else
-				assembler = "invoke printf , cfm$(\"%.20f\\n\"), auxiliar" + lexemaPrint;
+				assembler.append("invoke printf , cfm$(\"%.20f\\n\"), auxiliar" + lexemaPrint);
 		}
 		else
 			if (tPrint.getTipo()!= null)
 				if (tPrint.getTipo().equals("int")) 
-					assembler = "invoke printf , cfm$(\"%d\\n\"), _" + lexemaPrint.replace('-', '@');
+					assembler.append("invoke printf , cfm$(\"%d\\n\"), _" + lexemaPrint.replace('-', '@'));
 				else
-					assembler = "invoke printf , cfm$(\"%.20f\\n\"), _" + lexemaPrint.replace('-', '@').replace('.', '@');
+					assembler.append("invoke printf , cfm$(\"%.20f\\n\"), _" + lexemaPrint.replace('-', '@').replace('.', '@'));
 			else
-				assembler = "invoke MessageBox, NULL, addr "+ "_" +print +", addr "+ "_" +print+", MB_OK \n";
-        return assembler;
+				assembler.append("invoke MessageBox, NULL, addr "+ "_" +print +", addr "+ "_" +print+", MB_OK \n");
+        return assembler.toString();
 	}
 
 }

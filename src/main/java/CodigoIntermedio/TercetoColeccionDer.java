@@ -21,28 +21,28 @@ public class TercetoColeccionDer extends TercetoAbstracto{
 		String lexemaIzq = tercetoIzq.getLexema();
 		String lexemaDer = tercetoDer.getLexema();
 		String offset = listTerceto.get(0).getLexema();
-		String assembler = "";
+		StringBuilder assembler = new StringBuilder();
 		if (tercetoIzq.getTipo().equals("int")) {
-			assembler = assembler + "MOV EAX, _" + lexemaDer + '\n';
-			assembler = assembler + "CMP " + "EAX"+ ", " + 0 + '\n';
-			assembler = assembler + "JL LabelSubIndices" + '\n';
-			assembler = assembler + "CMP EAX," + tamanio + '\n';
-			assembler = assembler + "JGE LabelSubIndices" + '\n';
-			assembler = assembler + "MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n';
-			assembler = assembler + "MOV EAX, [ECX + EAX*4]" + '\n';
-			assembler = assembler + "MOV auxiliar@" + getNumTerceto()+", EAX" + '\n'; 
+			assembler.append("MOV EAX, _" + lexemaDer + '\n');
+			assembler.append("CMP " + "EAX"+ ", " + 0 + '\n');
+			assembler.append("JL LabelSubIndices" + '\n');
+			assembler.append("CMP EAX," + tamanio + '\n');
+			assembler.append("JGE LabelSubIndices" + '\n');
+			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n');
+			assembler.append("MOV EAX, [ECX + EAX*4]" + '\n');
+			assembler.append("MOV auxiliar@" + getNumTerceto()+", EAX" + '\n'); 
 		}
 		else {
-			assembler = assembler + "MOV EAX, _" + lexemaDer + '\n';
-			assembler = assembler + "CMP " + "EAX"+ ", " + 0 + '\n';
-			assembler = assembler + "JL LabelSubIndices" + '\n';
-			assembler = assembler + "CMP EAX," + tamanio + '\n';
-			assembler = assembler + "JGE LabelSubIndices" + '\n';
-			assembler = assembler + "MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n';
-			assembler = assembler + "FLD DWORD PTR [ECX + EAX*8] " + '\n'; 
-			assembler = assembler + "FST auxiliar@" + getNumTerceto()+ '\n'; 
+			assembler.append("MOV EAX, _" + lexemaDer + '\n');
+			assembler.append("CMP " + "EAX"+ ", " + 0 + '\n');
+			assembler.append("JL LabelSubIndices" + '\n');
+			assembler.append("CMP EAX," + tamanio + '\n');
+			assembler.append("JGE LabelSubIndices" + '\n');
+			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n');
+			assembler.append("FLD DWORD PTR [ECX + EAX*8] " + '\n'); 
+			assembler.append("FST auxiliar@" + getNumTerceto()+ '\n'); 
 		}
-		return assembler;
+		return assembler.toString();
 	}
 
 }

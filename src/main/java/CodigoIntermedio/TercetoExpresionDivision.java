@@ -10,7 +10,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
 	}
 
     public String getCodigoAssembler() {
-    	String assembler= "";
+    	StringBuilder assembler= new StringBuilder();
     	
     	String operador = "IDIV";
     	String lexemaIzq = listTerceto.get(1).getLexema();
@@ -27,16 +27,17 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     					"JE DividirCero" + '\n' +
     					"IDIV EBX" + '\n' +
     					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
-    		else {assembler = assembler + "FINIT" + '\n';
-	    		assembler = assembler + "FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
-	          	assembler = assembler + "FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
-	            assembler = assembler + "FLDZ"+'\n';
-	            assembler = assembler + "FCOM" + '\n';
-	            assembler = assembler + "FSTSW AX" + '\n';
-	            assembler = assembler + "SAHF" + '\n';
-	            assembler = assembler + "JE DividirCero" + '\n';
-	          	assembler = assembler + "FDIV "  + '\n';
-	            assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
+    		else {
+    			assembler.append("FINIT" + '\n');
+	    		assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
+	          	assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
+	            assembler.append("FLDZ"+'\n');
+	            assembler.append("FCOM" + '\n');
+	            assembler.append("FSTSW AX" + '\n');
+	            assembler.append("SAHF" + '\n');
+	            assembler.append("JE DividirCero" + '\n');
+	          	assembler.append("FDIV "  + '\n');
+	            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
 	           
     		}
     	else
@@ -49,16 +50,17 @@ public class TercetoExpresionDivision extends TercetoExpresion {
         					"JE DividirCero" + '\n' +
         					"IDIV EBX" + '\n' +
         					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
-    			else{assembler = assembler + "FINIT" + '\n';
-    				assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
-				 	assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
-				 	assembler = assembler + "FLDZ"+'\n';
-		            assembler = assembler + "FCOM" + '\n';
-		            assembler = assembler + "FSTSW AX" + '\n';
-		            assembler = assembler + "SAHF" + '\n';
-		            assembler = assembler + "JE DividirCero" + '\n';
-		          	assembler = assembler + "FDIV "  + '\n';
-		            assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
+    			else{
+    				assembler.append("FINIT" + '\n');
+    				assembler.append("FLD " +  "auxiliar" + lexemaIzq + '\n');
+				 	assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+				 	assembler.append("FLDZ"+'\n');
+		            assembler.append("FCOM" + '\n');
+		            assembler.append("FSTSW AX" + '\n');
+		            assembler.append("SAHF" + '\n');
+		            assembler.append("JE DividirCero" + '\n');
+		          	assembler.append("FDIV "  + '\n');
+		            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
     			}
     		else
     			if (!lexemaIzq.contains("@") && (lexemaDer.contains("@"))) //(operador,id,terceto)
@@ -71,15 +73,16 @@ public class TercetoExpresionDivision extends TercetoExpresion {
             					"IDIV EBX" + '\n' +
             					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
         			}
-        			else {assembler = assembler + "FINIT" + '\n';
-        				assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
-        				assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
-        				assembler = assembler + "FCOM" + '\n';
-     		            assembler = assembler + "FSTSW AX" + '\n';
-     		            assembler = assembler + "SAHF" + '\n';
-     		            assembler = assembler + "JE DividirCero" + '\n';
-     		          	assembler = assembler + "FDIV "  + '\n';
-     		            assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
+        			else {
+        				assembler.append("FINIT" + '\n');
+        				assembler.append("FLD " +  "auxiliar" + lexemaIzq + '\n');
+        				assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+        				assembler.append("FCOM" + '\n');
+     		            assembler.append("FSTSW AX" + '\n');
+     		            assembler.append("SAHF" + '\n');
+     		            assembler.append("JE DividirCero" + '\n');
+     		          	assembler.append("FDIV "  + '\n');
+     		            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
         			}
     			else //(operador,terceto,terceto)
     				if (lexemaIzq.contains("@") && (lexemaDer.contains("@")))
@@ -92,17 +95,18 @@ public class TercetoExpresionDivision extends TercetoExpresion {
     	        					"IDIV EBX" + '\n' +
     	        					"MOV auxiliar@" + getNumTerceto() + " , EAX" + '\n';
     	    			
-    					else {assembler = assembler + "FINIT" + '\n';
-	    					assembler = assembler + "FLD " + "auxiliar" + lexemaIzq + '\n';
-	   					 	assembler = assembler + "FLD " +  "auxiliar" + lexemaDer + '\n';
-    						assembler = assembler + "FCOM" + '\n';
-	     		            assembler = assembler + "FSTSW AX" + '\n';
-	     		            assembler = assembler + "SAHF" + '\n';
-	     		            assembler = assembler + "JE DividirCero" + '\n';
-	     		          	assembler = assembler + "FDIV "  + '\n';
-	     		            assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
+    					else {
+    						assembler.append("FINIT" + '\n');
+	    					assembler.append("FLD " + "auxiliar" + lexemaIzq + '\n');
+	   					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
+    						assembler.append("FCOM" + '\n');
+	     		            assembler.append("FSTSW AX" + '\n');
+	     		            assembler.append("SAHF" + '\n');
+	     		            assembler.append("JE DividirCero" + '\n');
+	     		          	assembler.append("FDIV "  + '\n');
+	     		            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
     					}
-    	return assembler;
+    	return assembler.toString();
     
     }
  

@@ -10,7 +10,7 @@ public class TercetoExpresionMult extends TercetoExpresion {
 	
 	
     public String getCodigoAssembler() {
-    	String assembler= "" ;
+    	StringBuilder assembler= new StringBuilder();
     	
     	String operador = "IMUL";
 
@@ -25,10 +25,10 @@ public class TercetoExpresionMult extends TercetoExpresion {
              			+ operador + " EAX, " + "_"+  lexemaDer.replace('-', '@') + '\n'
              			+ "MOV "  + "auxiliar@" + getNumTerceto() + " ,EAX" + '\n';
              else{
-            	 assembler = assembler + "FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
-            	 assembler = assembler + "FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n';
-            	 assembler = assembler + "FMUL " + '\n';
-            	 assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';
+            	 assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
+            	 assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
+            	 assembler.append("FMUL " + '\n');
+            	 assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
              }
              }
          	
@@ -39,10 +39,10 @@ public class TercetoExpresionMult extends TercetoExpresion {
  			                 + operador +" EAX," + "auxiliar" + lexemaDer  +'\n'
  			                 + "MOV " + "auxiliar@" + getNumTerceto() + ", EAX" + '\n';
          		else{
-         			assembler = assembler + "FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
-         			assembler = assembler + "FLD " +  "auxiliar" + lexemaDer + '\n';
-   		            assembler = assembler + "FMUL" + " " + '\n';
-   		            assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';  					
+         			assembler.append("FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+         			assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
+   		            assembler.append("FMUL" + " " + '\n');
+   		            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');  					
    				}
          	}
          	else
@@ -52,10 +52,10 @@ public class TercetoExpresionMult extends TercetoExpresion {
  				                 + operador +" EAX, " + "_"+lexemaDer.replace('-', '@') + '\n'
  				                 + "MOV " + "auxiliar@" + getNumTerceto() +", EAX" + '\n';
          			else {
-         				assembler = assembler + "FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
-						assembler = assembler + "FLD " +  "auxiliar" + lexemaIzq + '\n';
-			            assembler = assembler + "FMUL " + '\n';
-			            assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n'; 					
+         				assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+						assembler.append("FLD " +  "auxiliar" + lexemaIzq + '\n');
+			            assembler.append("FMUL " + '\n');
+			            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n'); 					
 					}
          					
          		else	// (OP,@,@)
@@ -64,13 +64,13 @@ public class TercetoExpresionMult extends TercetoExpresion {
  					             + operador +" EAX, " + "auxiliar" + lexemaDer + '\n' 
  					             + "MOV " + "auxiliar@" + getNumTerceto() + ",EAX" + '\n';
          			else{
-    					assembler = assembler + "FLD " + "auxiliar" + lexemaIzq + '\n';
-   					 	assembler = assembler + "FLD " +  "auxiliar" + lexemaDer + '\n';
-   					 	assembler = assembler + "FMUL " + '\n';
-   					 	assembler = assembler + "FST " + "auxiliar@" + getNumTerceto() + '\n';					
+    					assembler.append("FLD " + "auxiliar" + lexemaIzq + '\n');
+   					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
+   					 	assembler.append("FMUL " + '\n');
+   					 	assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');					
     				}
          
-         return assembler;
+         return assembler.toString();
      }
     
 

@@ -21,30 +21,30 @@ public class TercetoColeccionIzq extends TercetoAbstracto{
 		String lexemaIzq = tercetoIzq.getLexema();
 		String lexemaDer = tercetoDer.getLexema();
 		String offset = listTerceto.get(0).getLexema();
-		String assembler = "";
+		StringBuilder assembler = new StringBuilder();
 		if (tercetoIzq.getTipo().equals("int")) {
-			assembler = assembler + "MOV ECX, _" + lexemaDer + '\n';
-			assembler = assembler + "CMP " + "ECX"+ ", " + 0 + '\n';
-			assembler = assembler + "JL LabelSubIndices" + '\n';
-			assembler = assembler + "CMP ECX," + tamanio + '\n';
-			assembler = assembler + "JGE LabelSubIndices" + '\n';
-			assembler = assembler + "MOV esi, " + offset + " " + "_" + lexemaIzq +  '\n';
-			assembler = assembler + "MOV EAX, _" + lexemaDer + '\n';
-			assembler = assembler + "IMUL EAX, 4" + '\n';
-			assembler = assembler + "ADD esi,EAX" + '\n'; 
+			assembler.append("MOV ECX, _" + lexemaDer + '\n');
+			assembler.append("CMP " + "ECX"+ ", " + 0 + '\n');
+			assembler.append("JL LabelSubIndices" + '\n');
+			assembler.append("CMP ECX," + tamanio + '\n');
+			assembler.append("JGE LabelSubIndices" + '\n');
+			assembler.append("MOV esi, " + offset + " " + "_" + lexemaIzq +  '\n');
+			assembler.append("MOV EAX, _" + lexemaDer + '\n');
+			assembler.append("IMUL EAX, 4" + '\n');
+			assembler.append("ADD esi,EAX" + '\n'); 
 		}
 		else {
-			assembler = assembler + "MOV ECX, _" + lexemaDer + '\n';
-			assembler = assembler + "CMP " + "ECX"+ ", " + 0 + '\n';
-			assembler = assembler + "JL LabelSubIndices" + '\n';
-			assembler = assembler + "CMP ECX," + tamanio + '\n';
-			assembler = assembler + "JGE LabelSubIndices" + '\n';
-			assembler = assembler + "MOV esi, " + offset + " " + "_" + lexemaIzq +  '\n';
-			assembler = assembler + "MOV EAX, _" + lexemaDer + '\n';
-			assembler = assembler + "IMUL EAX, 8" + '\n';
-			assembler = assembler + "ADD esi,EAX" + '\n';
+			assembler.append("MOV ECX, _" + lexemaDer + '\n');
+			assembler.append("CMP " + "ECX"+ ", " + 0 + '\n');
+			assembler.append("JL LabelSubIndices" + '\n');
+			assembler.append("CMP ECX," + tamanio + '\n');
+			assembler.append("JGE LabelSubIndices" + '\n');
+			assembler.append("MOV esi, " + offset + " " + "_" + lexemaIzq +  '\n');
+			assembler.append("MOV EAX, _" + lexemaDer + '\n');
+			assembler.append("IMUL EAX, 8" + '\n');
+			assembler.append("ADD esi,EAX" + '\n');
 		}
-		return assembler;
+		return assembler.toString();
 		
 		
 		
