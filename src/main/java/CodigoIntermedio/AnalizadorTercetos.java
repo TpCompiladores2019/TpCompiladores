@@ -80,11 +80,9 @@ public class AnalizadorTercetos {
 		listErroresSemanticos.add(new Error(mensaje, nroLinea, "", "ERROR"));
 	}
 
-	public int borrarLabelPendientes() {
+	public void borrarLabelPendientes() {
 		int label = listLabel.get(listLabel.size()-1);
 		listLabel.remove(listLabel.size()-1);
-		
-		return label;
 	}
 	
 	public String imprimirErroresSemanticos() {
@@ -104,8 +102,9 @@ public class AnalizadorTercetos {
 			code = code + listTercetos.get(i).getCodigoAssembler() + '\n';
 			tercetoActual++;
 			if ( (!listLabel.isEmpty()) && ( tercetoActual == listLabel.get(listLabel.size()-1))){
-					code = code + "Label" + String.valueOf(listLabel.get(listLabel.size()-1))+ ":" + '\n';
+					code = code + "Label" + listLabel.get(listLabel.size()-1)+ ":" + '\n';
 	                borrarLabelPendientes();
+	                System.out.println("Entra");
 	            }
 			}
             

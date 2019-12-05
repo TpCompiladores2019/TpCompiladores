@@ -14,45 +14,43 @@ public class TercetoMetodos extends TercetoAbstracto {
 	}
 	@Override
 	public String getCodigoAssembler() {
-		String assembler="";
+		StringBuilder assembler=new StringBuilder();
 		Token tercetoIzq = listTerceto.get(1);
 		Token tercetoDer = listTerceto.get(2);
 		
 		String lexemaIzq=tercetoIzq.getLexema();
 		String lexemaDer=tercetoDer.getLexema();
 		if (lexemaDer.contains("length")) {
-				assembler=assembler+ "MOV auxiliar@" +getNumTerceto() + ","+tamanio + '\n';
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+				assembler.append("CALL FUNCION_LENGTH"+ '\n');
+				assembler.append("MOV auxiliar@" +getNumTerceto() + ", auxiliarInt" + '\n');
 		}
 		if (lexemaDer.contains("first")) {
 			if (tercetoIzq.getTipo().equals("int")) {
-				assembler = assembler + "MOV EAX, OFFSET _" + lexemaIzq + '\n';
-				assembler = assembler + "CALL FUNCION_FIRSTI" + '\n';
-				assembler = assembler + "MOV EAX,auxiliar" + '\n';
-				assembler = assembler + "MOV auxiliar@" + getNumTerceto() + ", EAX"  + '\n';
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+				assembler.append("CALL FUNCION_FIRSTINT" + '\n');
+				assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarInt"  + '\n');
 				}
 			else {
-				 assembler = assembler + "MOV esi, OFFSET _"  + lexemaIzq + '\n';
-				 assembler = assembler + "FLD DWORD PTR [esi] " + '\n'; 
-                 assembler = assembler + "FST auxiliar@" + getNumTerceto() + '\n';
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+				assembler.append("CALL FUNCION_FIRSTFLOAT" + '\n');
+				assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarFloat"  + '\n');
 			}
 				
 		}
 		if (lexemaDer.contains("last")) 
 			if (tercetoIzq.getTipo().equals("int")) {
-			assembler = assembler + "MOV EAX, OFFSET _" + lexemaIzq + '\n';
-			assembler = assembler + "MOV ECX, " + (tamanio-1) + '\n';
-			assembler = assembler + "CALL FUNCION_LASTI" + '\n';
-			assembler = assembler + "MOV EAX,auxiliar" + '\n';
-			assembler = assembler + "MOV auxiliar@" + getNumTerceto() + ", EAX"  + '\n';
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+				assembler.append("CALL FUNCION_LASTINT" + '\n');
+				assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarInt"  + '\n');
 		}
 		else {
-			 assembler = assembler + "MOV esi, OFFSET _"  + lexemaIzq + '\n';
-			 assembler = assembler + "ADD esi, "+ (tamanio-1)*8 + '\n';
-			 assembler = assembler + "FLD DWORD PTR [esi] " + '\n'; 
-             assembler = assembler + "FST auxiliar@" + getNumTerceto() + '\n';
+			assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+			assembler.append("CALL FUNCION_LASTFLOAT" + '\n');
+			assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarFloat"  + '\n');
 			
 		}
-	return assembler;
+	return assembler.toString();
 	}
 
 }

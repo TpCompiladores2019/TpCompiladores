@@ -4,27 +4,26 @@ Tokens Detectados:
 Linea 1 Palabra Reservada: int
 Linea 1 Identificador: a
 Linea 1: [
-Linea 1 Constante Entera: 4
+Linea 1 Constante Entera: 3
 Linea 1: ]
 Linea 1: ;
-Linea 2 Palabra Reservada: int
-Linea 2 Identificador: b
-Linea 2: ;
-Linea 3 Palabra Reservada: begin
-Linea 4 Identificador: b
-Linea 4: :=
-Linea 4 Identificador: a
-Linea 4: .
-Linea 4 Palabra Reservada: length
+Linea 2 Palabra Reservada: begin
+Linea 3 Palabra Reservada: print
+Linea 3: (
+Linea 3 Cadena: hola
+Linea 3: )
+Linea 3: ;
+Linea 4 Palabra Reservada: print
 Linea 4: (
+Linea 4 Cadena: pepe
 Linea 4: )
 Linea 4: ;
-Linea 7 Palabra Reservada: end
+Linea 5 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
-Linea 2: Sentencia declarativa
-Linea 4: Asignacion
+Linea 3: Sentencia PRINT
+Linea 4: Sentencia PRINT
 
 Sin errores lexicos 
 
@@ -33,11 +32,11 @@ Sin warning lexicos
 Sin errores semanticos 
 
 Tabla de Simbolos: 
-a: Tipo: int, Uso:Nombre de Coleccion, Tamaño de Coleccion: 4
-b: Tipo: int, Uso:Variable
-auxiliar@1: Tipo: int, Uso:Variable Auxiliar
-4: Tipo: int, Uso:null
+a: Tipo: int, Uso:Nombre de Coleccion, Tamaño de Coleccion: 3
+3: Tipo: int, Uso:null
+hola: Tipo: Cadena, Uso:null
+pepe: Tipo: Cadena, Uso:null
 
 Tercetos: 
-1  (METODO, a, length)
-2  (:=, b, @1)
+1  (print, hola,  - )
+2  (print, pepe,  - )

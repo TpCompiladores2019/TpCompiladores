@@ -23,50 +23,50 @@ public class TercetoAsignacionRowing extends TercetoAbstracto {
 		String lexemaIzq = tercetoIzq.getLexema();
 		String lexemaDer = tercetoDer.getLexema();
 		
-		String assembler = "";
+		StringBuilder assembler = new StringBuilder();
 		if (!lexemaDer.contains("@")){
 			if(tercetoIzq.getTipo().equals("int")) {
-				assembler = assembler + "MOV esi, OFFSET _" + lexemaIzq + '\n';
-				assembler = assembler + "MOV EAX, _" + lexemaDer.replace('-', '@') + '\n';
-				assembler = assembler + "XOR ECX,ECX" + '\n';
-				assembler = assembler + "L" + getNumTerceto() + ": " + '\n';
-				assembler = assembler + "MOV [esi + ECX * 4], EAX " + '\n';
-				assembler = assembler + "ADD ECX,1" + '\n';
-				assembler = assembler + "cmp ECX, LENGTHOF _" + lexemaIzq + '\n';
-				assembler = assembler + "jne L" + getNumTerceto() + '\n';
+				assembler.append("MOV esi, OFFSET _" + lexemaIzq + '\n');
+				assembler.append("MOV AX, _" + lexemaDer.replace('-', '@') + '\n');
+				assembler.append("XOR ECX,ECX" + '\n');
+				assembler.append("L" + getNumTerceto() + ": " + '\n');
+				assembler.append("MOV [esi + ECX * 2], AX " + '\n');
+				assembler.append("ADD ECX,1" + '\n');
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
+				assembler.append("jne L" + getNumTerceto() + '\n');
 			}
 			else {
-				assembler = assembler + "XOR ECX,ECX" + '\n';
-				assembler = assembler + "FLD _" + lexemaDer.replace("-", "@").replace("+", "@").replace(".", "@") + '\n';
-				assembler = assembler + "L" + getNumTerceto() + ": " + '\n';
-				assembler = assembler + "FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n';
-				assembler = assembler + "ADD ECX,1" + '\n';
-				assembler = assembler + "cmp ECX, LENGTHOF _" + lexemaIzq + '\n';
-				assembler = assembler + "jne L" + getNumTerceto() + '\n';
+				assembler.append("XOR ECX,ECX" + '\n');
+				assembler.append("FLD _" + lexemaDer.replace("-", "@").replace("+", "@").replace(".", "@") + '\n');
+				assembler.append("L" + getNumTerceto() + ": " + '\n');
+				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n');
+				assembler.append("ADD ECX,1" + '\n');
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
+				assembler.append("jne L" + getNumTerceto() + '\n');
 		}
 		}
 		else {
 			if(tercetoIzq.getTipo().equals("int")) {
-				assembler = assembler + "MOV esi, OFFSET _" + lexemaIzq + '\n';
-				assembler = assembler + "MOV EAX, auxiliar" + lexemaDer + '\n';
-				assembler = assembler + "XOR ECX,ECX" + '\n';
-				assembler = assembler + "L" + getNumTerceto() + ": " + '\n';
-				assembler = assembler + "MOV [esi + ECX * 4], EAX " + '\n';
-				assembler = assembler + "ADD ECX,1" + '\n';
-				assembler = assembler + "cmp ECX, LENGTHOF _" + lexemaIzq + '\n';
-				assembler = assembler + "jne L" + getNumTerceto() + '\n';
+				assembler.append("MOV esi, OFFSET _" + lexemaIzq + '\n');
+				assembler.append("MOV AX, auxiliar" + lexemaDer + '\n');
+				assembler.append("XOR ECX,ECX" + '\n');
+				assembler.append("L" + getNumTerceto() + ": " + '\n');
+				assembler.append("MOV [esi + ECX * 4], AX " + '\n');
+				assembler.append("ADD ECX,1" + '\n');
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
+				assembler.append("jne L" + getNumTerceto() + '\n');
 			}			
 			else {
-				assembler = assembler + "XOR ECX,ECX" + '\n';
-				assembler = assembler + "FLD auxiliar" + lexemaDer  + '\n';
-				assembler = assembler + "L" + getNumTerceto() + ": " + '\n';
-				assembler = assembler + "FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n';
-				assembler = assembler + "ADD ECX,1" + '\n';
-				assembler = assembler + "cmp ECX, LENGTHOF _" + lexemaIzq + '\n';
-				assembler = assembler + "jne L" + getNumTerceto() + '\n';
+				assembler.append("XOR ECX,ECX" + '\n');
+				assembler.append("FLD auxiliar" + lexemaDer  + '\n');
+				assembler.append("L" + getNumTerceto() + ": " + '\n');
+				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n');
+				assembler.append("ADD ECX,1" + '\n');
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
+				assembler.append("jne L" + getNumTerceto() + '\n');
 			}
 		}
-		return assembler;
+		return assembler.toString();
 	}
 
 }

@@ -7,10 +7,12 @@ dll_dllcrt0 PROTO C
 printf PROTO C : VARARG
 
 .data
-_a DD 10, 20, 30, 40
-_b DD ?
-auxiliar@1 DD ?
-auxiliar DD ?
+_a DW 2, 5, 6 
+_b DQ 4, 5.0 , 6.0
+print1 DB "hola", 0
+print2 DB "pepe", 0
+auxiliar DW ?
+auxiliar2 DQ ?
 MayorNumInt DD 32767
 MenorNumInt DD -32768
 MayorNumFloatPos DQ 3.4028235E38
@@ -21,31 +23,57 @@ MenorNumFloatNeg DQ -3.4028235E38
 _LabelDividirCero DB "Error al dividir por cero!", 0
 _LabelOverflowSuma DB "La suma ha generado un Overflow!", 0
 _LabelSubIndices DB "Subindice fuera de rango!", 0
-auxiliarParametro DD 2
-auxiliarReturn DD 3
-aux DW -2
-.code
 
+.code
 FUNCION_LENGTH:
-    MOV ECX,[EAX]
-    MOV auxiliarReturn,ECX
+    mov ax,[ecx]
+    mov auxiliar,ax
     RET
-FUNCION_FIRST: 
-    MOV auxiliarReturn,ECX 
-    RET 
+
+FUNCION_FIRSTI:
+    MOV AX,[ECX + 2]
+    MOV auxiliar,AX
+    ret
+
+FUNCION_FIRSTF:
+    FLD DWORD PTR [ECX + 8]
+    FST auxiliar2
+    RET
+
 FUNCION_LASTI: 
-    MOV ECX,[EAX + ECX*4]  
-    MOV auxiliar,ECX 
-    RET 
+    MOV AX,[ECX]
+    IMUL AX,2
+    MOVZX EAX,AX
+    MOV AX,[ECX + EAX]
+    MOV auxiliar,AX
+    RET
+
+FUNCION_LASTF:
+    MOV AX,[ECX]
+    IMUL AX,8
+    MOVZX EAX,AX
+    FLD DWORD PTR [ECX + EAX]
+    FST auxiliar2
+    ret
 start:
 
+mov ecx, offset _b
+call FUNCION_LENGTH
 
-MOV ECX, offset _a
-call FUNCION_FIRST
-mov ecx,auxiliar
-invoke printf , cfm$("%d \n"), auxiliarReturn
 
-mov auxiliarParametro, auxiliarReturn
+
+MOV ecx, offset _a
+CALL FUNCION_LASTI
+    
+invoke printf , cfm$("%.d \n"), auxiliar
+
+
+
+invoke StdOut, ADDR print1
+
+invoke StdOut, ADDR print2
+
+
 invoke ExitProcess, 0
 DividirCero:
 invoke MessageBox, NULL, addr _LabelDividirCero, addr _LabelDividirCero, MB_OK

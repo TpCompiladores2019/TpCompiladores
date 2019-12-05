@@ -40,12 +40,12 @@ public class TercetoIF extends TercetoAbstracto{
 			AnalizadorTercetos.listLabel.add(numLabel);
 			return(tipoSalto +" Label" + numLabel + '\n');
 		}
-		String assembler ="";
+		StringBuilder assembler =new StringBuilder();
 		int numLabel = Integer.parseInt(listTerceto.get(1).getLexema().substring(1));
-		assembler = assembler + etiquetaSaltoIncondicional + "Label" + numLabel + '\n';
-		assembler =	assembler + "Label" + AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1) + ":" + '\n';
+		assembler.append(etiquetaSaltoIncondicional + "Label" + numLabel + '\n');
+		assembler.append("Label" + AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1) + ":" + '\n');
 		AnalizadorTercetos.listLabel.add(numLabel);
-		return assembler;
+		return assembler.toString();
 			
 	}
 

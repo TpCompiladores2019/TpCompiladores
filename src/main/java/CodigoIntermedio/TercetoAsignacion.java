@@ -12,54 +12,54 @@ public class TercetoAsignacion extends TercetoAbstracto{
 	@Override
 	public String getCodigoAssembler() {
 
-        String assembler = "";
+        StringBuilder assembler = new StringBuilder();
         String lexemaIzq = listTerceto.get(1).getLexema();
         String lexemaDer=listTerceto.get(2).getLexema();
             //(ASIG, variable, variable)
             if (!lexemaIzq.contains("@") && !lexemaDer.contains("@")){
                 if (listTerceto.get(2).getTipo().equals("float")){
-                    assembler = assembler + "FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
-                    assembler = assembler + "FST _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +'\n';
+                    assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+                    assembler.append("FST _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +'\n');
                 }
                 else{
-                    assembler = assembler + "MOV " + "EAX" + ", _" + lexemaDer.replace('-', '@') + '\n';
-                    assembler = assembler + "MOV _" + lexemaIzq.replace('-', '@') + ", " + "EAX" + '\n';
+                    assembler.append("MOV " + "AX" + ", _" + lexemaDer.replace('-', '@') + '\n');
+                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + '\n');
                 }
             }
             else
                 if (!lexemaIzq.contains("@") && lexemaDer.contains("@"))//(ASIG, variable, terceto)
 	                if (listTerceto.get(2).getTipo().equals("float")){
-	                    assembler = assembler + "FLD auxiliar" + lexemaDer + '\n';
-	                    assembler = assembler + "FST _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
+	                    assembler.append("FLD auxiliar" + lexemaDer + '\n');
+	                    assembler.append("FST _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 	                }
 	                else {
-	                    assembler = assembler + "MOV " + "EAX" + ", auxiliar" + lexemaDer + '\n';
-	                    assembler = assembler + "MOV _" + lexemaIzq.replace('-', '@') + ", " + "EAX" + '\n';
+	                    assembler.append("MOV " + "AX" + ", auxiliar" + lexemaDer + '\n');
+	                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + '\n');
 	                }
                 else//(ASIGN,TERCETO,TERCETO)
                 	if (lexemaIzq.contains("@") && lexemaDer.contains("@")) {
                 		if (listTerceto.get(1).getTipo().equals("int")){
-	                		assembler = assembler + "MOV EAX, auxiliar"+lexemaDer + '\n';
-	                		assembler = assembler + "MOV [esi],EAX" +'\n';
+	                		assembler.append("MOV AX, auxiliar"+lexemaDer + '\n');
+	                		assembler.append("MOV [esi],AX" +'\n');
                 		}
                 		else {
-                			assembler = assembler + "FLD auxiliar" + lexemaDer + '\n';
-                			assembler = assembler + "FST DWORD PTR [esi]"+ '\n';
+                			assembler.append("FLD auxiliar" + lexemaDer + '\n');
+                			assembler.append("FST DWORD PTR [esi]"+ '\n');
                 		}
                 	}
                 	else ////(ASIGN,TERCETO,variable)
                 		if(lexemaIzq.contains("@") && !lexemaDer.contains("@")) {
                 			if (listTerceto.get(1).getTipo().equals("int")){
-	                			assembler = assembler + "MOV EAX, _"+lexemaDer.replace("-", "@") + '\n';
-	                    		assembler = assembler + "MOV [esi],EAX" +'\n';
+	                			assembler.append("MOV AX, _"+lexemaDer.replace("-", "@") + '\n');
+	                    		assembler.append("MOV [esi],AX" +'\n');
                 			}
                 			else {
-                				assembler = assembler + "FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n';
-                                assembler = assembler + "FST DWORD PTR [esi]"+ '\n';
+                				assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+                                assembler.append("FST DWORD PTR [esi]"+ '\n');
                 			}
                 		}
             
-        return assembler;
+        return assembler.toString();
     }
 
 }

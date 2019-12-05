@@ -2,16 +2,17 @@ package Lexico;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import Lexico.Token;
 
 public class TablaSimbolos {
 
 	public static String DD = "DQ";
-	public static String DW = "DD";
+	public static String DW = "DW";
     public static String DB = "DB";
 
-	private HashMap<String, Token> tablaSimbolos = new HashMap<String, Token>();
+	private HashMap<String, Token> tablaSimbolos = new LinkedHashMap<String, Token>();
 	private ArrayList<Token> listVarAux = new ArrayList<Token>();
 	
 	
@@ -70,8 +71,7 @@ public class TablaSimbolos {
 					}
 					else
 						if (t.getTipo().equals("Cadena")) {
-							data = data + "_" + clave.replace(' ', '@') + " " + DB + " \""  + clave + "\", 0" + '\n';
-							t.setIdPrintCadena("_@print" + i);
+							data = data + "print" + i + " " + DB + " \""  + clave + "\", 0" + '\n';
 							i++;
 						}
 						else
