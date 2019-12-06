@@ -20,69 +20,69 @@ public class TercetoExpresion extends  TercetoAbstracto {
 
         if (!lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) //(operador,id,id)
             if (tercetoIzq.getTipo().equals("int")) {
-            	assembler.append("MOV AX, " + "_" +lexemaIzq.replace('-', '@') + '\n');
-                assembler.append(operador + " AX, " + "_"+  lexemaDer.replace('-', '@') + '\n');
-                assembler.append("MOV "  + "auxiliar@" + getNumTerceto() + " ,AX" + '\n');
-                assembler.append("JO LabelOverflowSuma" + '\n'); 
+            	assembler.append("MOV AX, " + "_" +lexemaIzq.replace('-', '@') + System.lineSeparator());
+                assembler.append(operador + " AX, " + "_"+  lexemaDer.replace('-', '@') + System.lineSeparator());
+                assembler.append("MOV "  + "auxiliar@" + getNumTerceto() + " ,AX" + System.lineSeparator());
+                assembler.append("JO LabelOverflowSuma" + System.lineSeparator()); 
             }
             else
-            	{ assembler.append("FINIT" + '\n');
-            	  assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
-            	  assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
-                  assembler.append("F"+operador+ " " + '\n');
-                  assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
-                  assembler.append(getComparacion() + '\n'); 
+            	{ assembler.append("FINIT" + System.lineSeparator());
+            	  assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ System.lineSeparator());
+            	  assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ System.lineSeparator());
+                  assembler.append("F"+operador+ " " + System.lineSeparator());
+                  assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator());
+                  assembler.append(getComparacion() + System.lineSeparator()); 
             	}
         else
         	if (!lexemaIzq.contains("@") && (lexemaDer.contains("@"))) // (operador,id,@)
         		if (tercetoIzq.getTipo().equals("int")) {
-        			assembler.append("MOV AX," + "_"+ lexemaIzq.replace('-', '@') + '\n');
-        			assembler.append(operador +" AX," + "auxiliar" + lexemaDer  +'\n');
-        			assembler.append("MOV " + "auxiliar@" + getNumTerceto() + ", AX" + '\n');
-        			assembler.append("JO LabelOverflowSuma" + '\n'); 		                 
+        			assembler.append("MOV AX," + "_"+ lexemaIzq.replace('-', '@') + System.lineSeparator());
+        			assembler.append(operador +" AX," + "auxiliar" + lexemaDer  +System.lineSeparator());
+        			assembler.append("MOV " + "auxiliar@" + getNumTerceto() + ", AX" + System.lineSeparator());
+        			assembler.append("JO LabelOverflowSuma" + System.lineSeparator()); 		                 
         		}
 		              
     			 else
-					{assembler.append("FINIT" + '\n');
-    				 assembler.append("FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-					 assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
-		             assembler.append("F"+operador+ " " + '\n');
-		             assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
-		             assembler.append(getComparacion() + '\n'); 					
+					{assembler.append("FINIT" + System.lineSeparator());
+    				 assembler.append("FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+					 assembler.append("FLD " +  "auxiliar" + lexemaDer + System.lineSeparator());
+		             assembler.append("F"+operador+ " " + System.lineSeparator());
+		             assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator());
+		             assembler.append(getComparacion() + System.lineSeparator()); 					
 					}
         	else
     			if (lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) // (operador,@,id)
     				if (tercetoIzq.getTipo().equals("int")) {
-    					assembler.append("MOV AX," + "auxiliar" + lexemaIzq +'\n');
-        				assembler.append(operador +" AX, " + "_"+lexemaDer.replace('-', '@') + '\n');
-        				assembler.append("MOV " + "auxiliar@" + getNumTerceto() +", AX" + '\n');
-        				assembler.append("JO LabelOverflowSuma" + '\n'); 
+    					assembler.append("MOV AX," + "auxiliar" + lexemaIzq +System.lineSeparator());
+        				assembler.append(operador +" AX, " + "_"+lexemaDer.replace('-', '@') + System.lineSeparator());
+        				assembler.append("MOV " + "auxiliar@" + getNumTerceto() +", AX" + System.lineSeparator());
+        				assembler.append("JO LabelOverflowSuma" + System.lineSeparator()); 
     				}	
 			           
     				else
-    					{assembler.append("FINIT" + '\n');
-    					 assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-    					 assembler.append("FLD " +  "auxiliar" + lexemaIzq + '\n');
-    		             assembler.append("F"+operador+ " " + '\n');
-    		             assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
-    		             assembler.append(getComparacion() + '\n');    					
+    					{assembler.append("FINIT" + System.lineSeparator());
+    					 assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+    					 assembler.append("FLD " +  "auxiliar" + lexemaIzq + System.lineSeparator());
+    		             assembler.append("F"+operador+ " " + System.lineSeparator());
+    		             assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator());
+    		             assembler.append(getComparacion() + System.lineSeparator());    					
     					}
         		else
     				if (lexemaIzq.contains("@") && (lexemaDer.contains("@")))// (OP,@,@)
     					if (tercetoIzq.getTipo().equals("int")) {
-    						assembler.append("MOV AX," + "auxiliar" + lexemaIzq + '\n');
-    						assembler.append(operador +" AX, " + "auxiliar" + lexemaDer + '\n');
-    						assembler.append("MOV " + "auxiliar@" + getNumTerceto() + ",AX" + '\n');
-    						assembler.append("JO LabelOverflowSuma" + '\n'); 
+    						assembler.append("MOV AX," + "auxiliar" + lexemaIzq + System.lineSeparator());
+    						assembler.append(operador +" AX, " + "auxiliar" + lexemaDer + System.lineSeparator());
+    						assembler.append("MOV " + "auxiliar@" + getNumTerceto() + ",AX" + System.lineSeparator());
+    						assembler.append("JO LabelOverflowSuma" + System.lineSeparator()); 
     					}
 
     					else {
-    						assembler.append("FINIT" + '\n');
-	    					assembler.append("FLD " + "auxiliar" + lexemaIzq + '\n');
-	   					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
-	   					 	assembler.append("F"+operador+ " " + '\n');
-	   					 	assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
-	   					 	assembler.append(getComparacion() + '\n');     					
+    						assembler.append("FINIT" + System.lineSeparator());
+	    					assembler.append("FLD " + "auxiliar" + lexemaIzq + System.lineSeparator());
+	   					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + System.lineSeparator());
+	   					 	assembler.append("F"+operador+ " " + System.lineSeparator());
+	   					 	assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator());
+	   					 	assembler.append(getComparacion() + System.lineSeparator());     					
 	    					}
         return assembler.toString();
     }
@@ -95,18 +95,18 @@ public class TercetoExpresion extends  TercetoAbstracto {
     
     private String getComparacion() {
     	StringBuilder assCom=new StringBuilder();
-		assCom.append("FLD MayorNumFloatPos" + '\n');  
-		assCom.append("FLD auxiliar@" + getNumTerceto() + '\n');      
-		assCom.append("FCOM" + '\n');
-		assCom.append("FSTSW AX" + '\n');
-		assCom.append("SAHF" + '\n');
-		assCom.append("JA LabelOverflowSuma" + '\n');
-		assCom.append("FLD MenorNumFloatNeg" + '\n');
-		assCom.append("FLD auxiliar@" + getNumTerceto() + '\n');
-		assCom.append("FCOM" + '\n');
-		assCom.append("FSTSW AX" + '\n');
-		assCom.append("SAHF" + '\n');
-		assCom.append("JB LabelOverflowSuma" + '\n'); 
+		assCom.append("FLD MayorNumFloatPos" + System.lineSeparator());  
+		assCom.append("FLD auxiliar@" + getNumTerceto() + System.lineSeparator());      
+		assCom.append("FCOM" + System.lineSeparator());
+		assCom.append("FSTSW AX" + System.lineSeparator());
+		assCom.append("SAHF" + System.lineSeparator());
+		assCom.append("JA LabelOverflowSuma" + System.lineSeparator());
+		assCom.append("FLD MenorNumFloatNeg" + System.lineSeparator());
+		assCom.append("FLD auxiliar@" + getNumTerceto() + System.lineSeparator());
+		assCom.append("FCOM" + System.lineSeparator());
+		assCom.append("FSTSW AX" + System.lineSeparator());
+		assCom.append("SAHF" + System.lineSeparator());
+		assCom.append("JB LabelOverflowSuma" + System.lineSeparator()); 
 
     	return assCom.toString();
     }

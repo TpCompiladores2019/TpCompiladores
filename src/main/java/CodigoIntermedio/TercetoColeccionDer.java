@@ -23,28 +23,28 @@ public class TercetoColeccionDer extends TercetoAbstracto{
 		String offset = listTerceto.get(0).getLexema();
 		StringBuilder assembler = new StringBuilder();
 		if (tercetoIzq.getTipo().equals("int")) {
-			assembler.append("MOV AX, _" + lexemaDer + '\n');
-			assembler.append("CMP " + "AX"+ ", " + 0 + '\n');
-			assembler.append("JL LabelSubIndices" + '\n');
-			assembler.append("CMP AX," + tamanio + '\n');
-			assembler.append("JGE LabelSubIndices" + '\n');
-			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n');
-			assembler.append("ADD AX,1" + '\n');
-			assembler.append("MOVZX EAX,AX" + '\n');
-			assembler.append("MOV AX, [ECX + EAX*2]" + '\n');
-			assembler.append("MOV auxiliar@" + getNumTerceto()+", AX" + '\n'); 
+			assembler.append("MOV AX, _" + lexemaDer + System.lineSeparator());
+			assembler.append("CMP " + "AX"+ ", " + 0 + System.lineSeparator());
+			assembler.append("JL LabelSubIndices" + System.lineSeparator());
+			assembler.append("CMP AX," + tamanio + System.lineSeparator());
+			assembler.append("JGE LabelSubIndices" + System.lineSeparator());
+			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  System.lineSeparator());
+			assembler.append("ADD AX,1" + System.lineSeparator());
+			assembler.append("MOVZX EAX,AX" + System.lineSeparator());
+			assembler.append("MOV AX, [ECX + EAX*2]" + System.lineSeparator());
+			assembler.append("MOV auxiliar@" + getNumTerceto()+", AX" + System.lineSeparator()); 
 		}
 		else {
-			assembler.append("MOV AX, _" + lexemaDer + '\n');
-			assembler.append("CMP " + "AX"+ ", " + 0 + '\n');
-			assembler.append("JL LabelSubIndices" + '\n');
-			assembler.append("CMP AX," + tamanio + '\n');
-			assembler.append("JGE LabelSubIndices" + '\n');
-			assembler.append("ADD AX,1" + '\n');
-			assembler.append("MOVZX EAX,AX" + '\n');
-			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n');
-			assembler.append("FLD DWORD PTR [ECX + EAX*8] " + '\n'); 
-			assembler.append("FSTP auxiliar@" + getNumTerceto()+ '\n'); 
+			assembler.append("MOV AX, _" + lexemaDer + System.lineSeparator());
+			assembler.append("CMP " + "AX"+ ", " + 0 + System.lineSeparator());
+			assembler.append("JL LabelSubIndices" + System.lineSeparator());
+			assembler.append("CMP AX," + tamanio + System.lineSeparator());
+			assembler.append("JGE LabelSubIndices" + System.lineSeparator());
+			assembler.append("ADD AX,1" + System.lineSeparator());
+			assembler.append("MOVZX EAX,AX" + System.lineSeparator());
+			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  System.lineSeparator());
+			assembler.append("FLD DWORD PTR [ECX + EAX*8] " + System.lineSeparator()); 
+			assembler.append("FSTP auxiliar@" + getNumTerceto()+ System.lineSeparator()); 
 		}
 		return assembler.toString();   
 	}

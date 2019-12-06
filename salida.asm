@@ -7,10 +7,11 @@ dll_dllcrt0 PROTO C
 printf PROTO C : VARARG
 
 .data
-_A DQ 2, ?, ?
-_3@0 DQ 3.0
-_2@0 DQ 2.0
-print1 DB "pepe", 0
+_id DW ?
+_@10 DW -10
+_30 DW 30
+_3 DW 3
+print1 DB "lala", 0
 auxiliarFloat DQ ?
 auxiliarInt DW ?
 MayorNumFloatPos DQ 3.4028235E38
@@ -47,18 +48,17 @@ FUNCION_LASTFLOAT:
     FST auxiliarFloat 
     RET 
 start:
-FINIT
-FLD _3@0
-FLD _2@0
-FCOM
-FSTSW AX
-SAHF
+MOV EAX, _@10
+CMP EAX , _30
 
-JBE Label4
+JL Label5
+
+MOV AX, _3
+MOV _id, AX
 
 invoke StdOut, ADDR print1
 
-Label4:
+Label5:
 
 invoke ExitProcess, 0
 DividirCero:

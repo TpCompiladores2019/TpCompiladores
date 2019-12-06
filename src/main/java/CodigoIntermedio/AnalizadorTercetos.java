@@ -41,7 +41,7 @@ public class AnalizadorTercetos {
     public String imprimirTerceto() {
         String cadena="\nTercetos: \n";
         for (TercetoAbstracto t: listTercetos ){
-            cadena= cadena + t.imprimirTercetoI() + '\n';
+            cadena= cadena + t.imprimirTercetoI() + System.lineSeparator();
         }
         return cadena;
 
@@ -86,9 +86,9 @@ public class AnalizadorTercetos {
 	}
 	
 	public String imprimirErroresSemanticos() {
-		String errores = '\n' + "Errores Semanticos Detectados" + '\n';
+		String errores = System.lineSeparator() + "Errores Semanticos Detectados" + System.lineSeparator();
 		for (Error error : listErroresSemanticos) {
-			errores = errores + error.toString() + '\n';
+			errores = errores + error.toString() + System.lineSeparator();
 		}
 		return errores;
 	}
@@ -99,12 +99,11 @@ public class AnalizadorTercetos {
 		int tercetoActual =1;
 
 		for (int i = 0; i< listTercetos.size();i++) {
-			code = code + listTercetos.get(i).getCodigoAssembler() + '\n';
+			code = code + listTercetos.get(i).getCodigoAssembler() + System.lineSeparator();
 			tercetoActual++;
 			if ( (!listLabel.isEmpty()) && ( tercetoActual == listLabel.get(listLabel.size()-1))){
-					code = code + "Label" + listLabel.get(listLabel.size()-1)+ ":" + '\n';
+					code = code + "Label" + listLabel.get(listLabel.size()-1)+ ":" + System.lineSeparator();
 	                borrarLabelPendientes();
-	                System.out.println("Entra");
 	            }
 			}
             

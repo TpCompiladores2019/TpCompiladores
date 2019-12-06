@@ -21,38 +21,38 @@ public class TercetoMetodos extends TercetoAbstracto {
 		String lexemaIzq=tercetoIzq.getLexema();
 		String lexemaDer=tercetoDer.getLexema();
 		if (lexemaDer.contains("length")) {
-				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-				assembler.append("CALL FUNCION_LENGTH"+ '\n');
-				assembler.append("MOV AX , auxiliarInt" + '\n');
-				assembler.append("MOV auxiliar@" +getNumTerceto() + ", AX" + '\n');
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+				assembler.append("CALL FUNCION_LENGTH"+ System.lineSeparator());
+				assembler.append("MOV AX , auxiliarInt" + System.lineSeparator());
+				assembler.append("MOV auxiliar@" +getNumTerceto() + ", AX" + System.lineSeparator());
 		}
 		if (lexemaDer.contains("first")) {
 			if (tercetoIzq.getTipo().equals("int")) {
-				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-				assembler.append("CALL FUNCION_FIRSTINT" + '\n');
-				assembler.append("MOV AX , auxiliarInt" + '\n');
-				assembler.append("MOV auxiliar@" + getNumTerceto() + ", AX"  + '\n');
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+				assembler.append("CALL FUNCION_FIRSTINT" + System.lineSeparator());
+				assembler.append("MOV AX , auxiliarInt" + System.lineSeparator());
+				assembler.append("MOV auxiliar@" + getNumTerceto() + ", AX"  + System.lineSeparator());
 				}
 			else {
-				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-				assembler.append("CALL FUNCION_FIRSTFLOAT" + '\n');
-				assembler.append("FLD auxiliarFloat"  + '\n');
-				assembler.append("FSTP auxiliar@" + getNumTerceto() + '\n');
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+				assembler.append("CALL FUNCION_FIRSTFLOAT" + System.lineSeparator());
+				assembler.append("FLD auxiliarFloat"  + System.lineSeparator());
+				assembler.append("FSTP auxiliar@" + getNumTerceto() + System.lineSeparator());
 			}
 				
 		}
 		if (lexemaDer.contains("last")) 
 			if (tercetoIzq.getTipo().equals("int")) {
-				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-				assembler.append("CALL FUNCION_LASTINT" + '\n');
-				assembler.append("MOV AX , auxiliarInt" + '\n');
-				assembler.append("MOV auxiliar@" + getNumTerceto() + ", AX"  + '\n');
+				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+				assembler.append("CALL FUNCION_LASTINT" + System.lineSeparator());
+				assembler.append("MOV AX , auxiliarInt" + System.lineSeparator());
+				assembler.append("MOV auxiliar@" + getNumTerceto() + ", AX"  + System.lineSeparator());
 		}
 		else {
-			assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-			assembler.append("CALL FUNCION_LASTFLOAT" + '\n');
-			assembler.append("FLD auxiliarFloat"  + '\n');
-			assembler.append("FSTP auxiliar@" + getNumTerceto() + '\n');
+			assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+			assembler.append("CALL FUNCION_LASTFLOAT" + System.lineSeparator());
+			assembler.append("FLD auxiliarFloat"  + System.lineSeparator());
+			assembler.append("FSTP auxiliar@" + getNumTerceto() + System.lineSeparator());
 			
 		}
 	return assembler.toString();

@@ -21,53 +21,53 @@ public class TercetoExpresionMult extends TercetoExpresion {
 
          if (!lexemaIzq.contains("@") && (!lexemaDer.contains("@"))){ //(operador,id,id)
              if (tercetoIzq.getTipo().equals("int"))
-             	return  "MOV AX, " + "_" +lexemaIzq.replace('-', '@') + '\n'  
-             			+ operador + " AX, " + "_"+  lexemaDer.replace('-', '@') + '\n'
-             			+ "MOV "  + "auxiliar@" + getNumTerceto() + " ,AX" + '\n';
+             	return  "MOV AX, " + "_" +lexemaIzq.replace('-', '@') + System.lineSeparator()  
+             			+ operador + " AX, " + "_"+  lexemaDer.replace('-', '@') + System.lineSeparator()
+             			+ "MOV "  + "auxiliar@" + getNumTerceto() + " ,AX" + System.lineSeparator();
              else{
-            	 assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
-            	 assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
-            	 assembler.append("FMUL " + '\n');
-            	 assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
+            	 assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ System.lineSeparator());
+            	 assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ System.lineSeparator());
+            	 assembler.append("FMUL " + System.lineSeparator());
+            	 assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator());
              }
              }
          	
          else
          	if (!lexemaIzq.contains("@") && (lexemaDer.contains("@"))) { // (operador,id,@)
          		if (tercetoIzq.getTipo().equals("int"))
-         			return "MOV AX," + "_"+ lexemaIzq.replace('-', '@') + '\n' 
- 			                 + operador +" AX," + "auxiliar" + lexemaDer  +'\n'
- 			                 + "MOV " + "auxiliar@" + getNumTerceto() + ", AX" + '\n';
+         			return "MOV AX," + "_"+ lexemaIzq.replace('-', '@') + System.lineSeparator() 
+ 			                 + operador +" AX," + "auxiliar" + lexemaDer  +System.lineSeparator()
+ 			                 + "MOV " + "auxiliar@" + getNumTerceto() + ", AX" + System.lineSeparator();
          		else{
-         			assembler.append("FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-         			assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
-   		            assembler.append("FMUL" + " " + '\n');
-   		            assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');  					
+         			assembler.append("FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+         			assembler.append("FLD " +  "auxiliar" + lexemaDer + System.lineSeparator());
+   		            assembler.append("FMUL" + " " + System.lineSeparator());
+   		            assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator());  					
    				}
          	}
          	else
          		if (lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) // (operador,@,id)
          			if (tercetoIzq.getTipo().equals("int"))
-         				return "MOV AX," + "auxiliar" + lexemaIzq +'\n'
- 				                 + operador +" AX, " + "_"+lexemaDer.replace('-', '@') + '\n'
- 				                 + "MOV " + "auxiliar@" + getNumTerceto() +", AX" + '\n';
+         				return "MOV AX," + "auxiliar" + lexemaIzq +System.lineSeparator()
+ 				                 + operador +" AX, " + "_"+lexemaDer.replace('-', '@') + System.lineSeparator()
+ 				                 + "MOV " + "auxiliar@" + getNumTerceto() +", AX" + System.lineSeparator();
          			else {
-         				assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-						assembler.append("FLD " +  "auxiliar" + lexemaIzq + '\n');
-			            assembler.append("FMUL " + '\n');
-			            assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n'); 					
+         				assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+						assembler.append("FLD " +  "auxiliar" + lexemaIzq + System.lineSeparator());
+			            assembler.append("FMUL " + System.lineSeparator());
+			            assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator()); 					
 					}
          					
          		else	// (OP,@,@)
          			if (tercetoIzq.getTipo().equals("int"))
-         				return "MOV AX," + "auxiliar" + lexemaIzq + '\n' 
- 					             + operador +" AX, " + "auxiliar" + lexemaDer + '\n' 
- 					             + "MOV " + "auxiliar@" + getNumTerceto() + ",AX" + '\n';
+         				return "MOV AX," + "auxiliar" + lexemaIzq + System.lineSeparator() 
+ 					             + operador +" AX, " + "auxiliar" + lexemaDer + System.lineSeparator() 
+ 					             + "MOV " + "auxiliar@" + getNumTerceto() + ",AX" + System.lineSeparator();
          			else{
-    					assembler.append("FLD " + "auxiliar" + lexemaIzq + '\n');
-   					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
-   					 	assembler.append("FMUL " + '\n');
-   					 	assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');					
+    					assembler.append("FLD " + "auxiliar" + lexemaIzq + System.lineSeparator());
+   					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + System.lineSeparator());
+   					 	assembler.append("FMUL " + System.lineSeparator());
+   					 	assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + System.lineSeparator());					
     				}
          
          return assembler.toString();

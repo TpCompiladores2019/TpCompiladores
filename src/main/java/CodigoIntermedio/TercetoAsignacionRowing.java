@@ -26,44 +26,44 @@ public class TercetoAsignacionRowing extends TercetoAbstracto {
 		StringBuilder assembler = new StringBuilder();
 		if (!lexemaDer.contains("@")){
 			if(tercetoIzq.getTipo().equals("int")) {
-				assembler.append("MOV esi, OFFSET _" + lexemaIzq + '\n');
-				assembler.append("MOV AX, _" + lexemaDer.replace('-', '@') + '\n');
-				assembler.append("XOR ECX,ECX" + '\n');
-				assembler.append("L" + getNumTerceto() + ": " + '\n');
-				assembler.append("ADD ECX,1" + '\n');
-				assembler.append("MOV [esi + ECX * 2], AX " + '\n');
-				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
-				assembler.append("jne L" + getNumTerceto() + '\n');
+				assembler.append("MOV esi, OFFSET _" + lexemaIzq + System.lineSeparator());
+				assembler.append("MOV AX, _" + lexemaDer.replace('-', '@') + System.lineSeparator());
+				assembler.append("XOR ECX,ECX" + System.lineSeparator());
+				assembler.append("L" + getNumTerceto() + ": " + System.lineSeparator());
+				assembler.append("ADD ECX,1" + System.lineSeparator());
+				assembler.append("MOV [esi + ECX * 2], AX " + System.lineSeparator());
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + System.lineSeparator());
+				assembler.append("jne L" + getNumTerceto() + System.lineSeparator());
 			}
 			else {
-				assembler.append("XOR ECX,ECX" + '\n');
-				assembler.append("FLD _" + lexemaDer.replace("-", "@").replace("+", "@").replace(".", "@") + '\n');
-				assembler.append("L" + getNumTerceto() + ": " + '\n');
-				assembler.append("ADD ECX,1" + '\n');
-				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n');
-				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
-				assembler.append("jne L" + getNumTerceto() + '\n');
+				assembler.append("XOR ECX,ECX" + System.lineSeparator());
+				assembler.append("FLD _" + lexemaDer.replace("-", "@").replace("+", "@").replace(".", "@") + System.lineSeparator());
+				assembler.append("L" + getNumTerceto() + ": " + System.lineSeparator());
+				assembler.append("ADD ECX,1" + System.lineSeparator());
+				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + System.lineSeparator());
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + System.lineSeparator());
+				assembler.append("jne L" + getNumTerceto() + System.lineSeparator());
 		}
 		}
 		else {
 			if(tercetoIzq.getTipo().equals("int")) {
-				assembler.append("MOV esi, OFFSET _" + lexemaIzq + '\n');
-				assembler.append("MOV AX, auxiliar" + lexemaDer + '\n');
-				assembler.append("XOR ECX,ECX" + '\n');
-				assembler.append("L" + getNumTerceto() + ": " + '\n');
-				assembler.append("MOV [esi + ECX * 4], AX " + '\n');
-				assembler.append("ADD ECX,1" + '\n');
-				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
-				assembler.append("jne L" + getNumTerceto() + '\n');
+				assembler.append("MOV esi, OFFSET _" + lexemaIzq + System.lineSeparator());
+				assembler.append("MOV AX, auxiliar" + lexemaDer + System.lineSeparator());
+				assembler.append("XOR ECX,ECX" + System.lineSeparator());
+				assembler.append("L" + getNumTerceto() + ": " + System.lineSeparator());
+				assembler.append("MOV [esi + ECX * 4], AX " + System.lineSeparator());
+				assembler.append("ADD ECX,1" + System.lineSeparator());
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + System.lineSeparator());
+				assembler.append("jne L" + getNumTerceto() + System.lineSeparator());
 			}			
 			else {
-				assembler.append("XOR ECX,ECX" + '\n');
-				assembler.append("FLD auxiliar" + lexemaDer  + '\n');
-				assembler.append("L" + getNumTerceto() + ": " + '\n');
-				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n');
-				assembler.append("ADD ECX,1" + '\n');
-				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
-				assembler.append("jne L" + getNumTerceto() + '\n');
+				assembler.append("XOR ECX,ECX" + System.lineSeparator());
+				assembler.append("FLD auxiliar" + lexemaDer  + System.lineSeparator());
+				assembler.append("L" + getNumTerceto() + ": " + System.lineSeparator());
+				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + System.lineSeparator());
+				assembler.append("ADD ECX,1" + System.lineSeparator());
+				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + System.lineSeparator());
+				assembler.append("jne L" + getNumTerceto() + System.lineSeparator());
 			}
 		}
 		return assembler.toString();

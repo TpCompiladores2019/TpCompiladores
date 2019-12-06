@@ -58,12 +58,12 @@ public class TercetoIF extends TercetoAbstracto{
 		if (operador.equals("BF")) {
 			int numLabel = Integer.parseInt(listTerceto.get(2).getLexema().substring(1));
 			AnalizadorTercetos.listLabel.add(numLabel);
-			return(tipoSalto +" Label" + numLabel + '\n');
+			return(tipoSalto +" Label" + numLabel + System.lineSeparator());
 		}
 		StringBuilder assembler =new StringBuilder();
 		int numLabel = Integer.parseInt(listTerceto.get(1).getLexema().substring(1));
-		assembler.append(etiquetaSaltoIncondicional + "Label" + numLabel + '\n');
-		assembler.append("Label" + AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1) + ":" + '\n');
+		assembler.append(etiquetaSaltoIncondicional + "Label" + numLabel + System.lineSeparator());
+		assembler.append("Label" + AnalizadorTercetos.listLabel.remove(AnalizadorTercetos.listLabel.size()-1) + ":" + System.lineSeparator());
 		AnalizadorTercetos.listLabel.add(numLabel);
 		return assembler.toString();
 			

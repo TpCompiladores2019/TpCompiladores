@@ -18,44 +18,44 @@ public class TercetoAsignacion extends TercetoAbstracto{
             //(ASIG, variable, variable)
             if (!lexemaIzq.contains("@") && !lexemaDer.contains("@")){
                 if (listTerceto.get(2).getTipo().equals("float")){
-                    assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-                    assembler.append("FSTP _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +'\n');
+                    assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+                    assembler.append("FSTP _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +System.lineSeparator());
                 }
                 else{
-                    assembler.append("MOV " + "AX" + ", _" + lexemaDer.replace('-', '@') + '\n');
-                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + '\n');
+                    assembler.append("MOV " + "AX" + ", _" + lexemaDer.replace('-', '@') + System.lineSeparator());
+                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + System.lineSeparator());
                 }
             }
             else
                 if (!lexemaIzq.contains("@") && lexemaDer.contains("@"))//(ASIG, variable, terceto)
 	                if (listTerceto.get(2).getTipo().equals("float")){
-	                    assembler.append("FLD auxiliar" + lexemaDer + '\n');
-	                    assembler.append("FSTP _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+	                    assembler.append("FLD auxiliar" + lexemaDer + System.lineSeparator());
+	                    assembler.append("FSTP _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
 	                }
 	                else {
-	                    assembler.append("MOV " + "AX" + ", auxiliar" + lexemaDer + '\n');
-	                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + '\n');
+	                    assembler.append("MOV " + "AX" + ", auxiliar" + lexemaDer + System.lineSeparator());
+	                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + System.lineSeparator());
 	                }
                 else//(ASIGN,TERCETO,TERCETO)
                 	if (lexemaIzq.contains("@") && lexemaDer.contains("@")) {
                 		if (listTerceto.get(1).getTipo().equals("int")){
-	                		assembler.append("MOV AX, auxiliar"+lexemaDer + '\n');
-	                		assembler.append("MOV [esi],AX" +'\n');
+	                		assembler.append("MOV AX, auxiliar"+lexemaDer + System.lineSeparator());
+	                		assembler.append("MOV [esi],AX" +System.lineSeparator());
                 		}
                 		else {
-                			assembler.append("FLD auxiliar" + lexemaDer + '\n');
-                			assembler.append("FSTP DWORD PTR [esi]"+ '\n');
+                			assembler.append("FLD auxiliar" + lexemaDer + System.lineSeparator());
+                			assembler.append("FSTP DWORD PTR [esi]"+ System.lineSeparator());
                 		}
                 	}
                 	else ////(ASIGN,TERCETO,variable)
                 		if(lexemaIzq.contains("@") && !lexemaDer.contains("@")) {
                 			if (listTerceto.get(1).getTipo().equals("int")){
-	                			assembler.append("MOV AX, _"+lexemaDer.replace("-", "@") + '\n');
-	                    		assembler.append("MOV [esi],AX" +'\n');
+	                			assembler.append("MOV AX, _"+lexemaDer.replace("-", "@") + System.lineSeparator());
+	                    		assembler.append("MOV [esi],AX" +System.lineSeparator());
                 			}
                 			else {
-                				assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-                                assembler.append("FSTP DWORD PTR [esi]"+ '\n');
+                				assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
+                                assembler.append("FSTP DWORD PTR [esi]"+ System.lineSeparator());
                 			}
                 		}
             
