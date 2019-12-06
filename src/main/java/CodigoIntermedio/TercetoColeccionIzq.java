@@ -23,24 +23,28 @@ public class TercetoColeccionIzq extends TercetoAbstracto{
 		String offset = listTerceto.get(0).getLexema();
 		StringBuilder assembler = new StringBuilder();
 		if (tercetoIzq.getTipo().equals("int")) {
-			assembler.append("MOV ECX, _" + lexemaDer + '\n');
-			assembler.append("CMP " + "ECX"+ ", " + 0 + '\n');
+			assembler.append("MOV CX, _" + lexemaDer + '\n');
+			assembler.append("CMP " + "CX"+ ", " + 0 + '\n');
 			assembler.append("JL LabelSubIndices" + '\n');
-			assembler.append("CMP ECX," + tamanio + '\n');
+			assembler.append("CMP CX," + tamanio + '\n');
 			assembler.append("JGE LabelSubIndices" + '\n');
 			assembler.append("MOV esi, " + offset + " " + "_" + lexemaIzq +  '\n');
-			assembler.append("MOV EAX, _" + lexemaDer + '\n');
-			assembler.append("IMUL EAX, 4" + '\n');
+			assembler.append("MOV AX, _" + lexemaDer + '\n');
+			assembler.append("ADD AX,1" + '\n');
+			assembler.append("MOVZX EAX,AX" + '\n');
+			assembler.append("IMUL EAX, 2" + '\n');
 			assembler.append("ADD esi,EAX" + '\n'); 
 		}
 		else {
-			assembler.append("MOV ECX, _" + lexemaDer + '\n');
-			assembler.append("CMP " + "ECX"+ ", " + 0 + '\n');
+			assembler.append("MOV CX, _" + lexemaDer + '\n');
+			assembler.append("CMP " + "CX"+ ", " + 0 + '\n');
 			assembler.append("JL LabelSubIndices" + '\n');
-			assembler.append("CMP ECX," + tamanio + '\n');
+			assembler.append("CMP CX," + tamanio + '\n');
 			assembler.append("JGE LabelSubIndices" + '\n');
 			assembler.append("MOV esi, " + offset + " " + "_" + lexemaIzq +  '\n');
-			assembler.append("MOV EAX, _" + lexemaDer + '\n');
+			assembler.append("MOV AX, _" + lexemaDer + '\n');
+			assembler.append("ADD AX, 1" + '\n');
+			assembler.append("MOVZX EAX,AX" + '\n');
 			assembler.append("IMUL EAX, 8" + '\n');
 			assembler.append("ADD esi,EAX" + '\n');
 		}

@@ -11,24 +11,45 @@ public class TercetoDO extends TercetoAbstracto{
 	}
 
 	
-    public void setTipoSalto(String operacion){
-        if(operacion.equals("<="))
-            this.tipoSalto = "JA";
-        else
-        if(operacion.equals("=="))
-            this.tipoSalto = "JNE";
-        else
-        if(operacion.equals(">="))
-            this.tipoSalto = "JB";
-        else
-        if(operacion.equals(">"))
-            this.tipoSalto = "JBE";
-        else
-        if(operacion.equals("<"))
-            this.tipoSalto = "JAE";
-        else
-        if(operacion.equals("<>"))
-            this.tipoSalto = "JE";
+    public void setTipoSalto(String operacion,String tipo){
+    	if (tipo.equals("float")) {
+			if(operacion.equals("<="))
+	            this.tipoSalto = "JA";
+	        else
+	        if(operacion.equals("=="))
+	            this.tipoSalto = "JNE";
+	        else
+	        if(operacion.equals(">="))
+	            this.tipoSalto = "JB";
+	        else
+	        if(operacion.equals(">"))
+	            this.tipoSalto = "JBE";
+	        else
+	        if(operacion.equals("<"))
+	            this.tipoSalto = "JAE";
+	        else
+	        if(operacion.equals("<>"))
+	            this.tipoSalto = "JE";
+    	}
+    	else {
+	        if(operacion.equals("<="))
+	            this.tipoSalto = "JA";
+	        else
+	        if(operacion.equals("=="))
+	            this.tipoSalto = "JNE";
+	        else
+	        if(operacion.equals(">="))
+	            this.tipoSalto = "JB";
+	        else
+	        if(operacion.equals(">"))
+	            this.tipoSalto = "JBE";
+	        else
+	        if(operacion.equals("<"))
+	            this.tipoSalto = "JAE";
+	        else
+	        if(operacion.equals("<>"))
+	            this.tipoSalto = "JE";
+    	}
     };
 	@Override
 	public String getCodigoAssembler() {

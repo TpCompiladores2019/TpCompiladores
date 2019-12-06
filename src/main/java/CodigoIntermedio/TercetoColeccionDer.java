@@ -29,8 +29,10 @@ public class TercetoColeccionDer extends TercetoAbstracto{
 			assembler.append("CMP AX," + tamanio + '\n');
 			assembler.append("JGE LabelSubIndices" + '\n');
 			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n');
-			assembler.append("MOV AX, [ECX + AX*2]" + '\n');
-			assembler.append("MOV auxiliar@" + getNumTerceto()+", EAX" + '\n'); 
+			assembler.append("ADD AX,1" + '\n');
+			assembler.append("MOVZX EAX,AX" + '\n');
+			assembler.append("MOV AX, [ECX + EAX*2]" + '\n');
+			assembler.append("MOV auxiliar@" + getNumTerceto()+", AX" + '\n'); 
 		}
 		else {
 			assembler.append("MOV AX, _" + lexemaDer + '\n');
@@ -38,9 +40,11 @@ public class TercetoColeccionDer extends TercetoAbstracto{
 			assembler.append("JL LabelSubIndices" + '\n');
 			assembler.append("CMP AX," + tamanio + '\n');
 			assembler.append("JGE LabelSubIndices" + '\n');
+			assembler.append("ADD AX,1" + '\n');
+			assembler.append("MOVZX EAX,AX" + '\n');
 			assembler.append("MOV ECX, " + offset + " " + "_" + lexemaIzq +  '\n');
-			assembler.append("FLD DWORD PTR [ECX + AX*8] " + '\n'); 
-			assembler.append("FST auxiliar@" + getNumTerceto()+ '\n'); 
+			assembler.append("FLD DWORD PTR [ECX + EAX*8] " + '\n'); 
+			assembler.append("FSTP auxiliar@" + getNumTerceto()+ '\n'); 
 		}
 		return assembler.toString();   
 	}

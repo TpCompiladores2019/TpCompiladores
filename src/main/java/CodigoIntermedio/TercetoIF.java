@@ -10,25 +10,45 @@ public class TercetoIF extends TercetoAbstracto{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void setTipoSalto(String operacion) {
-
-		if(operacion.equals("<="))
-            this.tipoSalto = "JG";
-        else
-        if(operacion.equals("=="))
-            this.tipoSalto = "JNE";
-        else
-        if(operacion.equals(">="))
-            this.tipoSalto = "JL";
-        else
-        if(operacion.equals(">"))
-            this.tipoSalto = "JLE";
-        else
-        if(operacion.equals("<"))
-            this.tipoSalto = "JGE";
-        else
-        if(operacion.equals("<>"))
-            this.tipoSalto = "JE";
+	public void setTipoSalto(String operacion,String tipo) {
+		if(tipo.equals("float")) {
+			if(operacion.equals("<="))
+	            this.tipoSalto = "JA";
+	        else
+	        if(operacion.equals("=="))
+	            this.tipoSalto = "JNE";
+	        else
+	        if(operacion.equals(">="))
+	            this.tipoSalto = "JB";
+	        else
+	        if(operacion.equals(">"))
+	            this.tipoSalto = "JBE";
+	        else
+	        if(operacion.equals("<"))
+	            this.tipoSalto = "JAE";
+	        else
+	        if(operacion.equals("<>"))
+	            this.tipoSalto = "JE";
+		}
+		else {
+			if(operacion.equals("<="))
+	            this.tipoSalto = "JG";
+	        else
+	        if(operacion.equals("=="))
+	            this.tipoSalto = "JNE";
+	        else
+	        if(operacion.equals(">="))
+	            this.tipoSalto = "JL";
+	        else
+	        if(operacion.equals(">"))
+	            this.tipoSalto = "JLE";
+	        else
+	        if(operacion.equals("<"))
+	            this.tipoSalto = "JGE";
+	        else
+	        if(operacion.equals("<>"))
+	            this.tipoSalto = "JE";
+		}
 	}
 
 	@Override

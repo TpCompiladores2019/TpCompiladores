@@ -49,9 +49,8 @@ public class TablaSimbolos {
 		String data = "";
 		int i = 1;
 		for (String clave : tablaSimbolos.keySet()) {
-			
 			Token t = tablaSimbolos.get(clave);
-			if (t.getUso() ==null )
+			if (t.getUso() ==null ) 
         		t.setUso("Cadena");
 
 			if (t.getUso().equals("CTE")) {
@@ -71,7 +70,7 @@ public class TablaSimbolos {
 					}
 					else
 						if (t.getTipo().equals("Cadena")) {
-							data = data + "print" + i + " " + DB + " \""  + clave + "\", 0" + '\n';
+							data = data + "print" + i + " " + DB + " \""  + clave.substring(0, clave.length()-1) + "\", 0" + '\n';
 							i++;
 						}
 						else
@@ -84,13 +83,13 @@ public class TablaSimbolos {
 							else
 								if (t.getUso().equals("Nombre de Coleccion")) {
 									if (t.getTipo().equals("int")){
-										data = data + "_" + clave + " " + DW ;
+										data = data + "_" + clave + " " + DW + " " + t.getTamanioColeccion() + ",";
 										for(int j = 0; j < t.getTamanioColeccion()-1; j++)
 											 data = data + " ?," ; 
 										data = data + " ?" + '\n';
 									}
 									else {
-										data = data + "_" + clave + " " + DD ;
+										data = data + "_" + clave + " " + DD + " " + t.getTamanioColeccion() + "," ;
 										for(int j = 0; j < t.getTamanioColeccion()-1; j++)
 											 data = data + " ?," ; 
 										data = data + " ?" + '\n';

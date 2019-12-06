@@ -19,7 +19,7 @@ public class TercetoAsignacion extends TercetoAbstracto{
             if (!lexemaIzq.contains("@") && !lexemaDer.contains("@")){
                 if (listTerceto.get(2).getTipo().equals("float")){
                     assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-                    assembler.append("FST _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +'\n');
+                    assembler.append("FSTP _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +'\n');
                 }
                 else{
                     assembler.append("MOV " + "AX" + ", _" + lexemaDer.replace('-', '@') + '\n');
@@ -30,7 +30,7 @@ public class TercetoAsignacion extends TercetoAbstracto{
                 if (!lexemaIzq.contains("@") && lexemaDer.contains("@"))//(ASIG, variable, terceto)
 	                if (listTerceto.get(2).getTipo().equals("float")){
 	                    assembler.append("FLD auxiliar" + lexemaDer + '\n');
-	                    assembler.append("FST _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
+	                    assembler.append("FSTP _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 	                }
 	                else {
 	                    assembler.append("MOV " + "AX" + ", auxiliar" + lexemaDer + '\n');
@@ -44,7 +44,7 @@ public class TercetoAsignacion extends TercetoAbstracto{
                 		}
                 		else {
                 			assembler.append("FLD auxiliar" + lexemaDer + '\n');
-                			assembler.append("FST DWORD PTR [esi]"+ '\n');
+                			assembler.append("FSTP DWORD PTR [esi]"+ '\n');
                 		}
                 	}
                 	else ////(ASIGN,TERCETO,variable)
@@ -55,7 +55,7 @@ public class TercetoAsignacion extends TercetoAbstracto{
                 			}
                 			else {
                 				assembler.append("FLD _" + lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
-                                assembler.append("FST DWORD PTR [esi]"+ '\n');
+                                assembler.append("FSTP DWORD PTR [esi]"+ '\n');
                 			}
                 		}
             

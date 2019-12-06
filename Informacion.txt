@@ -1,29 +1,32 @@
 El programa llego al final. 
 
 Tokens Detectados: 
-Linea 1 Palabra Reservada: int
-Linea 1 Identificador: a
+Linea 1 Palabra Reservada: float
+Linea 1 Identificador: A
 Linea 1: [
-Linea 1 Constante Entera: 3
+Linea 1 Constante Entera: 2
 Linea 1: ]
 Linea 1: ;
 Linea 2 Palabra Reservada: begin
-Linea 3 Palabra Reservada: print
+Linea 3 Palabra Reservada: if
 Linea 3: (
-Linea 3 Cadena: hola
+Linea 3 Constante Float: 3.0
+Linea 3: >
+Linea 3 Constante Float: 2.0
 Linea 3: )
-Linea 3: ;
 Linea 4 Palabra Reservada: print
 Linea 4: (
-Linea 4 Cadena: pepe
+Linea 4 Cadena: pepe!
 Linea 4: )
 Linea 4: ;
-Linea 5 Palabra Reservada: end
+Linea 5 Palabra Reservada: end_if
+Linea 5: ;
+Linea 6 Palabra Reservada: end
 
 Estructuras Sintacticas: 
 Linea 1: Sentencia declarativa
-Linea 3: Sentencia PRINT
 Linea 4: Sentencia PRINT
+Linea 3: Sentencia IF
 
 Sin errores lexicos 
 
@@ -32,11 +35,13 @@ Sin warning lexicos
 Sin errores semanticos 
 
 Tabla de Simbolos: 
-a: Tipo: int, Uso:Nombre de Coleccion, Tamaño de Coleccion: 3
-3: Tipo: int, Uso:null
-hola: Tipo: Cadena, Uso:null
-pepe: Tipo: Cadena, Uso:null
+A: Tipo: float, Uso:Nombre de Coleccion, Tamaño de Coleccion: 2
+2: Tipo: int, Uso:null
+3.0: Tipo: float, Uso:CTF
+2.0: Tipo: float, Uso:CTF
+pepe!: Tipo: Cadena, Uso:null
 
 Tercetos: 
-1  (print, hola,  - )
-2  (print, pepe,  - )
+1  (>, 3.0, 2.0)
+2  (BF, @1, @4)
+3  (print, pepe!,  - )

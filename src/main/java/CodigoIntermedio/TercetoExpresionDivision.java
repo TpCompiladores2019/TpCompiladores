@@ -35,7 +35,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
 				assembler.append("SAHF" + '\n');
 				assembler.append("JE DividirCero" + '\n');
 				assembler.append("FDIV " + '\n');
-				assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
+				assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
 
 			}
 		else if (lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) // (operador,terceto,id)
@@ -58,7 +58,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
 				assembler.append("SAHF" + '\n');
 				assembler.append("JE DividirCero" + '\n');
 				assembler.append("FDIV " + '\n');
-				assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
+				assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
 			}
 		else if (!lexemaIzq.contains("@") && (lexemaDer.contains("@"))) // (operador,id,terceto)
 			if (listTerceto.get(1).getTipo().equals("int")) {
@@ -78,7 +78,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
 				assembler.append("SAHF" + '\n');
 				assembler.append("JE DividirCero" + '\n');
 				assembler.append("FDIV " + '\n');
-				assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
+				assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
 			}
 		else // (operador,terceto,terceto)
 		if (lexemaIzq.contains("@") && (lexemaDer.contains("@")))
@@ -100,7 +100,7 @@ public class TercetoExpresionDivision extends TercetoExpresion {
 				assembler.append("SAHF" + '\n');
 				assembler.append("JE DividirCero" + '\n');
 				assembler.append("FDIV " + '\n');
-				assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
+				assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
 			}
 		return assembler.toString();
 

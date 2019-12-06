@@ -30,8 +30,8 @@ public class TercetoAsignacionRowing extends TercetoAbstracto {
 				assembler.append("MOV AX, _" + lexemaDer.replace('-', '@') + '\n');
 				assembler.append("XOR ECX,ECX" + '\n');
 				assembler.append("L" + getNumTerceto() + ": " + '\n');
-				assembler.append("MOV [esi + ECX * 2], AX " + '\n');
 				assembler.append("ADD ECX,1" + '\n');
+				assembler.append("MOV [esi + ECX * 2], AX " + '\n');
 				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
 				assembler.append("jne L" + getNumTerceto() + '\n');
 			}
@@ -39,8 +39,8 @@ public class TercetoAsignacionRowing extends TercetoAbstracto {
 				assembler.append("XOR ECX,ECX" + '\n');
 				assembler.append("FLD _" + lexemaDer.replace("-", "@").replace("+", "@").replace(".", "@") + '\n');
 				assembler.append("L" + getNumTerceto() + ": " + '\n');
-				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n');
 				assembler.append("ADD ECX,1" + '\n');
+				assembler.append("FST DWORD PTR _" + lexemaIzq + "[ECX*8]"  + '\n');
 				assembler.append("cmp ECX, LENGTHOF _" + lexemaIzq + '\n');
 				assembler.append("jne L" + getNumTerceto() + '\n');
 		}

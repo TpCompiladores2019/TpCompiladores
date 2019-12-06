@@ -30,8 +30,8 @@ public class TercetoExpresion extends  TercetoAbstracto {
             	  assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
             	  assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
                   assembler.append("F"+operador+ " " + '\n');
-                  assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
-                  assembler.append(getComparacion(operador,"float") + '\n'); 
+                  assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
+                  assembler.append(getComparacion() + '\n'); 
             	}
         else
         	if (!lexemaIzq.contains("@") && (lexemaDer.contains("@"))) // (operador,id,@)
@@ -47,8 +47,8 @@ public class TercetoExpresion extends  TercetoAbstracto {
     				 assembler.append("FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 					 assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
 		             assembler.append("F"+operador+ " " + '\n');
-		             assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
-		             assembler.append(getComparacion(operador,"float") + '\n'); 					
+		             assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
+		             assembler.append(getComparacion() + '\n'); 					
 					}
         	else
     			if (lexemaIzq.contains("@") && (!lexemaDer.contains("@"))) // (operador,@,id)
@@ -64,8 +64,8 @@ public class TercetoExpresion extends  TercetoAbstracto {
     					 assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
     					 assembler.append("FLD " +  "auxiliar" + lexemaIzq + '\n');
     		             assembler.append("F"+operador+ " " + '\n');
-    		             assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
-    		             assembler.append(getComparacion(operador,"float") + '\n');    					
+    		             assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
+    		             assembler.append(getComparacion() + '\n');    					
     					}
         		else
     				if (lexemaIzq.contains("@") && (lexemaDer.contains("@")))// (OP,@,@)
@@ -81,8 +81,8 @@ public class TercetoExpresion extends  TercetoAbstracto {
 	    					assembler.append("FLD " + "auxiliar" + lexemaIzq + '\n');
 	   					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
 	   					 	assembler.append("F"+operador+ " " + '\n');
-	   					 	assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
-	   					 	assembler.append(getComparacion(operador,"float") + '\n');     					
+	   					 	assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
+	   					 	assembler.append(getComparacion() + '\n');     					
 	    					}
         return assembler.toString();
     }
@@ -93,27 +93,21 @@ public class TercetoExpresion extends  TercetoAbstracto {
         return "SUB";
     }
     
-    private String getComparacion(String operador,String tipo) {
+    private String getComparacion() {
     	StringBuilder assCom=new StringBuilder();
-    		if (operador.equals("ADD")) {
-  			  assCom.append("FLD auxiliar@" + getNumTerceto() + '\n');
-  		      assCom.append("FLD MayorNumFloatPos" + '\n');
-  		      assCom.append("FCOM" + '\n');
-  		      assCom.append("FSTSW AX" + '\n');
-  		      assCom.append("SAHF" + '\n');
-  		      assCom.append("JG LabelOverflowSuma" + '\n');
-  	    	}
-  	    	else {
-  	    	  assCom.append("FLD auxiliar@" + getNumTerceto() + '\n');
-		      assCom.append("FLD MenorNumFloatNeg" + '\n');
-		      assCom.append("FCOM" + '\n');
-		      assCom.append("FSTSW AX" + '\n');
-		      assCom.append("SAHF" + '\n');
-		      assCom.append("JG LabelOverflowSuma" + '\n'); //TODO mirar porque jg y no jl
-  	    	}
-    	
-    	
-    	
+		assCom.append("FLD MayorNumFloatPos" + '\n');  
+		assCom.append("FLD auxiliar@" + getNumTerceto() + '\n');      
+		assCom.append("FCOM" + '\n');
+		assCom.append("FSTSW AX" + '\n');
+		assCom.append("SAHF" + '\n');
+		assCom.append("JA LabelOverflowSuma" + '\n');
+		assCom.append("FLD MenorNumFloatNeg" + '\n');
+		assCom.append("FLD auxiliar@" + getNumTerceto() + '\n');
+		assCom.append("FCOM" + '\n');
+		assCom.append("FSTSW AX" + '\n');
+		assCom.append("SAHF" + '\n');
+		assCom.append("JB LabelOverflowSuma" + '\n'); 
+
     	return assCom.toString();
     }
 

@@ -23,18 +23,21 @@ public class TercetoMetodos extends TercetoAbstracto {
 		if (lexemaDer.contains("length")) {
 				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 				assembler.append("CALL FUNCION_LENGTH"+ '\n');
-				assembler.append("MOV auxiliar@" +getNumTerceto() + ", auxiliarInt" + '\n');
+				assembler.append("MOV AX , auxiliarInt" + '\n');
+				assembler.append("MOV auxiliar@" +getNumTerceto() + ", AX" + '\n');
 		}
 		if (lexemaDer.contains("first")) {
 			if (tercetoIzq.getTipo().equals("int")) {
 				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 				assembler.append("CALL FUNCION_FIRSTINT" + '\n');
-				assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarInt"  + '\n');
+				assembler.append("MOV AX , auxiliarInt" + '\n');
+				assembler.append("MOV auxiliar@" + getNumTerceto() + ", AX"  + '\n');
 				}
 			else {
 				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 				assembler.append("CALL FUNCION_FIRSTFLOAT" + '\n');
-				assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarFloat"  + '\n');
+				assembler.append("FLD auxiliarFloat"  + '\n');
+				assembler.append("FSTP auxiliar@" + getNumTerceto() + '\n');
 			}
 				
 		}
@@ -42,12 +45,14 @@ public class TercetoMetodos extends TercetoAbstracto {
 			if (tercetoIzq.getTipo().equals("int")) {
 				assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 				assembler.append("CALL FUNCION_LASTINT" + '\n');
-				assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarInt"  + '\n');
+				assembler.append("MOV AX , auxiliarInt" + '\n');
+				assembler.append("MOV auxiliar@" + getNumTerceto() + ", AX"  + '\n');
 		}
 		else {
 			assembler.append("MOV ECX, OFFSET _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 			assembler.append("CALL FUNCION_LASTFLOAT" + '\n');
-			assembler.append("MOV auxiliar@" + getNumTerceto() + ", auxiliarFloat"  + '\n');
+			assembler.append("FLD auxiliarFloat"  + '\n');
+			assembler.append("FSTP auxiliar@" + getNumTerceto() + '\n');
 			
 		}
 	return assembler.toString();

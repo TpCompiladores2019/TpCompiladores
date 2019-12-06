@@ -62,10 +62,10 @@ public class GeneradorAssembler {
 		codigo.append("    RET " + '\n');
 		codigo.append("FUNCION_FIRSTFLOAT: \n");
 		codigo.append("    FLD DWORD PTR [ECX + 8] \n");
-		codigo.append("    STP auxiliarFloat \n");
+		codigo.append("    FST auxiliarFloat \n");
 		codigo.append("    RET " + '\n');
 		codigo.append("FUNCION_LASTFLOAT: \n");
-		codigo.append("    MOVE AX, [ECX] \n");
+		codigo.append("    MOV AX, [ECX] \n");
 		codigo.append("    IMUL AX, 8 \n");
 		codigo.append("    MOVZX EAX, AX \n");
 		codigo.append("    FLD DWORD PTR [ECX + EAX] \n");

@@ -154,7 +154,7 @@ public abstract class IAccionSemantica {
 
 		public int ejecutar(char caracter, StringBuilder cadena) {
 		
-
+			cadena.append("!");
 			tablaSimbolos.agregar(cadena.toString(),new Token("Cadena",1));
 			AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Cadena: " + cadena.toString());
 			AnalizadorLexico.porcentajeAbierto=false;
@@ -233,7 +233,8 @@ public abstract class IAccionSemantica {
 			}
 			else
 				salida = cadena.toString();	
-
+			
+			
 					
 			if (tablaTokens.contieneClave(salida)) { 
 				AnalizadorLexico.listaCorrectas.add("Linea " +AnalizadorLexico.nroLinea + " Palabra Reservada: " + cadena.toString());

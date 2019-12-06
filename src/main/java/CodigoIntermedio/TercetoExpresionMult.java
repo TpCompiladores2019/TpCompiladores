@@ -28,7 +28,7 @@ public class TercetoExpresionMult extends TercetoExpresion {
             	 assembler.append("FLD " + "_" +  lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
             	 assembler.append("FLD " + "_" +  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@')+ '\n');
             	 assembler.append("FMUL " + '\n');
-            	 assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');
+            	 assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');
              }
              }
          	
@@ -42,7 +42,7 @@ public class TercetoExpresionMult extends TercetoExpresion {
          			assembler.append("FLD " + "_" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
          			assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
    		            assembler.append("FMUL" + " " + '\n');
-   		            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');  					
+   		            assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');  					
    				}
          	}
          	else
@@ -55,7 +55,7 @@ public class TercetoExpresionMult extends TercetoExpresion {
          				assembler.append("FLD " + "_"+  lexemaDer.replace('.', '@').replace('-', '@').replace('+', '@') + '\n');
 						assembler.append("FLD " +  "auxiliar" + lexemaIzq + '\n');
 			            assembler.append("FMUL " + '\n');
-			            assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n'); 					
+			            assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n'); 					
 					}
          					
          		else	// (OP,@,@)
@@ -67,7 +67,7 @@ public class TercetoExpresionMult extends TercetoExpresion {
     					assembler.append("FLD " + "auxiliar" + lexemaIzq + '\n');
    					 	assembler.append("FLD " +  "auxiliar" + lexemaDer + '\n');
    					 	assembler.append("FMUL " + '\n');
-   					 	assembler.append("FST " + "auxiliar@" + getNumTerceto() + '\n');					
+   					 	assembler.append("FSTP " + "auxiliar@" + getNumTerceto() + '\n');					
     				}
          
          return assembler.toString();
