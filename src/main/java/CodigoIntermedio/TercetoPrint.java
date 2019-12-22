@@ -27,7 +27,7 @@ public class TercetoPrint extends TercetoAbstracto{
 				assembler.append("invoke printf , cfm$(\"%.20f\\n\"), auxiliar" + lexemaPrint);
 		}
 		else
-			if (tPrint.getTipo()!= null)
+			if (!tPrint.getTipo().isEmpty())
 				if (tPrint.getTipo().equals("int")) 
 					assembler.append("invoke printf , cfm$(\"%d\\n\"), _" + lexemaPrint.replace('-', '@'));
 				else
