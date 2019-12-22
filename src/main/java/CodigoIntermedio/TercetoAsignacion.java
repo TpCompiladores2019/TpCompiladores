@@ -22,8 +22,8 @@ public class TercetoAsignacion extends TercetoAbstracto{
                     assembler.append("FSTP _"+ lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') +System.lineSeparator());
                 }
                 else{
-                    assembler.append("MOV " + "AX" + ", _" + lexemaDer.replace('-', '@') + System.lineSeparator());
-                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + System.lineSeparator());
+                    assembler.append("MOV AX, _" + lexemaDer.replace('-', '@') + System.lineSeparator());
+                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", AX" + System.lineSeparator());
                 }
             }
             else
@@ -33,8 +33,8 @@ public class TercetoAsignacion extends TercetoAbstracto{
 	                    assembler.append("FSTP _" + lexemaIzq.replace('.', '@').replace('-', '@').replace('+', '@') + System.lineSeparator());
 	                }
 	                else {
-	                    assembler.append("MOV " + "AX" + ", auxiliar" + lexemaDer + System.lineSeparator());
-	                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", " + "AX" + System.lineSeparator());
+	                    assembler.append("MOV AX, auxiliar" + lexemaDer + System.lineSeparator());
+	                    assembler.append("MOV _" + lexemaIzq.replace('-', '@') + ", AX" + System.lineSeparator());
 	                }
                 else//(ASIGN,TERCETO,TERCETO)
                 	if (lexemaIzq.contains("@") && lexemaDer.contains("@")) {

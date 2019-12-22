@@ -5,7 +5,7 @@ public class Token {
 	private String lexema;
 	private int nroLinea;
 	private int idToken;
-	private String tipo;
+	private String tipo = "";
 	private int cantRef;
 	private String uso;
 	private boolean declarada;

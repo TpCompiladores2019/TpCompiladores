@@ -46,7 +46,7 @@ public class TablaSimbolos {
 	}
 	
 	public String getDataAssembler() {
-		String data = "";
+		StringBuilder data = new StringBuilder();
 		int i = 1;
 		for (String clave : tablaSimbolos.keySet()) {
 			Token t = tablaSimbolos.get(clave);
@@ -54,51 +54,51 @@ public class TablaSimbolos {
         		t.setUso("Cadena");
 
 			if (t.getUso().equals("CTE")) {
-				data = data + "_"+clave.replace('-', '@') + " " + DW + " " + clave + System.lineSeparator();
+				data.append("_"+clave.replace('-', '@') + " " + DW + " " + clave + System.lineSeparator());
 			}
 			else
 				if (t.getUso().equals("CTF")) {
 					
-					data = data + "_" + clave.replace('.', '@').replace('-', '@').replace('+', '@')+ " " + DD + " " + clave + System.lineSeparator();
+					data.append("_" + clave.replace('.', '@').replace('-', '@').replace('+', '@')+ " " + DD + " " + clave + System.lineSeparator());
 				}
 				else
 					if (t.getUso().equals("Variable")) {
 						if (t.getTipo().equals("int"))
-							data = data + "_" + clave + " " + DW + " ?" + System.lineSeparator();
+							data.append("_" + clave + " " + DW + " ?" + System.lineSeparator());
 						else
-							data = data  + "_" + clave + " " + DD + " ?" + System.lineSeparator();
+							data.append("_" + clave + " " + DD + " ?" + System.lineSeparator());
 					}
 					else
 						if (t.getTipo().equals("Cadena")) {
-							data = data + "print" + i + " " + DB + " \""  + clave.substring(0, clave.length()-1) + "\", 0" + System.lineSeparator();
+							data.append("print" + i + " " + DB + " \""  + clave.substring(0, clave.length()-1) + " \", 0" + System.lineSeparator());
 							i++;
 						}
 						else
 							if (t.getUso().equals("Variable Auxiliar")) {
 								if (t.getTipo().equals("int"))
-									data = data + "auxiliar"+t.getLexema() + " " + DW + " ?" + System.lineSeparator();
+									data.append("auxiliar"+t.getLexema() + " " + DW + " ?" + System.lineSeparator());
 								else
-									data = data + "auxiliar"+t.getLexema() + " " + DD + " ?" + System.lineSeparator();
+									data.append("auxiliar"+t.getLexema() + " " + DD + " ?" + System.lineSeparator());
 							}
 							else
 								if (t.getUso().equals("Nombre de Coleccion")) {
 									if (t.getTipo().equals("int")){
-										data = data + "_" + clave + " " + DW + " " + t.getTamanioColeccion() + ",";
+										data.append("_" + clave + " " + DW + " " + t.getTamanioColeccion() + ",");
 										for(int j = 0; j < t.getTamanioColeccion()-1; j++)
-											 data = data + " ?," ; 
-										data = data + " ?" + System.lineSeparator();
+											 data.append(" ?," ); 
+										data.append(" ?" + System.lineSeparator());
 									}
 									else {
-										data = data + "_" + clave + " " + DD + " " + t.getTamanioColeccion() + "," ;
+										data.append("_" + clave + " " + DD + " " + t.getTamanioColeccion() + ",");
 										for(int j = 0; j < t.getTamanioColeccion()-1; j++)
-											 data = data + " ?," ; 
-										data = data + " ?" + System.lineSeparator();
+											 data.append(" ?,"); 
+										data.append(" ?" + System.lineSeparator());
 									}
 								}
 		}
 		
 
-		return data;
+		return data.toString();
 	}
 	
 }

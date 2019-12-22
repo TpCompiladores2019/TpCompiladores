@@ -8,19 +8,24 @@ import Lexico.TablaSimbolos;
 public class GeneradorAssembler {
 	private AnalizadorTercetos analizadorTercetos;
 	private TablaSimbolos tablaSimbolos;
-	private FileWriter fw;	
+	private FileWriter fw;
+	private String path;
 	
 	public static final String labelDivCero = "_LabelDividirCero";
 	public static final String labelOverflowSuma = "_LabelOverflowSuma";
 	public static final String labelSubIndices = "_LabelSubIndices";
 	
-	public GeneradorAssembler(AnalizadorTercetos analizadorTercetos, TablaSimbolos tablaSimbolos) {
+	public GeneradorAssembler(AnalizadorTercetos analizadorTercetos, TablaSimbolos tablaSimbolos, String path) {
 		this.analizadorTercetos=analizadorTercetos;
 		this.tablaSimbolos=tablaSimbolos;
+		this.path = path;
 	}
 	
     public void generarAssembler() throws IOException {
-    	fw = new FileWriter("salida.asm");
+    	int i = path.indexOf('.');
+    	path = path.substring(0, i+1);
+    	path = path + "asm";
+    	fw = new FileWriter(path);
     	escribirCodigo();
     }
 

@@ -53,13 +53,9 @@ public class TercetoDO extends TercetoAbstracto{
     };
 	@Override
 	public String getCodigoAssembler() {
-		String operador = listTerceto.get(0).getLexema();
-		if (operador.equals("BF")) {
 			int numLabel = Integer.parseInt(listTerceto.get(1).getLexema().substring(1));
 			AnalizadorTercetos.listLabel.add(numLabel);
 			return(tipoSalto +" Lbl" + numLabel + System.lineSeparator());
-		}
-		return null;
 	}
 
 }

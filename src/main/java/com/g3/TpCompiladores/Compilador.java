@@ -22,8 +22,11 @@ public class Compilador {
 	private AnalizadorLexico analizarLexico ;
 	private FileWriter fw;	
 	private AnalizadorTercetos analizadorTerceto;
+	private String path;
+	
 	
 	public Compilador(String args) throws IOException {
+		this.path=args;
 		this.tablaSimbolos = new TablaSimbolos();
 		this.tablaTokens = new TablaTokens();
 		this.analizarLexico = new AnalizadorLexico(tablaSimbolos,tablaTokens,args);
@@ -38,46 +41,46 @@ public class Compilador {
 
 		try {
 			fw = new FileWriter("InformacionLexico.txt");
-			String informacion ="";
+			StringBuilder informacion = new StringBuilder();
 			
 			if (!AnalizadorLexico.listaCorrectas.isEmpty()) {
-				informacion = "Tokens Detectados: \n";
+				informacion.append("Tokens Detectados:" + System.lineSeparator());
 				for (String info : AnalizadorLexico.listaCorrectas) {
-					informacion += info + "\n";
+					informacion.append(info + System.lineSeparator());
 				}
 			}
 			else {
-				informacion += "Sin tokens \n";
+				informacion.append("Sin tokens" + System.lineSeparator());
 			}
 			
 			if(!AnalizadorLexico.listaWarning.isEmpty()) {
-				informacion += "\nWarnings Detectados: \n";
+				informacion.append(System.lineSeparator() + "Warnings Detectados:" + System.lineSeparator());
 				for (Error warning : AnalizadorLexico.listaWarning) {
-					informacion += warning + "\n"; 
+					informacion.append(warning + System.lineSeparator()); 
 				}
 			}
 			else {
-				informacion += "\nSin Warnings detectados \n";
+				informacion.append(System.lineSeparator() + "Sin Warnings detectados" + System.lineSeparator());
 			}
 			
 			if (!AnalizadorLexico.listaErrores.isEmpty()) {
-				informacion += "\nErrores Detectados: \n";
+				informacion.append(System.lineSeparator() + "Errores Detectados:" + System.lineSeparator());
 				for (Error errores : AnalizadorLexico.listaErrores) {
-					informacion += errores + "\n";
+					informacion.append(errores + System.lineSeparator());
 				}
 			}
 			else {
-				informacion += "\nSin errores detectados \n";
+				informacion.append(System.lineSeparator() + "Sin errores detectados" + System.lineSeparator());
 			}
 			
-			informacion += "\nTabla de Simbolos: \n" ;
+			informacion.append(System.lineSeparator() + "Tabla de Simbolos:" + System.lineSeparator());
 			for (String key : tablaSimbolos.getKeySet()) {
-				informacion += key + "--> " + tablaSimbolos.getClave(key).getTipo() + "\n";
+				informacion.append(key + "--> " + tablaSimbolos.getClave(key).getTipo() + System.lineSeparator());
 				System.out.println("key: " + key + " tipo: " + tablaSimbolos.getClave(key).getTipo());
 				System.out.println("key: " + key + " cantRef: " + tablaSimbolos.getClave(key).getCantRef());
 			}
 		
-			fw.write(informacion);
+			fw.write(informacion.toString());
 			fw.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -89,75 +92,72 @@ public class Compilador {
 		
 		try {
 			
-
 			
+			StringBuilder informacion =new StringBuilder();
 			
-			String informacion ="";
-			
-			if (sintactico == 0) {
-				informacion = "El programa llego al final. \n";
+			if (sintactico != 0) {
+				informacion.append("El programa no pudo ser compilado, debido a que una regla de la gramatica no esta contemplada." + System.lineSeparator());
 			}
 			else {
-				informacion = "El programa no pudo compilar. \n";
-			}
+				informacion.append("El programa llego al final del analisis." + System.lineSeparator());
+			
 			
 			if (!AnalizadorLexico.listaCorrectas.isEmpty()) {
-				informacion += "\nTokens Detectados: \n";
+				informacion.append(System.lineSeparator() + "Tokens Detectados:" + System.lineSeparator());
 				for (String info : AnalizadorLexico.listaCorrectas) {
-					informacion += info + "\n";
+					informacion.append(info + System.lineSeparator());
 				}
 			}
 			else {
-				informacion += "\nSin tokens \n";
+				informacion.append(System.lineSeparator() + "Sin tokens" + System.lineSeparator());
 			}
 			
-			informacion += parser.informacionEstructuras();
+			informacion.append(parser.informacionEstructuras());
 			
-			informacion += parser.informacionError();
+			informacion.append(parser.informacionError());
 			
 			if (!AnalizadorLexico.listaErrores.isEmpty()) {
-				informacion += "\nErrores Lexicos Detectados: \n";
+				informacion.append(System.lineSeparator() + "Errores Lexicos Detectados:" + System.lineSeparator());
 				for (Error errores : AnalizadorLexico.listaErrores) {
-					informacion += errores + "\n";
+					informacion.append(errores + System.lineSeparator());
 				}
 			}
 			else {
-				informacion += "\nSin errores lexicos \n";
+				informacion.append(System.lineSeparator() + "Sin errores lexicos" + System.lineSeparator());
 			}
 			
 			if (!AnalizadorLexico.listaWarning.isEmpty()) {
-				informacion += "\nWarning Lexicos Detectados: \n";
+				informacion.append(System.lineSeparator() + "Warning Lexicos Detectados:" + System.lineSeparator());
 				for (Error errores : AnalizadorLexico.listaWarning) {
-					informacion += errores + "\n";
+					informacion.append(errores + System.lineSeparator());
 				}
 			}
 			else {
-				informacion += "\nSin warning lexicos \n";
+				informacion.append(System.lineSeparator() + "Sin warning lexicos" + System.lineSeparator());
 			}
 			
 			if (analizadorTerceto.estaVacia()) 
-				informacion += "\nSin errores semanticos \n";
+				informacion.append(System.lineSeparator() + "Sin errores semanticos" + System.lineSeparator());
 			else
-				informacion += analizadorTerceto.imprimirErroresSemanticos();
-			informacion += "\nTabla de Simbolos: \n" ;
+				informacion.append(analizadorTerceto.imprimirErroresSemanticos());
+			informacion.append(System.lineSeparator() + "Tabla de Simbolos:" + System.lineSeparator());
 			for (String key : tablaSimbolos.getKeySet()) {
 				Token clave = tablaSimbolos.getClave(key);
-				informacion += key + ": Tipo: " + clave.getTipo() + ", Uso:" + clave.getUso(); 
+				informacion.append(key + ": Tipo: " + clave.getTipo() + ", Uso:" + clave.getUso()); 
 				if (clave.getTamanioColeccion()!=0)
-					informacion += ", Tamaño de Coleccion: " + clave.getTamanioColeccion() + "\n";
+					informacion.append(", Tamaño de Coleccion: " + clave.getTamanioColeccion() + System.lineSeparator());
 				else
-					informacion += "\n";
+					informacion.append(System.lineSeparator());
 						
 			}
 			
 			
-			fw.write(informacion);
 			
 			
-		//	analizadorTerceto.imprimirTerceto();
 			analizadorTerceto.imprimirErroresSemanticos();
 
-					
+			}	
+			fw.write(informacion.toString());
 			
 		} catch (IOException e1) {
 	
@@ -169,20 +169,24 @@ public class Compilador {
 	
 	public void ejecutar() throws IOException {
 		Parser parser = new Parser(analizarLexico,tablaSimbolos,analizadorTerceto);
+		int indiceBarra = path.lastIndexOf("\\");
+		int indicePunto = path.lastIndexOf(".");
+		String pathNombre = path.substring(indiceBarra + 1, indicePunto);
+		String pathInfo = path.substring(0, indiceBarra + 1);
+		pathInfo = pathInfo + "Informacion" + pathNombre + ".txt";
 		int sintactico =parser.yyparser(); 
-		fw = new FileWriter("Informacion.txt");
+		fw = new FileWriter(pathInfo);
 		String tercetos =""; 
 		mostrarInfoSintactico(sintactico, parser);
 		if (sintactico == 0) {
 			if ((analizarLexico.estaVacia()) && (analizadorTerceto.estaVacia() && parser.estaVacia())){
-				System.out.println(analizadorTerceto.imprimirTerceto());
 				tercetos +=analizadorTerceto.imprimirTerceto();
 				fw.write(tercetos);
-				GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos);
+				GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos, path);
 				assembler.generarAssembler();
 			}
 			else
-				fw.write("\nNo se genera codigo intermedio por errores en el codigo\n"); 
+				fw.write("\nNo se pudo genera codigo intermedio por errores en el codigo\n"); 
 		}
 		fw.close();
 	}

@@ -80,10 +80,7 @@ public class AnalizadorTercetos {
 		listErroresSemanticos.add(new Error(mensaje, nroLinea, "", "ERROR"));
 	}
 
-	public void borrarLabelPendientes() {
-		int label = listLabel.get(listLabel.size()-1);
-		listLabel.remove(listLabel.size()-1);
-	}
+
 	
 	public String imprimirErroresSemanticos() {
 		String errores = System.lineSeparator() + "Errores Semanticos Detectados" + System.lineSeparator();
@@ -97,13 +94,12 @@ public class AnalizadorTercetos {
 	public String getCodeString() {
 		String code = "";
 		int tercetoActual =1;
-
+		
 		for (int i = 0; i< listTercetos.size();i++) {
 			code = code + listTercetos.get(i).getCodigoAssembler() + System.lineSeparator();
 			tercetoActual++;
 			if ( (!listLabel.isEmpty()) && ( tercetoActual == listLabel.get(listLabel.size()-1))){
-					code = code + "Label" + listLabel.get(listLabel.size()-1)+ ":" + System.lineSeparator();
-	                borrarLabelPendientes();
+					code = code + "Label" + listLabel.remove(listLabel.size()-1)+ ":" + System.lineSeparator();
 	            }
 			}
             

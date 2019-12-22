@@ -1,25 +1,24 @@
 package CodigoIntermedio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Lexico.Token;
 
 public class TercetoPrint extends TercetoAbstracto{
-	String print = "";
 	public static int i = 1;
+	private static List<String> listTercetosPrint= new ArrayList<String>();
 	public TercetoPrint(Token t1, Token t2, Token t3, int numTerceto) {
 		super(t1, t2, t3, numTerceto);
 		// TODO Auto-generated constructor stub
 	}
 	
 	
-	public void setPrint (String print) {
-		this.print = print;
-	}
+
 	@Override
 	public String getCodigoAssembler() {  
 		String lexemaPrint = listTerceto.get(1).getLexema();
 		Token tPrint = listTerceto.get(1);
-		print = listTerceto.get(1).getLexema();
-		print = print.replace(' ', '@');
 		StringBuilder assembler = new StringBuilder(); 
 		if (lexemaPrint.contains("@")){
 			if (tPrint.getTipo().equals("int"))
@@ -34,9 +33,15 @@ public class TercetoPrint extends TercetoAbstracto{
 				else
 					assembler.append("invoke printf , cfm$(\"%.20f\\n\"), _" + lexemaPrint.replace('-', '@').replace('.', '@'));
 			else {
+				if (listTercetosPrint.contains(lexemaPrint)){
+					int index = listTercetosPrint.indexOf(lexemaPrint) + 1;
+					return "invoke StdOut, ADDR print" + index + "\n";
+				}
+				listTercetosPrint.add(lexemaPrint);
 				assembler.append("invoke StdOut, ADDR print" + i + "\n");
 				i++;
 			}
+			
         return assembler.toString();
 	}
 
