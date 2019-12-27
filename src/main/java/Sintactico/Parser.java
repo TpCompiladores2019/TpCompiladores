@@ -1416,8 +1416,7 @@ case 72:
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												TercetoColeccionDer terceto = new TercetoColeccionDer((new Token("OFFSET")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
-												
-												
+
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
@@ -1446,6 +1445,7 @@ case 73:
 										if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
 											analizadorTerceto.agregarError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",lexico.nroLinea);
 										else{
+											System.out.println("fjassfSFSFSAjas");
 											if (noHayErrores()){
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
@@ -1453,6 +1453,7 @@ case 73:
 												TercetoColeccionDer terceto = new TercetoColeccionDer(new Token("OFFSET"), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
+												System.out.println("fjassfSFSFSAjaasfsafasgsags");
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 												nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												nuevo.setUso("Variable Auxiliar");
@@ -1574,11 +1575,14 @@ case 98:
 										if (tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 											analizadorTerceto.agregarError("Error '"+((Token)val_peek(1).obj).getLexema() + "' es una coleccion.",lexico.nroLinea);										
 										else{
+											System.out.println("fafjsajf");
 											if (noHayErrores()){
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo());
 												TercetoColeccionIzq terceto = new TercetoColeccionIzq((new Token("OFFSET")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
+												
+												
 												analizadorTerceto.addTerceto(terceto);
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 												nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
@@ -1605,6 +1609,7 @@ case 99:
 										if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
 											analizadorTerceto.agregarError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",lexico.nroLinea);
 										else{
+											System.out.println("fjassfSFSFSAjas");
 											if (noHayErrores()){
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo());
@@ -1612,6 +1617,7 @@ case 99:
 												TercetoColeccionIzq terceto = new TercetoColeccionIzq(new Token("OFFSET"), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
+												System.out.println("fjassfjas");
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 												nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												nuevo.setUso("Variable Auxiliar");

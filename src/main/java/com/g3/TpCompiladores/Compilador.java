@@ -182,6 +182,9 @@ public class Compilador {
 			if ((analizarLexico.estaVacia()) && (analizadorTerceto.estaVacia() && parser.estaVacia())){
 				tercetos +=analizadorTerceto.imprimirTerceto();
 				fw.write(tercetos);
+				analizadorTerceto.getTercetoOptimos();
+				tercetos =analizadorTerceto.imprimirTerceto();
+				fw.write(tercetos);
 				GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos, path);
 				assembler.generarAssembler();
 			}

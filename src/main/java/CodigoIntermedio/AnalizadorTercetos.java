@@ -102,10 +102,56 @@ public class AnalizadorTercetos {
 					code = code + "Label" + listLabel.remove(listLabel.size()-1)+ ":" + System.lineSeparator();
 	            }
 			}
-            
-	
 		return code;
 	}
+		
+	
+	public void getTercetoOptimos() {
+		int idTercetoActual;
+		int idTercetoCambio = -1;
+		boolean llegoHastaAsig ;
+		for (int i = 0; i< listTercetos.size();i++) {
+			llegoHastaAsig = false;
+			//if (!listTercetos.get(i).listTerceto.get(1).getLexema().contains("@") && !listTercetos.get(i).listTerceto.get(2).getLexema().contains("@")) {
+			if (!listTercetos.get(i).listTerceto.get(0).getLexema().equals(":=") ) {
+				
+				idTercetoActual = listTercetos.get(i).getNumTerceto();
+				//System.out.println(listTercetos.get(i).listTerceto.get(0).getLexema() + " " + idTercetoActual  + " " + idTercetoCambio);
+				for (int j = i+1; j< listTercetos.size()&& !llegoHastaAsig;j++ ) {
+					if (!listTercetos.get(j).listTerceto.get(0).getLexema().equals(":=") ) {
+					//if (!listTercetos.get(j).listTerceto.get(1).getLexema().contains("@") && !listTercetos.get(j).listTerceto.get(2).getLexema().contains("@")) 
+						if(listTercetos.get(j).listTerceto.get(0).getLexema().equals(listTercetos.get(i).listTerceto.get(0).getLexema()))
+							if(listTercetos.get(j).listTerceto.get(1).getLexema().equals(listTercetos.get(i).listTerceto.get(1).getLexema()))
+								if(listTercetos.get(j).listTerceto.get(2).getLexema().equals(listTercetos.get(i).listTerceto.get(2).getLexema())) {
+									idTercetoCambio = listTercetos.get(j).getNumTerceto();
+									//System.out.println(listTercetos.get(j).listTerceto.get(1).getLexema() + " " + idTercetoActual + " " +idTercetoCambio) ;
+								}
+					if(listTercetos.get(j).listTerceto.get(1).getLexema().equals("@"+idTercetoCambio)) {
+						listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),1);
+					}
+					else {
+						System.out.println("lexema" + listTercetos.get(j).listTerceto.get(2).getLexema());
+						System.out.println("idTercetoCambio" + idTercetoCambio);
+						if(listTercetos.get(j).listTerceto.get(2).getLexema().equals("@"+idTercetoCambio)) {
+							
+							System.out.println("tercetoooooooactual" + idTercetoActual);
+							listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),2);
+						}
+					}
+				}
+					else
+						llegoHastaAsig=true;
+				}
+				
+				
+			}
+			else {
+				idTercetoActual = -1;
+			 	idTercetoCambio = -1;
+			}
+		}
+	}
+	
 	
 	
 	
