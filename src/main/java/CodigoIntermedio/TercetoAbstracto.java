@@ -8,6 +8,7 @@ public abstract class TercetoAbstracto  {
 	protected ArrayList<Token> listTerceto;
 	private int numTerceto;
 	private String nombreTerceto;
+	private boolean correcto;
 	
 	public TercetoAbstracto(Token t1, Token t2, Token t3,int numTerceto) {
 		listTerceto = new ArrayList<Token>();
@@ -15,6 +16,7 @@ public abstract class TercetoAbstracto  {
 		listTerceto.add(t2);
 		listTerceto.add(t3);
 		this.numTerceto=numTerceto;
+		setCorrecto(true);
 	}
 
 	public void setNombre(String nombre) {
@@ -54,6 +56,15 @@ public abstract class TercetoAbstracto  {
 	}
 	
 	public abstract String getCodigoAssembler();
+
+	public boolean isCorrecto() {
+		return correcto;
+	}
+
+	public void setCorrecto(boolean correcto) {
+		this.correcto = correcto;
+	}
+
 
 
  }

@@ -2,6 +2,7 @@ package com.g3.TpCompiladores;
 
 
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -169,11 +170,14 @@ public class Compilador {
 	
 	public void ejecutar() throws IOException {
 		Parser parser = new Parser(analizarLexico,tablaSimbolos,analizadorTerceto);
-		int indiceBarra = path.lastIndexOf("\\");
-		int indicePunto = path.lastIndexOf(".");
-		String pathNombre = path.substring(indiceBarra + 1, indicePunto);
-		String pathInfo = path.substring(0, indiceBarra + 1);
-		pathInfo = pathInfo + "Informacion" + pathNombre + ".txt";
+		File fInfo = new File(path);
+		String nombre = "Informacion" + fInfo.getName();
+		int indicePunto = nombre.lastIndexOf(".");
+		String pathInfo = fInfo.getParent() + File.separator + nombre.substring(0,indicePunto) + ".txt";
+		
+
+		
+
 		int sintactico =parser.yyparser(); 
 		fw = new FileWriter(pathInfo);
 		String tercetos =""; 
@@ -182,9 +186,9 @@ public class Compilador {
 			if ((analizarLexico.estaVacia()) && (analizadorTerceto.estaVacia() && parser.estaVacia())){
 				tercetos +=analizadorTerceto.imprimirTerceto();
 				fw.write(tercetos);
-				analizadorTerceto.getTercetoOptimos();
-				tercetos =analizadorTerceto.imprimirTerceto();
-				fw.write(tercetos);
+				//analizadorTerceto.getTercetoOptimos();
+				//tercetos =analizadorTerceto.imprimirTercetoOptimos();
+				//fw.write(tercetos);
 				GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos, path);
 				assembler.generarAssembler();
 			}

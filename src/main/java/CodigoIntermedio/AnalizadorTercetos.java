@@ -1,6 +1,9 @@
 package CodigoIntermedio;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 import Lexico.Token;
@@ -44,8 +47,15 @@ public class AnalizadorTercetos {
             cadena= cadena + t.imprimirTercetoI() + System.lineSeparator();
         }
         return cadena;
-
-
+    }
+    
+    public String imprimirTercetoOptimos() {
+        String cadena="\nTercetos Optimos: \n";
+        for (TercetoAbstracto t: listTercetos ){
+        	if (t.isCorrecto())
+        		cadena= cadena + t.imprimirTercetoI() + System.lineSeparator();
+        }
+        return cadena;
     }
 	
 	public String getNumeroTerceto() {
@@ -96,12 +106,15 @@ public class AnalizadorTercetos {
 		int tercetoActual =1;
 		
 		for (int i = 0; i< listTercetos.size();i++) {
-			code = code + listTercetos.get(i).getCodigoAssembler() + System.lineSeparator();
-			tercetoActual++;
-			if ( (!listLabel.isEmpty()) && ( tercetoActual == listLabel.get(listLabel.size()-1))){
+			if (listTercetos.get(i).isCorrecto()) {
+				System.out.println(i+1);
+				code = code + listTercetos.get(i).getCodigoAssembler() + System.lineSeparator();
+				tercetoActual++;
+				if ( (!listLabel.isEmpty()) && ( tercetoActual == listLabel.get(listLabel.size()-1))){
 					code = code + "Label" + listLabel.remove(listLabel.size()-1)+ ":" + System.lineSeparator();
 	            }
 			}
+		}
 		return code;
 	}
 		
@@ -110,45 +123,46 @@ public class AnalizadorTercetos {
 		int idTercetoActual;
 		int idTercetoCambio = -1;
 		boolean llegoHastaAsig ;
+		List<String> listaIdAModificar = new ArrayList<String>();
+		
 		for (int i = 0; i< listTercetos.size();i++) {
 			llegoHastaAsig = false;
-			//if (!listTercetos.get(i).listTerceto.get(1).getLexema().contains("@") && !listTercetos.get(i).listTerceto.get(2).getLexema().contains("@")) {
-			if (!listTercetos.get(i).listTerceto.get(0).getLexema().equals(":=") ) {
-				
-				idTercetoActual = listTercetos.get(i).getNumTerceto();
-				//System.out.println(listTercetos.get(i).listTerceto.get(0).getLexema() + " " + idTercetoActual  + " " + idTercetoCambio);
-				for (int j = i+1; j< listTercetos.size()&& !llegoHastaAsig;j++ ) {
-					if (!listTercetos.get(j).listTerceto.get(0).getLexema().equals(":=") ) {
-					//if (!listTercetos.get(j).listTerceto.get(1).getLexema().contains("@") && !listTercetos.get(j).listTerceto.get(2).getLexema().contains("@")) 
-						if(listTercetos.get(j).listTerceto.get(0).getLexema().equals(listTercetos.get(i).listTerceto.get(0).getLexema()))
-							if(listTercetos.get(j).listTerceto.get(1).getLexema().equals(listTercetos.get(i).listTerceto.get(1).getLexema()))
-								if(listTercetos.get(j).listTerceto.get(2).getLexema().equals(listTercetos.get(i).listTerceto.get(2).getLexema())) {
-									idTercetoCambio = listTercetos.get(j).getNumTerceto();
-									//System.out.println(listTercetos.get(j).listTerceto.get(1).getLexema() + " " + idTercetoActual + " " +idTercetoCambio) ;
-								}
-					if(listTercetos.get(j).listTerceto.get(1).getLexema().equals("@"+idTercetoCambio)) {
-						listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),1);
-					}
-					else {
-						System.out.println("lexema" + listTercetos.get(j).listTerceto.get(2).getLexema());
-						System.out.println("idTercetoCambio" + idTercetoCambio);
-						if(listTercetos.get(j).listTerceto.get(2).getLexema().equals("@"+idTercetoCambio)) {
-							
-							System.out.println("tercetoooooooactual" + idTercetoActual);
-							listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),2);
+			listaIdAModificar.clear();
+			Token tokenOp = listTercetos.get(i).listTerceto.get(0);
+			Token tokenIzq = listTercetos.get(i).listTerceto.get(1);
+			Token tokenDer = listTercetos.get(i).listTerceto.get(2);
+			if (listTercetos.get(i).isCorrecto() && tokenIzq!=null && tokenDer!=null)
+				if (!tokenOp.getLexema().equals(":="))  {
+					idTercetoActual = listTercetos.get(i).getNumTerceto();
+					for (int j = i+1; j< listTercetos.size()&& !llegoHastaAsig;j++ ) {
+						Token tokenOpSig = listTercetos.get(j).listTerceto.get(0);
+						Token tokenIzqSig = listTercetos.get(j).listTerceto.get(1);
+						Token tokenDerSig = listTercetos.get(j).listTerceto.get(2); 
+						if (tokenIzqSig!=null && tokenDerSig!=null) {
+							if (listaIdAModificar.contains(tokenIzqSig.getLexema()))
+								listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),1);
+							if (listaIdAModificar.contains(tokenDerSig.getLexema()))
+								listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),2);
+							if (!tokenOpSig.getLexema().equals(":=")) {
+								if(tokenOpSig.getLexema().equals(tokenOp.getLexema()))
+									if(tokenIzqSig.getLexema().equals(tokenIzq.getLexema()))
+										if(tokenDerSig.getLexema().equals(tokenDer.getLexema())) {
+											idTercetoCambio = listTercetos.get(j).getNumTerceto();
+											listaIdAModificar.add("@"+idTercetoCambio);
+											listTercetos.get(j).setCorrecto(false);
+										}
+							}
+							else
+								if (tokenIzqSig.getLexema().equals(tokenIzq.getLexema()) || tokenIzqSig.getLexema().equals(tokenDer.getLexema()))
+									llegoHastaAsig=true;
 						}
+						
 					}
+					
 				}
-					else
-						llegoHastaAsig=true;
+				else {
+					idTercetoActual = -1;
 				}
-				
-				
-			}
-			else {
-				idTercetoActual = -1;
-			 	idTercetoCambio = -1;
-			}
 		}
 	}
 	

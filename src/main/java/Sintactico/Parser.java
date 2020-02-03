@@ -795,6 +795,8 @@ public boolean estaDeclarada(Token t){
 }
 
 public boolean esCompatible(Token t1, Token t2){
+	System.out.println(t1.getLexema() + " tipo " + t1.getTipo());
+	System.out.println(t2.getLexema() + " tipo " + t2.getTipo());
 	return (t1.getTipo().equals(t2.getTipo()));
 }
 
@@ -1412,11 +1414,12 @@ case 72:
 										if (tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 											analizadorTerceto.agregarError("Error '"+((Token)val_peek(1).obj).getLexema() + "' es una coleccion.",lexico.nroLinea);
 										else{
-											if (noHayErrores()){
+										/*	ACAif (noHayErrores()){*/
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												TercetoColeccionDer terceto = new TercetoColeccionDer((new Token("OFFSET")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
-
+												
+												
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
@@ -1424,7 +1427,7 @@ case 72:
 												nuevo.setUso("Variable Auxiliar");
 												tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 												yyval = new ParserVal(nuevo);
-											}
+										/*ACA	}*/
 										}
 								}
 break;
@@ -1445,22 +1448,20 @@ case 73:
 										if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
 											analizadorTerceto.agregarError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",lexico.nroLinea);
 										else{
-											System.out.println("fjassfSFSFSAjas");
-											if (noHayErrores()){
+											/*ACAif (noHayErrores()){*/
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).setUso("CTE");
 												TercetoColeccionDer terceto = new TercetoColeccionDer(new Token("OFFSET"), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
-												System.out.println("fjassfSFSFSAjaasfsafasgsags");
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 												nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												nuevo.setUso("Variable Auxiliar");
 												tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 												
 												yyval = new ParserVal(nuevo);
-												}
+										/*	ACA	}*/
 										}
 									}
 								
@@ -1575,21 +1576,18 @@ case 98:
 										if (tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getUso().equals("Nombre de Coleccion"))
 											analizadorTerceto.agregarError("Error '"+((Token)val_peek(1).obj).getLexema() + "' es una coleccion.",lexico.nroLinea);										
 										else{
-											System.out.println("fafjsajf");
-											if (noHayErrores()){
+											/*	ACAif (noHayErrores()){*/
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo());
 												TercetoColeccionIzq terceto = new TercetoColeccionIzq((new Token("OFFSET")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
-												
-												
 												analizadorTerceto.addTerceto(terceto);
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 												nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												nuevo.setUso("Variable Auxiliar");
 												tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 												yyval = new ParserVal(nuevo);
-											}
+											/*	ACA}*/
 									}
 								}
 break;
@@ -1609,22 +1607,20 @@ case 99:
 										if (tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getUso().equals("Variable"))
 											analizadorTerceto.agregarError("Error '"+((Token)val_peek(3).obj).getLexema() + "' es una variable.",lexico.nroLinea);
 										else{
-											System.out.println("fjassfSFSFSAjas");
-											if (noHayErrores()){
+										/*	ACA	if (noHayErrores()){*/
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo());
 												tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).setUso("CTE");
 												TercetoColeccionIzq terceto = new TercetoColeccionIzq(new Token("OFFSET"), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
-												System.out.println("fjassfjas");
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
 												nuevo.setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												nuevo.setUso("Variable Auxiliar");
 												tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 												
 												yyval = new ParserVal(nuevo);
-											}
+										/*	ACA	}*/
 										}
 									}
 								}
@@ -1692,7 +1688,7 @@ case 109:
 { 
 										
 											if (esColeccion(((Token)val_peek(4).obj).getLexema())){
-												if (noHayErrores()){
+											/*	ACA		if (noHayErrores()){*/
 													((Token)val_peek(4).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTipo());
 													TercetoMetodos tercetoMetodo = new TercetoMetodos(new Token("METODO"), ((Token)val_peek(4).obj) , 					((Token)val_peek(2).obj),analizadorTerceto.getProximoTerceto());
 													tercetoMetodo.setTamanio(tablaSimbolos.getClave(((Token)val_peek(4).obj).getLexema()).getTamanioColeccion()); 
@@ -1706,7 +1702,7 @@ case 109:
 													nuevo.setUso("Variable Auxiliar");
 													tablaSimbolos.agregar("auxiliar" +nuevo.getLexema(),nuevo);
 													yyval = new ParserVal(nuevo);
-												}
+											/*	ACA		}*/
 											}
 											else
 												analizadorTerceto.agregarError("La variable '" + ((Token)val_peek(4).obj).getLexema() +"' no puede invocar metodos, debe ser una coleccion." ,lexico.nroLinea);

@@ -1,5 +1,6 @@
 package CodigoIntermedio;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -22,9 +23,8 @@ public class GeneradorAssembler {
 	}
 	
     public void generarAssembler() throws IOException {
-    	int i = path.indexOf('.');
-    	path = path.substring(0, i+1);
-    	path = path + "asm";
+    	int i = path.lastIndexOf('.');
+    	path = path.substring(0, i) + ".asm";
     	fw = new FileWriter(path);
     	escribirCodigo();
     }
