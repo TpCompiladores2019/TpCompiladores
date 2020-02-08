@@ -1579,7 +1579,7 @@ case 98:
 											/*	ACAif (noHayErrores()){*/
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo());
-												TercetoColeccionIzq terceto = new TercetoColeccionIzq((new Token("OFFSET")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
+												TercetoColeccionIzq terceto = new TercetoColeccionIzq((new Token("OFFSETI")), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());
@@ -1611,7 +1611,7 @@ case 99:
 												((Token)val_peek(3).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTipo());
 												((Token)val_peek(1).obj).setTipo(tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).getTipo());
 												tablaSimbolos.getClave(((Token)val_peek(1).obj).getLexema()).setUso("CTE");
-												TercetoColeccionIzq terceto = new TercetoColeccionIzq(new Token("OFFSET"), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
+												TercetoColeccionIzq terceto = new TercetoColeccionIzq(new Token("OFFSETI"), ((Token)val_peek(3).obj), ((Token)val_peek(1).obj),analizadorTerceto.getProximoTerceto());
 												terceto.setTamanio(tablaSimbolos.getClave(((Token)val_peek(3).obj).getLexema()).getTamanioColeccion());
 												analizadorTerceto.addTerceto(terceto);
 												Token nuevo = new Token( "@" + analizadorTerceto.getNumeroTerceto());

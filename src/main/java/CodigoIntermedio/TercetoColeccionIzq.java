@@ -20,7 +20,7 @@ public class TercetoColeccionIzq extends TercetoAbstracto{
 		Token tercetoDer = listTerceto.get(2);
 		String lexemaIzq = tercetoIzq.getLexema();
 		String lexemaDer = tercetoDer.getLexema();
-		String offset = listTerceto.get(0).getLexema();
+		String offset = "OFFSET";
 		StringBuilder assembler = new StringBuilder();
 		if (tercetoIzq.getTipo().equals("int")) {
 			assembler.append("MOV CX, _" + lexemaDer + System.lineSeparator());

@@ -120,7 +120,7 @@ public class AnalizadorTercetos {
 		
 	
 	public void getTercetoOptimos() {
-		int idTercetoActual;
+		int idTercetoActual = -1;
 		int idTercetoCambio = -1;
 		boolean llegoHastaAsig ;
 		List<String> listaIdAModificar = new ArrayList<String>();
@@ -131,38 +131,48 @@ public class AnalizadorTercetos {
 			Token tokenOp = listTercetos.get(i).listTerceto.get(0);
 			Token tokenIzq = listTercetos.get(i).listTerceto.get(1);
 			Token tokenDer = listTercetos.get(i).listTerceto.get(2);
-			if (listTercetos.get(i).isCorrecto() && tokenIzq!=null && tokenDer!=null)
-				if (!tokenOp.getLexema().equals(":="))  {
+			if (listTercetos.get(i).isCorrecto() && tokenIzq!=null && tokenDer!=null && !tokenOp.getLexema().equals("OFFSETI")) {
+				//if (!tokenOp.getLexema().equals(":="))  {
 					idTercetoActual = listTercetos.get(i).getNumTerceto();
+					System.out.println("Principal: " + idTercetoActual + " (" + tokenOp.getLexema() + "," + tokenIzq.getLexema() + "," + tokenDer.getLexema() + ")");
+					
 					for (int j = i+1; j< listTercetos.size()&& !llegoHastaAsig;j++ ) {
 						Token tokenOpSig = listTercetos.get(j).listTerceto.get(0);
 						Token tokenIzqSig = listTercetos.get(j).listTerceto.get(1);
 						Token tokenDerSig = listTercetos.get(j).listTerceto.get(2); 
-						if (tokenIzqSig!=null && tokenDerSig!=null) {
+						if (tokenIzqSig!=null && tokenDerSig!=null && listTercetos.get(j).isCorrecto()) {
+							System.out.println("Comparacion: " + " (" + tokenOpSig.getLexema() + "," + tokenIzqSig.getLexema() + "," + tokenDerSig.getLexema() + ")");
+							
 							if (listaIdAModificar.contains(tokenIzqSig.getLexema()))
 								listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),1);
 							if (listaIdAModificar.contains(tokenDerSig.getLexema()))
 								listTercetos.get(j).setTerceto(new Token("@"+idTercetoActual),2);
-							if (!tokenOpSig.getLexema().equals(":=")) {
+							if (!tokenOpSig.getLexema().equals(":=") || !(tokenOpSig.getLexema().equals("OFFSETI") && tokenIzqSig.getLexema().equals(tokenIzq.getLexema()) && tokenDerSig.getLexema().equals(tokenDer.getLexema()))) {
 								if(tokenOpSig.getLexema().equals(tokenOp.getLexema()))
 									if(tokenIzqSig.getLexema().equals(tokenIzq.getLexema()))
 										if(tokenDerSig.getLexema().equals(tokenDer.getLexema())) {
 											idTercetoCambio = listTercetos.get(j).getNumTerceto();
 											listaIdAModificar.add("@"+idTercetoCambio);
 											listTercetos.get(j).setCorrecto(false);
+											System.out.println("entro");
 										}
 							}
-							else
+							else 
 								if (tokenIzqSig.getLexema().equals(tokenIzq.getLexema()) || tokenIzqSig.getLexema().equals(tokenDer.getLexema()))
 									llegoHastaAsig=true;
+							    if (tokenOpSig.getLexema().equals("OFFSETI") && tokenIzqSig.getLexema().equals(tokenIzq.getLexema()) && tokenDerSig.getLexema().equals(tokenDer.getLexema()))
+							    	llegoHastaAsig=true;
+							    if (tokenOp.getLexema().equals("OFFSET") && tokenDer.getLexema().equals(tokenIzqSig.getLexema()))
+							    	llegoHastaAsig=true;
+							
 						}
 						
 					}
-					
-				}
-				else {
-					idTercetoActual = -1;
-				}
+			}
+			//	}
+			//	else {
+			//		idTercetoActual = -1;
+			//	}
 		}
 	}
 	

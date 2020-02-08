@@ -174,10 +174,7 @@ public class Compilador {
 		String nombre = "Informacion" + fInfo.getName();
 		int indicePunto = nombre.lastIndexOf(".");
 		String pathInfo = fInfo.getParent() + File.separator + nombre.substring(0,indicePunto) + ".txt";
-		
-
-		
-
+	
 		int sintactico =parser.yyparser(); 
 		fw = new FileWriter(pathInfo);
 		String tercetos =""; 
@@ -186,9 +183,9 @@ public class Compilador {
 			if ((analizarLexico.estaVacia()) && (analizadorTerceto.estaVacia() && parser.estaVacia())){
 				tercetos +=analizadorTerceto.imprimirTerceto();
 				fw.write(tercetos);
-				//analizadorTerceto.getTercetoOptimos();
-				//tercetos =analizadorTerceto.imprimirTercetoOptimos();
-				//fw.write(tercetos);
+				analizadorTerceto.getTercetoOptimos();
+				tercetos =analizadorTerceto.imprimirTercetoOptimos();
+				fw.write(tercetos);
 				GeneradorAssembler assembler = new GeneradorAssembler(analizadorTerceto, tablaSimbolos, path);
 				assembler.generarAssembler();
 			}
